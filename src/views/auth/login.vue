@@ -12,8 +12,7 @@
             </b-form-group>
             <b-form-group label-cols="4" label-cols-lg="3" label="">
               <b-button variant="primary" :disabled="loading" @click="onSubmit"
-                ><b-spinner v-if="loading" small></b-spinner> 로그인</b-button
-              >
+                ><b-spinner v-if="loading" small></b-spinner> 로그인</b-button>
             </b-form-group>
           </b-card>
         </b-col>
