@@ -5,9 +5,9 @@
         <form action="#">
           <h1>Create Account</h1>
           <!-- <span>or use your email for registration</span> -->
-          <input v-model="Name" type="text" placeholder="Name" />
-          <input v-model="userId" type="email" placeholder="userId" />
-          <input v-model="Password" type="password" placeholder="Password" />
+          <input v-model="name" type="text" placeholder="Name" />
+          <input v-model="userid" type="userid" placeholder="userId" />
+          <input v-model="password" type="Password" placeholder="Password" />
           <button @click="signUp">Sign Up</button>
         </form>
       </div>
@@ -15,7 +15,7 @@
         <form action="#">
           <h1>Sign in</h1>
           <!-- <span>or use your account</span> -->
-          <input v-model="userId" type="userId" placeholder="userId" />
+          <input v-model="userid" type="userid" placeholder="userId" />
           <input v-model="password" type="password" placeholder="Password" />
           <button @click="Login">Sign In</button>
         </form>
@@ -43,11 +43,10 @@ export default {
   name: 'HomeView',
   data() {
     return {
-      Name: '',
+      name: '',
       Email: '',
-      Password: '',
       password: '',
-      userId: ''
+      userid: ''
     }
   },
   mounted() {
@@ -68,16 +67,16 @@ export default {
       console.log(process.env)
       this.loading = true
       const axiosBody = {
-        name: this.Name,
-        email: this.Email,
-        password: this.Password
+        name: this.name,
+        userid: this.userid,
+        password: this.password
       }
       console.log('auth/ register - axiosBody : ', axiosBody)
       await axios
-        .post(process.env.VUE_APP_URL + '/auth/join', axiosBody)
+        .post(process.env.VUE_APP_SERVER + '/users', axiosBody)
         .then(async res => {
           const code = res.status
-          console.log('auth/register - response: ', res)
+          console.log('/users - response: ', res)
           if (code == 400) {
             alert('이미 존재하는 아이디 입니다. 다시 입력해주세요!')
           } else if (code == 200) {
@@ -95,17 +94,17 @@ export default {
 
     async Login() {
       const axiosBody = {
-        email: this.userId,
+        userid: this.userid,
         password: this.password
       }
       await axios
-        .post(process.env.VUE_APP_URL + '/auth/login', axiosBody)
+        .post(process.env.VUE_APP_SERVER + '/auths/token', axiosBody)
         .then(async res => {
           console.log(res)
           const code = res.data
           localStorage.setItem('token', res.data.token)
-          console.log('/auth/login - response: ', code)
-          this.$router.push({ path: '/about' })
+          console.log('/auths/token - response: ', code)
+          this.$router.push({ path: '/home' })
         })
         .catch(err => {
           alert('다시 시도해주세요!')
