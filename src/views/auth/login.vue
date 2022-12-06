@@ -4,9 +4,9 @@
       <div class="form-container sign-up-container">
         <form action="#">
           <h1>Create Account</h1>
-          <span>or use your email for registration</span>
+          <!-- <span>or use your email for registration</span> -->
           <input v-model="Name" type="text" placeholder="Name" />
-          <input v-model="Email" type="email" placeholder="Email" />
+          <input v-model="userId" type="email" placeholder="userId" />
           <input v-model="Password" type="password" placeholder="Password" />
           <button @click="signUp">Sign Up</button>
         </form>
@@ -14,8 +14,8 @@
       <div class="form-container sign-in-container">
         <form action="#">
           <h1>Sign in</h1>
-          <span>or use your account</span>
-          <input v-model="userId" type="email" placeholder="Email" />
+          <!-- <span>or use your account</span> -->
+          <input v-model="userId" type="userId" placeholder="userId" />
           <input v-model="password" type="password" placeholder="Password" />
           <button @click="Login">Sign In</button>
         </form>
@@ -28,7 +28,7 @@
             <button id="signIn" class="ghost">Sign In</button>
           </div>
           <div class="overlay-panel overlay-right">
-            <h1>Hello, Friend!</h1>
+            <h1>Good Day!</h1>
             <p>Enter your personal details and start journey with us</p>
             <button id="signUp" class="ghost">Sign Up</button>
           </div>
@@ -37,7 +37,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios'
 export default {
