@@ -1,15 +1,26 @@
 <template>
-  <div ref="webgl"></div>
+  <div>
+    <div>
+      <button>시작</button>
+      <button>정지</button>
+      <button>리셋</button>
+    </div>
+    <Edukit />
+  </div>
 </template>
 
 <script>
-import Three from '../../js/example'
+import Edukit from './edukit.vue'
 
 export default {
-  mounted() {
-    Three(this.$refs.webgl)
+  components: {
+    Edukit
   }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+#MQTT {
+  margin: 50px;
+}
+</style>
