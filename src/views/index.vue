@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="separate-body"></div>
+    <!-- <div class="separate-body"></div> -->
     <b-container fluid style="padding-left: 0px">
       <b-row>
         <!-- Side bar -->
-        <b-col cols="2" style="padding-right: 0px">
+        <!-- <b-col cols="2" style="padding-right: 0px">
           <app-sidebar />
-        </b-col>
+        </b-col> -->
         <!-- Body contents -->
         <b-col style="padding-left: 0px; padding-right: 0px">
           <div class="content-body">
@@ -19,13 +19,7 @@
 </template>
 
 <script>
-import Sidebar from '../components/layout/Sidebar'
-
-export default {
-  components: {
-    'app-sidebar': Sidebar
-  }
-}
+export default {}
 </script>
 
 <style lang="scss" scoped></style>

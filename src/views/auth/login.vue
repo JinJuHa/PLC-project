@@ -1,89 +1,330 @@
 <template>
-  <div>
-    <div style="margin-top: 80px">
-      <b-row align-h="center">
-        <b-col cols="4">
-          <b-card title="로그인">
-            <b-form-group label-cols="4" label-cols-lg="3" label="아이디" label-for="input-userid">
-              <b-form-input id="input-userid" v-model="userid"></b-form-input>
-            </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="3" label="패스워드" label-for="input-password">
-              <b-form-input id="input-password" v-model="password" type="password"></b-form-input>
-            </b-form-group>
-            <b-form-group label-cols="4" label-cols-lg="3" label="">
-              <b-button variant="primary" :disabled="loading" @click="onSubmit"
-                ><b-spinner v-if="loading" small></b-spinner> 로그인</b-button
-              >
-            </b-form-group>
-          </b-card>
-        </b-col>
-      </b-row>
+  <div class="home">
+    <div id="container" class="container">
+      <div class="form-container sign-up-container">
+        <form action="#">
+          <h1>Create Account</h1>
+          <span>or use your email for registration</span>
+          <input v-model="Name" type="text" placeholder="Name" />
+          <input v-model="Email" type="email" placeholder="Email" />
+          <input v-model="Password" type="password" placeholder="Password" />
+          <button @click="signUp">Sign Up</button>
+        </form>
+      </div>
+      <div class="form-container sign-in-container">
+        <form action="#">
+          <h1>Sign in</h1>
+          <span>or use your account</span>
+          <input v-model="userId" type="email" placeholder="Email" />
+          <input v-model="password" type="password" placeholder="Password" />
+          <button @click="Login">Sign In</button>
+        </form>
+      </div>
+      <div class="overlay-container">
+        <div class="overlay">
+          <div class="overlay-panel overlay-left">
+            <h1>Welcome Back!</h1>
+            <p>To keep connected with us please login with your personal info</p>
+            <button id="signIn" class="ghost">Sign In</button>
+          </div>
+          <div class="overlay-panel overlay-right">
+            <h1>Hello, Friend!</h1>
+            <p>Enter your personal details and start journey with us</p>
+            <button id="signUp" class="ghost">Sign Up</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import jwtDecode from 'jwt-decode'
-
+import axios from 'axios'
 export default {
+  name: 'HomeView',
   data() {
     return {
-      userid: null,
-      password: null
+      Name: '',
+      Email: '',
+      Password: '',
+      password: '',
+      userId: ''
     }
   },
-  computed: {
-    tokenUser() {
-      return this.$store.getters.TokenUser
-    },
-    loading() {
-      return this.$store.getters.TokenLoading
-    },
-    error() {
-      return this.$store.getters.TokenError
-    }
-  },
-  watch: {
-    tokenUser(value) {
-      if (value && value.id && value.id > 0) {
-        // 로그인이 완료된 상황
-        this.$router.push('/home') // 메인 페이지 이동
-      }
-    },
-    error(errValue) {
-      if (errValue !== null) {
-        // 메세지 출력
-        this.$bvToast.toast('아이디/비밀번호를 확인해 주세요.', {
-          title: '로그인 에러',
-          variant: 'danger',
-          solid: true
-        })
-      }
-    }
-  },
-  created() {
-    // 이미 토큰을 가지고 있는 경우 처리를 위한 로직
-    const token = window.localStorage.getItem('token')
-    if (token) {
-      const decodedToken = jwtDecode(token)
-      const today = new Date()
-      const expDate = new Date(decodedToken.exp * 1000)
+  mounted() {
+    const signUpButton = document.getElementById('signUp')
+    const signInButton = document.getElementById('signIn')
+    const container = document.getElementById('container')
 
-      if (expDate && expDate >= today) {
-        // 토큰이 유효한 경우
-        this.$router.push('/home') // 메인 페이지 이동
-      } else {
-        // 토큰이 만료된 경우
-        window.localStorage.removeItem('token') // 토큰 삭제
-      }
-    }
+    signUpButton.addEventListener('click', () => {
+      container.classList.add('right-panel-active')
+    })
+
+    signInButton.addEventListener('click', () => {
+      container.classList.remove('right-panel-active')
+    })
   },
   methods: {
-    onSubmit() {
-      this.$store.dispatch('authLogin', { userid: this.userid, password: this.password })
+    async signUp() {
+      console.log(process.env)
+      this.loading = true
+      const axiosBody = {
+        name: this.Name,
+        email: this.Email,
+        password: this.Password
+      }
+      console.log('auth/ register - axiosBody : ', axiosBody)
+      await axios
+        .post(process.env.VUE_APP_URL + '/auth/join', axiosBody)
+        .then(async res => {
+          const code = res.status
+          console.log('auth/register - response: ', res)
+          if (code == 400) {
+            alert('이미 존재하는 아이디 입니다. 다시 입력해주세요!')
+          } else if (code == 200) {
+            alert('가입에 성공하셨습니다! 로그인 해주세요.')
+          } else {
+            alert('가입에 실패했습니다. 다시 시도해주세요.')
+            this.$router.go(0)
+          }
+        })
+        .catch(err => {
+          alert('다시 시도해주세요!')
+          console.log('errerr', err)
+        })
+    },
+
+    async Login() {
+      const axiosBody = {
+        email: this.userId,
+        password: this.password
+      }
+      await axios
+        .post(process.env.VUE_APP_URL + '/auth/login', axiosBody)
+        .then(async res => {
+          console.log(res)
+          const code = res.data
+          localStorage.setItem('token', res.data.token)
+          console.log('/auth/login - response: ', code)
+          this.$router.push({ path: '/about' })
+        })
+        .catch(err => {
+          alert('다시 시도해주세요!')
+          console.log('/auth/login - error: ', err)
+          this.$router.go(0)
+        })
     }
   }
 }
 </script>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
-<style lang="scss" scoped></style>
+* {
+  box-sizing: border-box;
+}
+body {
+  background: #f6f5f7;
+}
+
+.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: 'Montserrat', sans-serif;
+  height: 95vh;
+}
+
+h1 {
+  font-weight: bold;
+  margin: 0;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+}
+
+span {
+  font-size: 12px;
+}
+
+a {
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  margin: 15px 0;
+}
+
+button {
+  border-radius: 20px;
+  border: 1px solid #ff4b2b;
+  background-color: #ff4b2b;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+button:focus {
+  outline: none;
+}
+
+button.ghost {
+  background-color: transparent;
+  border-color: #ffffff;
+}
+
+form {
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 50px;
+  height: 100%;
+  text-align: center;
+}
+
+input {
+  background-color: #eee;
+  border: none;
+  padding: 12px 15px;
+  margin: 8px 0;
+  width: 100%;
+}
+
+.container {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  position: relative;
+  overflow: hidden;
+  width: 768px;
+  max-width: 100%;
+  min-height: 480px;
+}
+
+.form-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.sign-in-container {
+  left: 0;
+  width: 50%;
+  z-index: 2;
+}
+
+.container.right-panel-active .sign-in-container {
+  transform: translateX(100%);
+}
+
+.sign-up-container {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.container.right-panel-active .sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: show 0.6s;
+}
+
+@keyframes show {
+  0%,
+  49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 1;
+    z-index: 5;
+  }
+}
+
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+}
+
+.container.right-panel-active .overlay-container {
+  transform: translateX(-100%);
+}
+
+.overlay {
+  background: #ff416c;
+  background: -webkit-linear-gradient(to right, #ff4b2b, #ff416c);
+  background: linear-gradient(to right, #ff4b2b, #ff416c);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 0;
+  color: #ffffff;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.container.right-panel-active .overlay {
+  transform: translateX(50%);
+}
+
+.overlay-panel {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 40px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.overlay-left {
+  transform: translateX(-20%);
+}
+
+.container.right-panel-active .overlay-left {
+  transform: translateX(0);
+}
+
+.overlay-right {
+  right: 0;
+  transform: translateX(0);
+}
+
+.container.right-panel-active .overlay-right {
+  transform: translateX(20%);
+}
+</style>
