@@ -24,7 +24,7 @@ const routes = [
       {
         path: '/web',
         component: () => import('../views/edukit'),
-        meta: { noLogin: true }
+        meta: { header: false, noLogin: true }
       },
       // {
       //   path: '/department',
