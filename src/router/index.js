@@ -13,11 +13,18 @@ const routes = [
     children: [
       {
         path: '/home',
-        component: () => import('../views/Home.vue')
+        component: () => import('../views/Home.vue'),
+        meta: { noLogin: true }
       },
       {
         path: '/dashboard',
-        component: () => import('../views/dashboard')
+        component: () => import('../views/dashboard'),
+        meta: { noLogin: true }
+      },
+      {
+        path: '/web',
+        component: () => import('../views/edukit'),
+        meta: { noLogin: true }
       },
       // {
       //   path: '/department',
@@ -26,7 +33,7 @@ const routes = [
       {
         path: '/user',
         component: () => import('../views/user')
-      },
+      }
       // {
       //   path: '/device',
       //   component: () => import('../views/device')
