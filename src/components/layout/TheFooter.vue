@@ -1,15 +1,31 @@
 <template>
-  <div class="footer">
-    <div class="footer-button">
-      <div class="footer-button-icon">
-        <font-awesome-icon icon="fa-solid fa-angles-up" />
+  <div>
+    <div v-show="drawerStat !== true" class="footer">
+      <div class="footer-button">
+        <div class="footer-button-icon" @click="drawer">
+          <font-awesome-icon icon="fa-solid fa-angles-up" />
+        </div>
       </div>
+    </div>
+    <div v-show="drawerStat == true" class="menu-container">
+      <div class="menu"></div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      drawerStat: false
+    }
+  },
+  methods: {
+    drawer() {
+      this.drawerStat = true
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -35,5 +51,15 @@ export default {}
   text-align: center;
   padding-top: 5px;
   color: darkgreen;
+}
+.menu-container {
+  width: 100%;
+  position: sticky;
+  bottom: 0;
+}
+.menu {
+  height: 80px;
+  background-color: white;
+  width: 80%;
 }
 </style>
