@@ -16,6 +16,13 @@
           <b-avatar class="user-avatar" variant="primary"
             ><font-awesome-icon icon="fa-solid fa-user" class="icon-avatar"
           /></b-avatar>
+          <div class="user-info">
+            <p>이름: {{ user.name }}</p>
+            <p>직급: {{ user.role }}</p>
+            <p>아이디: {{ user.userid }}</p>
+            <p>이메일: {{ user.email }}</p>
+            <p>폰번호: {{ user.phone }}</p>
+          </div>
         </div>
       </b-modal>
     </div>
@@ -32,19 +39,22 @@ import TheFooter from '../../components/layout/TheFooter.vue'
 
 export default {
   components: { Edukit, TheFooter },
+  data: () => ({
+    user: {}
+  }),
   mounted() {
     this.inforData()
   },
   methods: {
     async inforData() {
       await axios
-        .get(process.env.VUE_APP_URL + '/users', {
+        .get(process.env.VUE_APP_SERVER + '/users', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         })
         .then(async res => {
-          this.user = res.data.data
+          this.user = res.data
           console.log('inforData - response: ', this.user)
         })
         .catch(err => {
@@ -90,4 +100,5 @@ export default {
   width: 40px;
   height: 40px;
 }
+/* .user-info {} */
 </style>

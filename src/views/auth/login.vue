@@ -109,7 +109,7 @@ export default {
           const code = res.data
           localStorage.setItem('token', res.data.token)
           console.log('/auths/token - response: ', code)
-          this.$router.push({ path: '/home' })
+          this.$router.push({ path: '/web' })
         })
         .catch(err => {
           alert('다시 시도해주세요!')
