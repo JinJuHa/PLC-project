@@ -17,9 +17,6 @@ export default {}
   width: 100%;
   position: sticky;
   bottom: 0;
-  display: flex;
-  justify-content: center;
-  background-color: black;
 }
 .footer-button {
   background-color: white;
@@ -28,14 +25,15 @@ export default {}
   opacity: 0.5;
   width: 50px;
   height: 50px;
+  margin-left: 50px;
 }
 .footer-button-icon {
   width: 100%;
   height: 100%;
   cursor: pointer;
   font-size: 25px;
-}
-.input-plus {
-  cursor: pointer;
+  text-align: center;
+  padding-top: 5px;
+  color: darkgreen;
 }
 </style>
