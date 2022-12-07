@@ -1,16 +1,16 @@
 <template>
   <div>
     <div ref="webgl"></div>
-    <!-- <the-footer /> -->
+    <the-footer />
   </div>
 </template>
 
 <script>
 import Three from '../../js/example'
-// import TheFooter from '../../components/layout/TheFooter.vue'
+import TheFooter from '../../components/layout/TheFooter.vue'
 
 export default {
-  // components: { TheFooter },
+  components: { TheFooter },
   mounted() {
     Three(this.$refs.webgl)
   }

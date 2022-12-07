@@ -1,8 +1,10 @@
 <template>
   <div class="footer">
-    <ul class="footer-button-plus">
-      <font-awesome-icon icon="fa-regular fa-envelope"></font-awesome-icon>
-    </ul>
+    <div class="footer-button">
+      <div class="footer-button-icon">
+        <font-awesome-icon icon="fa-solid fa-angles-up" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -10,21 +12,28 @@
 export default {}
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .footer {
   width: 100%;
   position: sticky;
   bottom: 0;
-  padding-bottom: 10px;
-  background-color: white;
+  display: flex;
+  justify-content: center;
+  background-color: black;
 }
-.footer-button-plus {
-  width: 80px;
-  margin: auto;
-  text-align: center;
+.footer-button {
+  background-color: white;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  opacity: 0.5;
+  width: 50px;
+  height: 50px;
+}
+.footer-button-icon {
+  width: 100%;
+  height: 100%;
   cursor: pointer;
-  font-size: 24px;
-  padding-top: 12px;
+  font-size: 25px;
 }
 .input-plus {
   cursor: pointer;
