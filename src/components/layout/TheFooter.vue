@@ -1,15 +1,25 @@
 <template>
   <div>
-    <div v-show="drawerStat !== true" class="footer">
-      <div class="footer-button">
-        <div class="footer-button-icon" @click="drawer">
-          <font-awesome-icon icon="fa-solid fa-angles-up" />
+    <transition name="slide">
+      <div v-show="drawerStat !== true" class="footer">
+        <div class="footer-button">
+          <div class="footer-button-icon" @click="drawer">
+            <font-awesome-icon icon="fa-solid fa-angles-up" />
+          </div>
         </div>
       </div>
-    </div>
-    <div v-show="drawerStat == true" class="menu-container">
-      <div class="menu"></div>
-    </div>
+    </transition>
+    <transition name="menuSlide">
+      <div v-show="drawerStat == true" class="menu-container">
+        <div class="menu">
+          <div class="menu-icon"></div>
+          <div class="menu-icon"></div>
+          <div class="menu-icon"></div>
+          <div class="menu-icon"></div>
+          <div class="menu-icon"></div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -31,7 +41,7 @@ export default {
 <style scoped>
 .footer {
   width: 100%;
-  position: sticky;
+  position: fixed;
   bottom: 0;
 }
 .footer-button {
@@ -54,12 +64,45 @@ export default {
 }
 .menu-container {
   width: 100%;
-  position: sticky;
+  position: fixed;
   bottom: 0;
 }
 .menu {
-  height: 80px;
-  background-color: white;
-  width: 80%;
+  height: 90px;
+  background-color: rgb(255, 245, 206);
+  border-radius: 40px;
+  width: 70%;
+  margin-left: 180px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 15%;
+  padding-right: 15%;
+  align-items: center;
+}
+.menu-icon {
+  height: 70px;
+  width: 70px;
+  background-color: orange;
+  border-radius: 10px;
+}
+
+.slide-leave-from {
+  transform: translateY(0px);
+}
+.slide-leave-active {
+  transition: all 2s;
+}
+.slide-leave-to {
+  transform: translateY(300px);
+}
+.menuSlide-enter-from {
+  transform: translateY(0px);
+}
+.menuSlide-enter-active {
+  transition: all 3s;
+}
+.menuSlide-enter-to {
+  transform: translateY(300px);
 }
 </style>
