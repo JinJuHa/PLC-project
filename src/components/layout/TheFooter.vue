@@ -64,7 +64,8 @@ export default {
 }
 .menu-container {
   width: 100%;
-  position: fixed;
+  /* position: fixed; */
+  position: absolute;
   bottom: 0;
 }
 .menu {
@@ -91,18 +92,18 @@ export default {
   transform: translateY(0px);
 }
 .slide-leave-active {
-  transition: all 2s;
-}
-.slide-leave-to {
-  transform: translateY(300px);
-}
-.menuSlide-enter-from {
-  transform: translateY(0px);
-}
-.menuSlide-enter-active {
   transition: all 3s;
 }
+.slide-leave-to {
+  transform: translateY(100px);
+}
+.menuSlide-enter-from {
+  transform: translateY(90px);
+}
+.menuSlide-enter-active {
+  transition: all 2s;
+}
 .menuSlide-enter-to {
-  transform: translateY(300px);
+  transform: translateY(-10px);
 }
 </style>
