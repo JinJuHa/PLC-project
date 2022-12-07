@@ -7,7 +7,7 @@ import mqtt from 'mqtt'
 class Event {
   constructor(element, edukit) {
     const eventElement = document.createElement('div')
-
+    eventElement.setAttribute('id', 'MQTT')
     const inputAddressElement = eventElement.appendChild(document.createElement('input'))
     inputAddressElement.placeholder = 'MQTT Host 입력'
 
