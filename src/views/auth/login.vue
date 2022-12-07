@@ -6,7 +6,7 @@
           <h1>Create Account</h1>
           <!-- <span>or use your email for registration</span> -->
           <input v-model="name" type="text" placeholder="Name" />
-          <input v-model="userid" type="userid" placeholder="userId" />
+          <input v-model="userId" type="userid" placeholder="userId" />
           <input v-model="password" type="Password" placeholder="Password" />
           <button @click="signUp">Sign Up</button>
         </form>
@@ -15,9 +15,9 @@
         <form action="#">
           <h1>Sign in</h1>
           <!-- <span>or use your account</span> -->
-          <input v-model="userid" type="userid" placeholder="userId" />
+          <input v-model="userId" type="userid" placeholder="userId" />
           <input v-model="password" type="password" placeholder="Password" />
-          <button @click="Login">Sign In</button>
+          <button @click="login">Sign In</button>
         </form>
       </div>
       <div class="overlay-container">
@@ -44,9 +44,11 @@ export default {
   data() {
     return {
       name: '',
-      Email: '',
+      userId: '',
       password: '',
-      userid: ''
+      email: 'jjhh@naver.com',
+      role: '관리자',
+      phone: '01012344321'
     }
   },
   mounted() {
@@ -68,12 +70,15 @@ export default {
       this.loading = true
       const axiosBody = {
         name: this.name,
-        userid: this.userid,
-        password: this.password
+        userid: this.userId,
+        password: this.password,
+        email: this.email,
+        role: this.role,
+        phone: this.phone
       }
       console.log('auth/ register - axiosBody : ', axiosBody)
       await axios
-        .post(process.env.VUE_APP_SERVER + '/users', axiosBody)
+        .post(process.env.VUE_APP_SERVER + '/auths/sign', axiosBody)
         .then(async res => {
           const code = res.status
           console.log('/users - response: ', res)
@@ -92,13 +97,13 @@ export default {
         })
     },
 
-    async Login() {
+    async login() {
       const axiosBody = {
-        userid: this.userid,
+        userid: this.userId,
         password: this.password
       }
       await axios
-        .post(process.env.VUE_APP_SERVER + '/auths/token', axiosBody)
+        .post(process.env.VUE_APP_SERVER + '/auths/login', axiosBody)
         .then(async res => {
           console.log(res)
           const code = res.data

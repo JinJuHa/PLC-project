@@ -13,8 +13,8 @@ Vue.use(BootstrapVue)
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faAnglesUp } from '@fortawesome/free-solid-svg-icons'
-library.add(faAnglesUp)
+import { fas } from '@fortawesome/free-solid-svg-icons'
+library.add(fas)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

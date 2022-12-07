@@ -2,14 +2,22 @@
   <div>
     <div id="control-button">
       <button class="start"><font-awesome-icon icon="fa-solid fa-play" /></button>
-      <button class="stop">정지</button>
-      <button class="reset">리셋</button>
+      <button class="stop"><font-awesome-icon icon="fa-solid fa-stop" /></button>
+      <button class="reset"><font-awesome-icon icon="fa-solid fa-rotate-left" /></button>
     </div>
     <div>
-      <button class="logout"></button>
+      <button class="logout"><font-awesome-icon icon="fa-solid fa-power-off" /></button>
     </div>
     <div>
-      <button class="user-page">사용자 관리</button>
+      <button v-b-modal.modal-1 class="user-page">사용자 관리</button>
+
+      <b-modal id="modal-1" hide-footer hide-header>
+        <div class="user-profile">
+          <b-avatar class="user-avatar" variant="primary"
+            ><font-awesome-icon icon="fa-solid fa-user" class="icon-avatar"
+          /></b-avatar>
+        </div>
+      </b-modal>
     </div>
     <Edukit />
     <div ref="webgl"></div>
@@ -18,14 +26,31 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Edukit from './edukit.vue'
-import Three from '../../js/example'
 import TheFooter from '../../components/layout/TheFooter.vue'
 
 export default {
   components: { Edukit, TheFooter },
   mounted() {
-    Three(this.$refs.webgl)
+    this.inforData()
+  },
+  methods: {
+    async inforData() {
+      await axios
+        .get(process.env.VUE_APP_URL + '/users', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async res => {
+          this.user = res.data.data
+          console.log('inforData - response: ', this.user)
+        })
+        .catch(err => {
+          console.log('inforData - error: ', err)
+        })
+    }
   }
 }
 </script>
@@ -46,7 +71,23 @@ export default {
   margin-bottom: 20px;
   background: #fff;
 }
+.logout {
+  position: absolute;
+  margin: 50px;
+}
 .user-page {
   position: absolute;
+}
+.user-profile {
+  display: flex;
+  justify-content: center;
+}
+.user-avatar {
+  width: 80px;
+  height: 80px;
+}
+.icon-avatar {
+  width: 40px;
+  height: 40px;
 }
 </style>
