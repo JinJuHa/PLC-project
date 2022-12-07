@@ -12,15 +12,20 @@
       <button class="user-page">사용자 관리</button>
     </div>
     <Edukit />
+    <div ref="webgl"></div>
+    <the-footer />
   </div>
 </template>
 
 <script>
 import Edukit from './edukit.vue'
+import Three from '../../js/example'
+import TheFooter from '../../components/layout/TheFooter.vue'
 
 export default {
-  components: {
-    Edukit
+  components: { Edukit, TheFooter },
+  mounted() {
+    Three(this.$refs.webgl)
   }
 }
 </script>
