@@ -17,7 +17,12 @@
             ><font-awesome-icon icon="fa-solid fa-user" class="icon-avatar"
           /></b-avatar>
           <div class="user-info">
-            <p>이름: {{ user.name }}</p>
+            <p>
+              이름: {{ user.name }}
+              <button v-if="on" class="phone" variant="outline-primary" @click="on = !on">
+                <b-icon icon="pencil" class="pencil"></b-icon>
+              </button>
+            </p>
             <p>직급: {{ user.role }}</p>
             <p>아이디: {{ user.userid }}</p>
             <p>이메일: {{ user.email }}</p>

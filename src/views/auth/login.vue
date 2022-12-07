@@ -48,7 +48,8 @@ export default {
       password: '',
       email: 'jjhh@naver.com',
       role: '관리자',
-      phone: '01012344321'
+      phone: '01012344321',
+      on: true
     }
   },
   mounted() {
