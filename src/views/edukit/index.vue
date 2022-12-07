@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>
+    <div id="control-button">
       <button>시작</button>
       <button>정지</button>
       <button>리셋</button>
@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style scoped>
-#MQTT {
-  margin: 50px;
+#control-button {
+  position: absolute;
 }
 </style>

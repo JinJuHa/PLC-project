@@ -9,11 +9,11 @@ import { Control } from './assets/control'
 import { Render } from './assets/render'
 import { Event } from './assets/event'
 
-import { Gui } from './plugins/gui'
+// import { Gui } from './plugins/gui'
 
 export default async element => {
-  element.style.width = '700px'
-  element.style.height = '700px'
+  element.style.width = '100%'
+  element.style.height = '100vh'
 
   // Scene Setting
   let scene = new Scene('edukit')
@@ -61,16 +61,16 @@ export default async element => {
   )
 
   // Dat.GUI Setting
-  let gui = new Gui(element)
-  let options = {
-    yAxis: -27,
-    xAxis: -4375
-  }
-  gui.addOptions(options)
-  gui.addFolder('Example')
+  // let gui = new Gui(element)
+  // let options = {
+  //   yAxis: -27,
+  //   xAxis: -4375
+  // }
+  // gui.addOptions(options)
+  // gui.addFolder('Example')
 
-  gui.addExample('yAxis', -27, 1301828, scene.resource.edukit)
-  gui.addExample('xAxis', -4375, 25021563, scene.resource.edukit)
+  // gui.addExample('yAxis', -27, 1301828, scene.resource.edukit)
+  // gui.addExample('xAxis', -4375, 25021563, scene.resource.edukit)
 
   // MQTT Event Setting
   new Event(element, scene.resource.edukit)
