@@ -2,35 +2,33 @@
   <div class="home">
     <div id="container" class="container">
       <div class="form-container sign-up-container">
-        <form action="#">
-          <h1>Create Account</h1>
-          <!-- <span>or use your email for registration</span> -->
-          <input v-model="name" type="text" placeholder="Name" />
-          <input v-model="userId" type="userid" placeholder="userId" />
-          <input v-model="password" type="Password" placeholder="Password" />
-          <button @click="signUp">Sign Up</button>
+        <form action="#" class="form">
+          <h1 class="title">Create Account</h1>
+          <input v-model="name" type="text" placeholder="Name" class="input" />
+          <input v-model="userId" type="userid" placeholder="userId" class="input" />
+          <input v-model="password" type="Password" placeholder="Password" class="input" />
+          <button class="button" @click="signUp">Sign Up</button>
         </form>
       </div>
       <div class="form-container sign-in-container">
-        <form action="#">
-          <h1>Sign in</h1>
-          <!-- <span>or use your account</span> -->
-          <input v-model="userId" type="userid" placeholder="userId" />
-          <input v-model="password" type="password" placeholder="Password" />
-          <button @click="login">Sign In</button>
+        <form action="#" class="form">
+          <h1 class="title">Sign in</h1>
+          <input v-model="userId" type="userid" placeholder="userId" class="input" />
+          <input v-model="password" type="password" placeholder="Password" class="input" />
+          <button class="button" @click="login">Sign In</button>
         </form>
       </div>
       <div class="overlay-container">
         <div class="overlay">
           <div class="overlay-panel overlay-left">
-            <h1>Welcome Back!</h1>
-            <p>To keep connected with us please login with your personal info</p>
-            <button id="signIn" class="ghost">Sign In</button>
+            <h1 class="title">Welcome Back!</h1>
+            <p class="subtitle">To keep connected with us please login with your personal info</p>
+            <button id="signIn" class="transition-button">Sign In</button>
           </div>
           <div class="overlay-panel overlay-right">
-            <h1>Good Day!</h1>
-            <p>Enter your personal details and start journey with us</p>
-            <button id="signUp" class="ghost">Sign Up</button>
+            <h1 class="title">Good Day!</h1>
+            <p class="subtitle">Enter your personal details and start journey with us</p>
+            <button id="signUp" class="transition-button">Sign Up</button>
           </div>
         </div>
       </div>
@@ -108,12 +106,12 @@ export default {
           console.log(res)
           const code = res.data
           localStorage.setItem('token', res.data.token)
-          console.log('/auths/token - response: ', code)
-          this.$router.push({ path: '/web' })
+          console.log('/auths/login - response: ', code)
+          this.$router.push('/web')
         })
         .catch(err => {
           alert('다시 시도해주세요!')
-          console.log('/auth/login - error: ', err)
+          console.log('/auths/login - error: ', err)
           this.$router.go(0)
         })
     }
@@ -123,14 +121,9 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
-* {
-  box-sizing: border-box;
-}
-body {
-  background: #f6f5f7;
-}
-
 .home {
+  box-sizing: border-box;
+  background: #f6f5f7;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -139,12 +132,12 @@ body {
   height: 95vh;
 }
 
-h1 {
+.title {
   font-weight: bold;
   margin: 0;
 }
 
-p {
+.subtitle {
   font-size: 14px;
   font-weight: 100;
   line-height: 20px;
@@ -152,18 +145,7 @@ p {
   margin: 20px 0 30px;
 }
 
-span {
-  font-size: 12px;
-}
-
-a {
-  color: #333;
-  font-size: 14px;
-  text-decoration: none;
-  margin: 15px 0;
-}
-
-button {
+.button {
   border-radius: 20px;
   border: 1px solid #ff4b2b;
   background-color: #ff4b2b;
@@ -176,20 +158,35 @@ button {
   transition: transform 80ms ease-in;
 }
 
-button:active {
+.button:active {
   transform: scale(0.95);
 }
 
-button:focus {
+.button:focus {
   outline: none;
 }
 
-button.ghost {
-  background-color: transparent;
-  border-color: #ffffff;
+.input:focus {
+  outline: none;
 }
 
-form {
+.transition-button {
+  background-color: transparent;
+  border: 2.5px solid #fff;
+
+  border-radius: 20px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+}
+
+.transition-button:focus {
+  outline: none;
+}
+
+.form {
   background-color: #ffffff;
   display: flex;
   align-items: center;
@@ -200,7 +197,7 @@ form {
   text-align: center;
 }
 
-input {
+.input {
   background-color: #eee;
   border: none;
   padding: 12px 15px;

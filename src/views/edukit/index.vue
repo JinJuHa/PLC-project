@@ -5,70 +5,58 @@
       <button class="stop"><font-awesome-icon icon="fa-solid fa-stop" /></button>
       <button class="reset"><font-awesome-icon icon="fa-solid fa-rotate-left" /></button>
     </div>
-    <div>
-      <button class="logout"><font-awesome-icon icon="fa-solid fa-power-off" /></button>
+    <div class="control-three">
+      <button v-if="on" class="remote-control" @click="on = !on">
+        <font-awesome-icon icon="fa-solid fa-gamepad" />
+      </button>
+      <div v-if="!on" class="control-three-button">
+        <div class="grid"></div>
+        <div class="grid">
+          <button class="click-button"><font-awesome-icon icon="fa-solid fa-angle-up" /></button>
+        </div>
+        <div class="grid"></div>
+        <div class="grid">
+          <button class="click-button"><font-awesome-icon icon="fa-solid fa-angle-left" /></button>
+        </div>
+        <div class="grid">
+          <button class="click-button"><font-awesome-icon icon="fa-solid fa-gamepad" @click="on = !on" /></button>
+        </div>
+        <div class="grid">
+          <button class="click-button"><font-awesome-icon icon="fa-solid fa-angle-right" /></button>
+        </div>
+        <div class="grid"></div>
+        <div class="grid">
+          <button class="click-button"><font-awesome-icon icon="fa-solid fa-angle-down" /></button>
+        </div>
+      </div>
     </div>
     <div>
-      <button v-b-modal.modal-1 class="user-page">사용자 관리</button>
-
-      <b-modal id="modal-1" hide-footer hide-header>
-        <div class="user-profile">
-          <b-avatar class="user-avatar" variant="primary"
-            ><font-awesome-icon icon="fa-solid fa-user" class="icon-avatar"
-          /></b-avatar>
-          <div class="user-info">
-            <span>이름: </span>
-            <div v-if="on">
-              {{ user.name }}
-              <button v-if="on" class="phone" variant="outline-primary" @click="on = !on">수정</button>
-            </div>
-            <b-input v-if="!on" v-model="name"></b-input>
-            <b-btn v-if="!on" variant="danger" @click="on = !on">취소</b-btn>
-            <p>직급: {{ user.role }}</p>
-            <p>아이디: {{ user.userid }}</p>
-            <p>이메일: {{ user.email }}</p>
-            <p>폰번호: {{ user.phone }}</p>
-          </div>
-        </div>
-      </b-modal>
+      <button class="logout" @click="signOut"><font-awesome-icon icon="fa-solid fa-power-off" /></button>
+    </div>
+    <div>
+      <UserInfo />
     </div>
     <Edukit />
-    <div ref="webgl"></div>
     <the-footer />
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import Edukit from './edukit.vue'
+import UserInfo from '../user/index.vue'
 import TheFooter from '../../components/layout/TheFooter.vue'
 
 export default {
-  components: { Edukit, TheFooter },
-  data: () => ({
-    user: {},
-    name: '',
-    on: true,
-    show: true
-  }),
-  mounted() {
-    this.inforData()
+  components: { Edukit, UserInfo, TheFooter },
+  data() {
+    return {
+      on: true
+    }
   },
   methods: {
-    async inforData() {
-      await axios
-        .get(process.env.VUE_APP_SERVER + '/users', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        })
-        .then(async res => {
-          this.user = res.data
-          console.log('inforData - response: ', this.user)
-        })
-        .catch(err => {
-          console.log('inforData - error: ', err)
-        })
+    signOut() {
+      localStorage.removeItem('token')
+      this.$router.push('/auth/login')
     }
   }
 }
@@ -94,20 +82,40 @@ export default {
   position: absolute;
   margin: 50px;
 }
-.user-page {
+.control-three {
   position: absolute;
-}
-.user-profile {
   display: flex;
-  justify-content: center;
+  width: 140px;
+  height: 140px;
+  bottom: 35%;
+  left: 40px;
 }
-.user-avatar {
-  width: 80px;
-  height: 80px;
+.control-three-button {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
-.icon-avatar {
+/* .grid {
+  border: 2px solid red;
+} */
+.control-three-button button {
+  margin: 3px;
   width: 40px;
   height: 40px;
+  border-radius: 25px;
+  background: #fff;
 }
-/* .user-info {} */
+.remote-control {
+  width: 70px;
+  height: 70px;
+  margin: 34px;
+  border-radius: 50px;
+  background: #fff;
+}
+button:focus {
+  outline: none;
+}
+.click-button:active {
+  background-color: black;
+  color: #fff;
+}
 </style>
