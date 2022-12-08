@@ -17,7 +17,13 @@
             ><font-awesome-icon icon="fa-solid fa-user" class="icon-avatar"
           /></b-avatar>
           <div class="user-info">
-            <p>이름: {{ user.name }}</p>
+            <span>이름: </span>
+            <div v-if="on">
+              {{ user.name }}
+              <button v-if="on" class="phone" variant="outline-primary" @click="on = !on">수정</button>
+            </div>
+            <b-input v-if="!on" v-model="name"></b-input>
+            <b-btn v-if="!on" variant="danger" @click="on = !on">취소</b-btn>
             <p>직급: {{ user.role }}</p>
             <p>아이디: {{ user.userid }}</p>
             <p>이메일: {{ user.email }}</p>
@@ -40,7 +46,10 @@ import TheFooter from '../../components/layout/TheFooter.vue'
 export default {
   components: { Edukit, TheFooter },
   data: () => ({
-    user: {}
+    user: {},
+    name: '',
+    on: true,
+    show: true
   }),
   mounted() {
     this.inforData()
