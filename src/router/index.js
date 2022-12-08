@@ -9,8 +9,13 @@ const routes = [
   {
     path: '/',
     component: () => import('../views'),
-    redirect: '/home',
+    redirect: '/web',
     children: [
+      {
+        path: '/web',
+        component: () => import('../views/edukit'),
+        meta: { header: false, noLogin: true }
+      },
       {
         path: '/home',
         component: () => import('../views/Home.vue'),
@@ -22,22 +27,9 @@ const routes = [
         meta: { noLogin: true }
       },
       {
-        path: '/web',
-        component: () => import('../views/edukit'),
-        meta: { header: false, noLogin: true }
-      },
-      // {
-      //   path: '/department',
-      //   component: () => import('../views/department')
-      // },
-      {
         path: '/user',
         component: () => import('../views/user')
       }
-      // {
-      //   path: '/device',
-      //   component: () => import('../views/device')
-      // }
     ]
   },
   {

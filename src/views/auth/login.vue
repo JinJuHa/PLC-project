@@ -166,6 +166,10 @@ export default {
   outline: none;
 }
 
+.input:focus {
+  outline: none;
+}
+
 .transition-button {
   background-color: transparent;
   border: 2.5px solid #fff;

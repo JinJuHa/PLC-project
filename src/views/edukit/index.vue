@@ -37,7 +37,6 @@
       <UserInfo />
     </div>
     <Edukit />
-    <div ref="webgl"></div>
     <the-footer />
   </div>
 </template>
@@ -114,5 +113,9 @@ export default {
 }
 button:focus {
   outline: none;
+}
+.click-button:active {
+  background-color: black;
+  color: #fff;
 }
 </style>

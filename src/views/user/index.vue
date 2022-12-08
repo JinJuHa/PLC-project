@@ -43,7 +43,7 @@
             <b-input v-if="!see" v-model="phone"></b-input>
             <b-btn v-if="!see" variant="danger" @click="see = !see">취소</b-btn>
           </div>
-          <b-btn variant="success" @click="updateProfile">저장</b-btn>
+          <b-btn variant="success" class="save-button" @click="updateProfile">저장</b-btn>
         </div>
       </div>
     </b-modal>
@@ -114,23 +114,30 @@ export default {
   position: absolute;
 }
 .user-profile {
-  display: flex;
+  display: grid;
   justify-content: center;
+  margin: 20px;
 }
 .user-avatar {
   width: 80px;
   height: 80px;
+  margin-left: 65px;
+  margin-bottom: 20px;
 }
 .icon-avatar {
   width: 40px;
   height: 40px;
 }
 .pencil {
+  font-size: 13px;
   transition: 0.5s;
+  justify-content: center;
+  text-align: center;
 }
 .correction {
-  width: 35px;
-  height: 35px;
+  width: 28px;
+  height: 28px;
+  padding: 2px;
   background-color: #fff;
   border-radius: 20px;
   border: none;
@@ -141,5 +148,8 @@ export default {
 }
 .correction:hover .pencil {
   color: #fff;
+}
+.save-button {
+  margin-top: 20px;
 }
 </style>
