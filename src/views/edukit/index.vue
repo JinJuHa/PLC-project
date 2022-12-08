@@ -8,7 +8,9 @@
     <div>
       <button class="logout" @click="signOut"><font-awesome-icon icon="fa-solid fa-power-off" /></button>
     </div>
-    <div></div>
+    <div>
+      <UserInfo />
+    </div>
     <Edukit />
     <div ref="webgl"></div>
     <the-footer />
@@ -17,11 +19,11 @@
 
 <script>
 import Edukit from './edukit.vue'
-// import UserInfo from '../user/index.vue'
+import UserInfo from '../user/index.vue'
 import TheFooter from '../../components/layout/TheFooter.vue'
 
 export default {
-  components: { Edukit, TheFooter },
+  components: { Edukit, UserInfo, TheFooter },
   methods: {
     signOut() {
       localStorage.removeItem('token')
@@ -50,37 +52,5 @@ export default {
 .logout {
   position: absolute;
   margin: 50px;
-}
-.user-page {
-  position: absolute;
-}
-.user-profile {
-  display: flex;
-  justify-content: center;
-}
-.user-avatar {
-  width: 80px;
-  height: 80px;
-}
-.icon-avatar {
-  width: 40px;
-  height: 40px;
-}
-.pencil {
-  transition: 0.5s;
-}
-.correction {
-  width: 35px;
-  height: 35px;
-  background-color: #fff;
-  border-radius: 20px;
-  border: none;
-  transition: 0.5s;
-}
-.correction:hover {
-  background-color: #432a9f;
-}
-.correction:hover .pencil {
-  color: #fff;
 }
 </style>
