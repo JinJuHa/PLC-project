@@ -106,12 +106,12 @@ export default {
           console.log(res)
           const code = res.data
           localStorage.setItem('token', res.data.token)
-          console.log('/auths/token - response: ', code)
-          this.$router.push({ path: '/web' })
+          console.log('/auths/login - response: ', code)
+          this.$router.push('/web')
         })
         .catch(err => {
           alert('다시 시도해주세요!')
-          console.log('/auth/login - error: ', err)
+          console.log('/auths/login - error: ', err)
           this.$router.go(0)
         })
     }
