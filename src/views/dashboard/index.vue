@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <div class="container">
     <h1>대시보드</h1>
     <div>장비: {{ selected.deviceName }}</div>
     <div>태그: {{ selected.tagList }}</div>
     <div v-if="chartData">
       <line-chart ref="chart" :chart-data="chartData" :options="options" style="width: 500px"></line-chart>
+      <doughnut-chart ref="chart" :chart-data="chartData" :options="options" style="width: 500px"></doughnut-chart>
     </div>
   </div>
 </template>
@@ -12,10 +13,12 @@
 <script>
 import mqtt from 'mqtt'
 import LineChart from '@/components/chart/lineChart'
+import DoughnutChart from '@/components/chart/doughnutChart'
 
 export default {
   components: {
-    'line-chart': LineChart
+    'line-chart': LineChart,
+    'doughnut-chart': DoughnutChart
   },
   data() {
     return {
