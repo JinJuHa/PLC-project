@@ -16,9 +16,14 @@ const routes = [
         component: () => import('../views/Home.vue'),
         meta: { noLogin: true }
       },
+      // {
+      //   path: '/dashboard',
+      //   component: () => import('../views/dashboard'),
+      //   meta: { noLogin: true }
+      // },
       {
         path: '/dashboard',
-        component: () => import('../views/dashboard'),
+        component: () => import('../views/dashboard/rough.vue'),
         meta: { noLogin: true }
       },
       {
