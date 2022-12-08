@@ -26,14 +26,14 @@ export default {
         // 선택된 장비 정보
         deviceId: 1, // TODO: 현재 화면에서 사용할 장비ID(선택 가능하도록 변경하도록 한다.)
         deviceName: 'Edge1', // TODO: 현재 화면에서 출력할 장비이름(deviceId선택 시 자동 세팅되도록 한다.)
-        tagList: ['humidity', 'temperature'] // TODO: 현재 화면에서 출력할 태그 이름(deviceId선택 시 해당 장비의 태그를 설정할 수 있도록 한다.),
+        tagList: ['양품', '불량품'] // TODO: 현재 화면에서 출력할 태그 이름(deviceId선택 시 해당 장비의 태그를 설정할 수 있도록 한다.),
         // tagList: ['tag1', 'tag2'] // TODO: 현재 화면에서 출력할 태그 이름(deviceId선택 시 해당 장비의 태그를 설정할 수 있도록 한다.)
       },
       options: {
         responsive: true,
         title: {
           display: true,
-          text: '온습도 차트'
+          text: '양품, 불량품 비율'
         },
         tooltips: {
           mode: 'index'
