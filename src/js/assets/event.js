@@ -6,47 +6,57 @@ import mqtt from 'mqtt'
 
 class Event {
   constructor(element, edukit) {
-    const eventElement = document.createElement('div')
-    eventElement.setAttribute('id', 'MQTT')
-    const inputAddressElement = eventElement.appendChild(document.createElement('input'))
-    inputAddressElement.placeholder = 'MQTT Host 입력'
+    // const eventElement = document.createElement('div')
+    // eventElement.setAttribute('id', 'MQTT')
+    // const inputAddressElement = eventElement.appendChild(document.createElement('input'))
+    // inputAddressElement.placeholder = 'MQTT Host 입력'
 
-    const inputPortElement = eventElement.appendChild(document.createElement('input'))
-    inputPortElement.placeholder = 'MQTT Port 입력'
+    // const inputPortElement = eventElement.appendChild(document.createElement('input'))
+    // inputPortElement.placeholder = 'MQTT Port 입력'
 
-    const inputPathElement = eventElement.appendChild(document.createElement('input'))
-    inputPathElement.placeholder = 'MQTT Path 입력'
+    // const inputPathElement = eventElement.appendChild(document.createElement('input'))
+    // inputPathElement.placeholder = 'MQTT Path 입력'
 
-    const inputTopicElement = eventElement.appendChild(document.createElement('input'))
-    inputTopicElement.placeholder = 'MQTT Topic 입력'
+    // const inputTopicElement = eventElement.appendChild(document.createElement('input'))
+    // inputTopicElement.placeholder = 'MQTT Topic 입력'
 
-    const buttonElement = eventElement.appendChild(document.createElement('button'))
-    buttonElement.innerText = 'Connect'
+    // const buttonElement = eventElement.appendChild(document.createElement('button'))
+    // buttonElement.innerText = 'Connect'
 
-    const statusElement = eventElement.appendChild(document.createElement('span'))
-    statusElement.innerText = '연결'
-    statusElement.style.color = 'red'
+    // const statusElement = eventElement.appendChild(document.createElement('span'))
+    // statusElement.innerText = '연결'
+    // statusElement.style.color = 'red'
 
-    buttonElement.addEventListener('click', () => {
-      let props = {
-        hostname: inputAddressElement.value,
-        port: inputPortElement.value,
-        path: inputPathElement.value,
-        topic: inputTopicElement.value,
-        status: statusElement.style,
-        edukit: edukit
-      }
-      statusElement.style.color = 'red'
-      if (this.client) this.client.end()
+    // buttonElement.addEventListener('click', () => {
+    //   let props = {
+    //     hostname: inputAddressElement.value,
+    //     port: inputPortElement.value,
+    //     path: inputPathElement.value,
+    //     topic: inputTopicElement.value,
+    //     status: statusElement.style,
+    //     edukit: edukit
+    //   }
+    //   statusElement.style.color = 'red'
+    //   if (this.client) this.client.end()
 
-      this.setEvent(props)
-    })
+    //   this.setEvent(props)
+    // })
 
-    element.appendChild(eventElement)
+    // element.appendChild(eventElement)
+
+    let props = {
+      hostname: '192.168.0.63',
+      port: '8088',
+      path: '',
+      topic: 'myEdukit',
+      edukit: edukit
+    }
+
+    this.setEvent(props)
   }
 
   setEvent(props) {
-    let { hostname, port, path, topic, status, edukit } = props
+    let { hostname, port, path, topic, edukit } = props
 
     const clientId = `mqtt_${Math.random().toString(16).slice(3)}`
     this.client = mqtt.connect({
@@ -61,7 +71,6 @@ class Event {
 
     this.client.on('connect', () => {
       console.log('MQTT Connected')
-      status.color = 'green'
 
       this.client.subscribe([topic], () => {
         console.log(`토픽 연결 완료: ${topic}`)
