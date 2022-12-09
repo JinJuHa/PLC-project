@@ -9,8 +9,31 @@ const routes = [
   {
     path: '/',
     component: () => import('../views'),
-    redirect: '/home',
+    redirect: '/web',
     children: [
+      {
+<<<<<<< HEAD
+        path: '/home',
+        component: () => import('../views/Home.vue'),
+        meta: { noLogin: true }
+      },
+      // {
+      //   path: '/dashboard',
+      //   component: () => import('../views/dashboard'),
+      //   meta: { noLogin: true }
+      // },
+      {
+        path: '/dashboard',
+        component: () => import('../views/dashboard/rough.vue'),
+        meta: { noLogin: true }
+      },
+      {
+=======
+>>>>>>> main
+        path: '/web',
+        component: () => import('../views/edukit'),
+        meta: { header: false, noLogin: true }
+      },
       {
         path: '/home',
         component: () => import('../views/Home.vue'),
@@ -27,22 +50,9 @@ const routes = [
         meta: { noLogin: true }
       },
       {
-        path: '/web',
-        component: () => import('../views/edukit'),
-        meta: { header: false, noLogin: true }
-      },
-      // {
-      //   path: '/department',
-      //   component: () => import('../views/department')
-      // },
-      {
         path: '/user',
         component: () => import('../views/user')
       }
-      // {
-      //   path: '/device',
-      //   component: () => import('../views/device')
-      // }
     ]
   },
   {
