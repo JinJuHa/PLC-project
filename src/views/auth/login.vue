@@ -1,23 +1,90 @@
 <template>
   <div class="home">
     <div id="container" class="container">
-      <div class="form-container sign-up-container">
-        <form action="#" class="form">
+      <!-- 이메일 인증 전 정보 입력 -->
+      <div v-show="!userSend" class="form-container sign-up-container">
+        <form class="form" @submit.prevent="handleSubmit(signUp)">
           <h1 class="title">Create Account</h1>
           <input v-model="name" type="text" placeholder="Name" class="input" />
+          <b-form-select v-model="selected" :options="options"></b-form-select>
           <input v-model="userId" type="userid" placeholder="userId" class="input" />
           <input v-model="password" type="Password" placeholder="Password" class="input" />
-          <button class="button" @click="signUp">Sign Up</button>
+          <input v-model="phone" type="number" placeholder="Phone" class="input" />
+          <button class="button" @click="clickUserSend">Sign Up</button>
         </form>
       </div>
+      <!-- 이메일 중복 확인 및 인증코드 전송 -->
+      <div v-show="userSend && !emailSend" class="form-container sign-up-container">
+        <form class="form" @submit.prevent="handleSubmit(sendEmail)">
+          <p class="title">
+            인증메일 전송
+            <span class="status">> 이메일 인증 </span>
+          </p>
+          <p class="subtitle" style="margin: 20px">
+            인증 과정에서 사용하실<br />
+            이메일 주소를 입력해 주세요.
+          </p>
+          <b-card-text>
+            <div class="emailInput">
+              <b-input-group append="@" class="mr-2">
+                <b-form-input v-model="emailId" placeholder="이메일 아이디"></b-form-input>
+              </b-input-group>
+              <p>uvc-company.com</p>
+            </div>
+          </b-card-text>
+
+          <b-list-group flush>
+            <b-button class="Ingle" block @click="sendEmail">인증메일 보내기</b-button>
+            <p class="footer">
+              - 입력하신 이메일로 인증코드가 전송됩니다.<br />
+              - 이메일은 추후 계정 찾기에 이용됩니다.
+            </p>
+          </b-list-group>
+        </form>
+      </div>
+      <!-- 인증코드 입력하고 가입 끝내기 -->
+      <div v-show="emailSend" class="form-container sign-up-container">
+        <form class="form" @submit.prevent="handleSubmit(authCode)">
+          <p class="title">
+            <span class="status">인증메일 전송</span>
+            > 이메일 인증
+          </p>
+          <p class="subtitle" style="margin: 20px">이메일로 발송된 인증코드를 입력해 주세요.</p>
+          <b-card-text>
+            <!-- 백 서버 연결 후 이메일 제대로 담기게 기능 구현 예정 -->
+            <b-input v-model="tempEmail" disabled></b-input>
+            <b-input v-model="inputCode" class="mt-3 mb-3" maxlength="6" placeholder="인증코드 입력"></b-input>
+            <b-button block class="Ingle" @click="authCode">인증 확인</b-button>
+          </b-card-text>
+          <b-list-group flush>
+            <b-list-group-item>
+              <div>
+                <button id="show-btn" class="modalBtn" @click="$bvModal.show('emailModal')">
+                  인증메일을 받지 못하셨나요?
+                </button>
+                <b-modal id="emailModal" hide-footer>
+                  <template #modal-title>인증메일을 받지 못하셨나요?</template>
+                  <div class="d-block text-center">
+                    <b-button block @click="resend">이메일 재전송하기</b-button>
+                  </div>
+                  <b-button class="mt-3" block @click="newEmail">다른 이메일로 전송하기</b-button>
+                </b-modal>
+              </div>
+            </b-list-group-item>
+            <!-- <b-list-group-item>Vestibulum at eros</b-list-group-item> -->
+          </b-list-group>
+        </form>
+      </div>
+      <!-- 로그인 화면 -->
       <div class="form-container sign-in-container">
-        <form action="#" class="form">
+        <form v-if="!userSend" class="form" @submit.prevent="handleSubmit(login)">
           <h1 class="title">Sign in</h1>
           <input v-model="userId" type="userid" placeholder="userId" class="input" />
           <input v-model="password" type="password" placeholder="Password" class="input" />
           <button class="button" @click="login">Sign In</button>
         </form>
       </div>
+      <!-- 로그인&회원가입 권유하는 화면들 -->
       <div class="overlay-container">
         <div class="overlay">
           <div class="overlay-panel overlay-left">
@@ -41,12 +108,23 @@ export default {
   name: 'HomeView',
   data() {
     return {
+      userSend: false,
+      emailSend: false,
+      emailId: '',
+      tempEmail: '',
+      inputCode: '',
       name: '',
       userId: '',
       password: '',
-      email: 'jjhh@naver.com',
-      role: '관리자',
-      phone: '01012344321'
+      email: '',
+      phone: '',
+      selected: null,
+      options: [
+        { value: null, text: '직급을 선택하세요.', disabled: true },
+        { value: '팀장', text: '팀장' },
+        { value: '직원', text: '직원' },
+        { value: '관리자', text: '관리자', disabled: true }
+      ]
     }
   },
   mounted() {
@@ -63,15 +141,18 @@ export default {
     })
   },
   methods: {
+    clickUserSend() {
+      this.userSend = true
+      this.emailSend = false
+      console.log(this.userId)
+    },
     async signUp() {
-      console.log(process.env)
-      this.loading = true
       const axiosBody = {
         name: this.name,
         userid: this.userId,
         password: this.password,
         email: this.email,
-        role: this.role,
+        role: this.selected,
         phone: this.phone
       }
       console.log('auth/ register - axiosBody : ', axiosBody)
@@ -114,6 +195,79 @@ export default {
           console.log('/auths/login - error: ', err)
           this.$router.go(0)
         })
+    },
+    sendEmail() {
+      const email = `${this.emailId}@gmail.com`
+      this.tempEmail = email
+      alert(`"${email}"로 이메일을 발송합니다.`)
+      axios
+        .get(process.env.VUE_APP_SERVER + `/mails/send-mail/${email}`)
+        .then(response => {
+          console.log('email sent : ', response)
+          if (localStorage.getItem('auth')) {
+            localStorage.removeItem('auth')
+          }
+          this.emailSend = true
+          console.log(response.data)
+          localStorage.setItem('auth', JSON.stringify(response.data.hash))
+        })
+        .catch(error => {
+          alert(`이메일을 다시 발송해주세요.`)
+          console.log('email fail : ', error)
+        })
+    },
+    // async duplicationCheck() {
+    //   const email = `${this.emailId}@gmail.com`
+    //   this.tempEmail = email
+    //   console.log('duplication check : ', email)
+    //   await axios
+    //     .get(process.env.VUE_APP_SERVER + '/auth/check-email/' + email)
+    //     .then(async res => {
+    //       const code = res.status
+    //       console.log('check code : ', code)
+    //       if (code == 200) {
+    //         this.sendEmail()
+    //       } else {
+    //         alert('이미 사용중인 이메일 입니다.')
+    //       }
+    //     })
+    //     .catch(err => {
+    //       alert('이미 사용중인 이메일 입니다. 다른 이메일을 지정해 주세요!')
+    //       console.log(err)
+    //     })
+    // },
+
+    authCode() {
+      const email = `${this.emailId}@gmail.com`
+      const user = JSON.parse(localStorage.getItem('auth'))
+      console.log('유저 : ', user)
+      axios
+        .post(process.env.VUE_APP_SERVER + '/mails/check-code', {
+          email: email,
+          code: this.inputCode,
+          hash: user
+        })
+        .then(response => {
+          console.log('code success : ', response)
+          this.signUp()
+          alert('이메일 인증에 성공하셨습니다.')
+          localStorage.setItem('email', user.email)
+          localStorage.removeItem('auth')
+          // this.$router.push('/auth/login')
+        })
+        .catch(error => {
+          console.log('code fail : ', error)
+          alert('인증에 실패하셨습니다. 입력하신 인증코드를 다시 확인해 주세요!')
+        })
+    },
+
+    resend() {
+      this.sendEmail()
+      this.$bvModal.hide('emailModal')
+    },
+    newEmail() {
+      this.emailSent = true
+      this.$bvModal.hide('emailModal')
     }
   }
 }
@@ -200,7 +354,7 @@ export default {
 .input {
   background-color: #eee;
   border: none;
-  padding: 12px 15px;
+  padding: 8px 11px;
   margin: 8px 0;
   width: 100%;
 }
@@ -213,7 +367,7 @@ export default {
   overflow: hidden;
   width: 768px;
   max-width: 100%;
-  min-height: 480px;
+  min-height: 530px;
 }
 
 .form-container {
@@ -326,5 +480,14 @@ export default {
 
 .container.right-panel-active .overlay-right {
   transform: translateX(20%);
+}
+.status {
+  color: rgba(180, 180, 180, 0.501);
+}
+.footer {
+  border-top: 1px solid rgb(135, 135, 135);
+  margin-top: 30px;
+  padding-top: 30px;
+  font-size: 12px;
 }
 </style>
