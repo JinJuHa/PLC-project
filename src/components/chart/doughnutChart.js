@@ -4,7 +4,6 @@ const { reactiveProp } = mixins
 export default {
   extends: Doughnut,
   mixins: [reactiveProp],
-
   props: ['chartData', 'options'],
 
   mounted() {

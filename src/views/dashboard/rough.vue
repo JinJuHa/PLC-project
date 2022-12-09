@@ -30,7 +30,7 @@
           ref="fruitChart"
           :chart-data="chart.data"
           :options="chart.options"
-          style="width: 450px; height: 250px"
+          style="width: 450px; height: 290px"
         ></doughnut-chart>
       </div>
       <div class="dashboard-bar"></div>
@@ -205,7 +205,7 @@ export default {
 .dashboard-bar {
   width: 100%;
   height: 100%;
-  background-color: yellow;
+  /* background-color: yellow; */
 }
 .dashboard-footer {
   width: 100%;
