@@ -4,14 +4,13 @@
       <div class="dashboard-headding"><p>Dashboard</p></div>
       <div class="dashboard-info">
         <div class="dashboard-date">
-          <!-- <p>날짜 및 시간</p> -->
-          <div id="timedate">
-            <a id="mon">January</a>
-            <a id="d">1</a>,<a id="y">0</a><br />
-            <a id="h">12</a> : <a id="m">00</a>: <a id="s">00</a>
+          <div class="dateTime">
+            <div id="time">&nbsp;</div>
           </div>
         </div>
-        <div class="dashboard-user"><p>담당자 : 이름이름</p></div>
+        <div class="dashboard-user">
+          <p>담당자 : {{ this.담당자이름 }}</p>
+        </div>
       </div>
     </div>
     <div class="dashboard-columns">
@@ -32,61 +31,34 @@
 
 <script>
 export default {
-  data: () => ({}),
+  data: () => ({
+    담당자이름: '지미'
+  }),
   mounted() {
-    this.clock()
+    this.timerInterval = setInterval(() => {
+      const now = new Date()
+      let years = now.getFullYear()
+      let months = now.getMonth() + 1
+      let dates = now.getDate()
+      this.today = `${years}/${months}/${dates}`
+      document.querySelector('#time').innerHTML = now.toLocaleString('ko-kr')
+    }, 10) // 1초마다 함수 실행되도록 설정
   },
-  methods: {
-    clock() {
-      Number.prototype.pad = function (n) {
-        for (var r = this.toString(); r.length < n; r = 0 + r);
-        return r
-      }
-
-      function updateClock() {
-        let now = new Date()
-        let sec = now.getSeconds(),
-          min = now.getMinutes(),
-          hou = now.getHours(),
-          mo = now.getMonth(),
-          dy = now.getDate(),
-          yr = now.getFullYear()
-        let months = [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-          'August',
-          'September',
-          'October',
-          'November',
-          'December'
-        ]
-        let tags = ['mon', 'd', 'y', 'h', 'm', 's'],
-          corr = [months[mo], dy, yr, hou.pad(2), min.pad(2), sec.pad(2)]
-        for (let i = 0; i < tags.length; i++) document.getElementById(tags[i]).firstChild.nodeValue = corr[i]
-      }
-
-      function initClock() {
-        updateClock()
-        window.setInterval('updateClock()', 1000)
-      }
-      initClock()
-    }
-  }
+  destroyed() {
+    clearInterval(this.timerInterval)
+  },
+  methods: {}
 }
 </script>
 
 <style scoped>
-#timedate {
+.dateTime {
   text-align: left;
-  width: 50%;
-  color: rgb(50, 38, 38);
+  width: 100%;
+  color: rgb(255, 255, 255);
   border-left: 3px solid #ed1f24;
   padding-left: 20px;
+  font-size: 40px;
 }
 .dashboard-container {
   display: grid;
@@ -124,7 +96,7 @@ export default {
   padding: 5px;
 }
 .dashboard-date {
-  background-color: azure;
+  /* background-color: azure; */
   padding: 5px;
   color: grey;
   font-size: 30px;
