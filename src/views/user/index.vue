@@ -1,203 +1,155 @@
 <template>
   <div>
-    <h1>사용자 관리</h1>
-    <div style="margin-bottom: 5px">
-      <b-row>
-        <b-col style="text-align: left" cols="3">
-          <b-input-group class="mt-3">
-            <b-form-input v-model="search.name" placeholder="이름 검색"></b-form-input>
-            <b-form-input v-model="search.userid" placeholder="아이디 검색"></b-form-input>
-            <b-input-group-append>
-              <b-button variant="primary" size="sm" @click="searchUserList">검색</b-button>
-            </b-input-group-append>
-          </b-input-group>
-        </b-col>
-        <b-col style="text-align: right">
-          <b-button variant="success" size="sm" @click="onClickAddNew">신규등록</b-button>
-        </b-col>
-      </b-row>
-    </div>
-    <div>
-      <b-table small hover striped :items="userList" :fields="fields">
-        <template #cell(Department)="row">
-          {{ row.item.Department && row.item.Department.name }}
-        </template>
-        <template #cell(createdAt)="row">
-          {{ row.item.createdAt.substring(0, 10) }}
-        </template>
-        <template #cell(updateBtn)="row">
-          <b-button size="sm" variant="success" @click="onClickEdit(row.item.id)">수정</b-button>
-        </template>
-        <template #cell(deleteBtn)="row">
-          <b-button size="sm" variant="danger" @click="onClickDelete(row.item.id)">삭제</b-button>
-        </template>
-      </b-table>
-    </div>
+    <button v-b-modal.modal-1 class="user-page">사용자 관리</button>
 
-    <!-- inform 영역 -->
-    <inform />
+    <b-modal id="modal-1" hide-footer hide-header>
+      <div class="user-profile">
+        <b-avatar class="user-avatar" variant="primary"
+          ><font-awesome-icon icon="fa-solid fa-user" class="icon-avatar"
+        /></b-avatar>
+        <div class="user-info">
+          <div>
+            <span>이름: </span>
+            <span v-if="on">
+              {{ user.name }}
+              <button v-if="on" class="correction" variant="outline-primary" @click="on = !on">
+                <font-awesome-icon icon="fa-solid fa-pen" class="pencil" />
+              </button>
+            </span>
+            <b-input v-if="!on" v-model="name"></b-input>
+            <b-btn v-if="!on" variant="danger" @click="on = !on">취소</b-btn>
+          </div>
+          <div>직급: {{ user.role }}</div>
+          <div>아이디: {{ user.userid }}</div>
+          <div>
+            <span>이메일: </span>
+            <span v-if="show">
+              {{ user.email }}
+              <button v-if="show" class="correction" variant="outline-primary" @click="show = !show">
+                <font-awesome-icon icon="fa-solid fa-pen" class="pencil" />
+              </button>
+            </span>
+            <b-input v-if="!show" v-model="email"></b-input>
+            <b-btn v-if="!show" variant="danger" @click="show = !show">취소</b-btn>
+          </div>
+          <div>
+            <span>폰번호: </span>
+            <span v-if="see">
+              {{ user.phone }}
+              <button v-if="see" class="correction" variant="outline-primary" @click="see = !see">
+                <font-awesome-icon icon="fa-solid fa-pen" class="pencil" />
+              </button>
+            </span>
+            <b-input v-if="!see" v-model="phone"></b-input>
+            <b-btn v-if="!see" variant="danger" @click="see = !see">취소</b-btn>
+          </div>
+          <b-btn variant="success" class="save-button" @click="updateProfile">저장</b-btn>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
-import inform from './inform.vue'
+import axios from 'axios'
 
 export default {
-  components: {
-    inform: inform
-  },
-  data() {
-    return {
-      fields: [
-        { key: 'id', label: 'id' },
-        { key: 'name', label: '이름' },
-        { key: 'Department', label: '부서' },
-        { key: 'userid', label: '아이디' },
-        { key: 'role', label: '권한' },
-        { key: 'email', label: '이메일' },
-        { key: 'createdAt', label: '생성일' },
-        { key: 'updateBtn', label: '수정' },
-        { key: 'deleteBtn', label: '삭제' }
-      ],
-      search: {
-        name: null,
-        userid: null
-      }
-    }
-  },
-  computed: {
-    userList() {
-      return this.$store.getters.UserList
-    },
-    insertedResult() {
-      return this.$store.getters.UserInsertedResult
-    },
-    updatedResult() {
-      return this.$store.getters.UserUpdatedResult
-    },
-    deletedResult() {
-      return this.$store.getters.UserDeletedResult
-    }
-  },
-  watch: {
-    insertedResult(value) {
-      // 등록 후 처리
-
-      if (value !== null) {
-        if (value > 0) {
-          // 등록이 성공한 경우
-
-          // 1. 메세지 출력
-          this.$bvToast.toast('등록 되었습니다.', {
-            title: 'SUCCESS',
-            variant: 'success',
-            solid: true
-          })
-
-          // 2. 리스트 재 검색
-          this.searchUserList()
-        } else {
-          // 등록이 실패한 경우
-          this.$bvToast.toast('등록이 실패하였습니다.', {
-            title: 'ERROR',
-            variant: 'danger',
-            solid: true
-          })
-        }
-      }
-    },
-    updatedResult(value) {
-      // 수정 후 처리
-      if (value !== null) {
-        if (value > 0) {
-          // 수정이 성공한 경우
-
-          // 1. 메세지 출력
-          this.$bvToast.toast('수정 되었습니다.', {
-            title: 'SUCCESS',
-            variant: 'success',
-            solid: true
-          })
-
-          // 2. 리스트 재 검색
-          this.searchUserList()
-        } else {
-          // 수정이 실패한 경우
-          this.$bvToast.toast('수정이 실패하였습니다.', {
-            title: 'ERROR',
-            variant: 'danger',
-            solid: true
-          })
-        }
-      }
-    },
-    deletedResult(value) {
-      // 삭제 후 처리
-      if (value !== null) {
-        if (value > 0) {
-          // 삭제가 성공한 경우
-
-          // 1. 메세지 출력
-          this.$bvToast.toast('삭제 되었습니다.', {
-            title: 'SUCCESS',
-            variant: 'success',
-            solid: true
-          })
-
-          // 2. 리스트 재 검색
-          this.searchUserList()
-        } else {
-          // 삭제가 실패한 경우
-          this.$bvToast.toast('삭제가 실패하였습니다.', {
-            title: 'ERROR',
-            variant: 'danger',
-            solid: true
-          })
-        }
-      }
-    }
-  },
-  created() {
-    this.searchUserList()
+  data: () => ({
+    user: {},
+    name: '',
+    email: '',
+    phone: '',
+    on: true,
+    show: true,
+    see: true
+  }),
+  mounted() {
+    this.inforData()
   },
   methods: {
-    searchUserList() {
-      this.$store.dispatch('actUserList', this.search)
+    async inforData() {
+      await axios
+        .get(process.env.VUE_APP_SERVER + '/users', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async res => {
+          this.user = res.data
+          console.log('inforData - response: ', this.user)
+        })
+        .catch(err => {
+          console.log('inforData - error: ', err)
+        })
     },
-    onClickAddNew() {
-      // 신규등록
+    async updateProfile() {
+      const axiosBody = {
+        name: this.name,
+        email: this.email,
+        phone: this.phone
+      }
+      console.log('updateProfile - axiosBody', axiosBody)
 
-      // 1. 입력모드 설정
-      this.$store.dispatch('actUserInputMode', 'insert')
-
-      // 2. 상세정보 초기화
-      this.$store.dispatch('actUserInit')
-
-      // 3. 모달 출력
-      this.$bvModal.show('modal-user-inform')
-    },
-    onClickEdit(id) {
-      // (수정을 위한)상세정보
-
-      // 1. 입력모드 설정
-      this.$store.dispatch('actUserInputMode', 'update')
-
-      // 2. 상세정보 호출
-      this.$store.dispatch('actUserInfo', id)
-
-      // 3. 모달 출력
-      this.$bvModal.show('modal-user-inform')
-    },
-    onClickDelete(id) {
-      // 삭제
-      this.$bvModal.msgBoxConfirm('삭제 하시겠습니까?').then(value => {
-        if (value) {
-          this.$store.dispatch('actUserDelete', id)
-        }
-      })
+      await axios
+        .put(process.env.VUE_APP_SERVER + '/users/update/' + this.user.userid, axiosBody, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(response => {
+          console.log('updateProfile - response : ', response)
+          alert('회원정보가 수정 되었습니다.')
+          this.$router.go()
+        })
+        .catch(error => {
+          console.log('updateProfile - error : ', error)
+        })
     }
   }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.user-page {
+  position: absolute;
+}
+.user-profile {
+  display: grid;
+  justify-content: center;
+  margin: 20px;
+}
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  margin-left: 65px;
+  margin-bottom: 20px;
+}
+.icon-avatar {
+  width: 40px;
+  height: 40px;
+}
+.pencil {
+  font-size: 13px;
+  transition: 0.5s;
+  justify-content: center;
+  text-align: center;
+}
+.correction {
+  width: 28px;
+  height: 28px;
+  padding: 2px;
+  background-color: #fff;
+  border-radius: 20px;
+  border: none;
+  transition: 0.5s;
+}
+.correction:hover {
+  background-color: #432a9f;
+}
+.correction:hover .pencil {
+  color: #fff;
+}
+.save-button {
+  margin-top: 20px;
+}
+</style>
