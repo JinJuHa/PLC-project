@@ -74,7 +74,6 @@ export default {
       })
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
-        console.log('안녕 앵준아', topic)
         // this.mqttData = JSON.parse(message) // json string으로만 받을 수 있음
         // let plcData = this.mqttData.Wrapper.filter(p => p.tagId === '1' || p.tagId === '8' || p.tagId === '35')
         // this.plc.isPlcStart = plcData[0].value // 시작

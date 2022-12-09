@@ -52,7 +52,7 @@
           <p class="subtitle" style="margin: 20px">이메일로 발송된 인증코드를 입력해 주세요.</p>
           <b-card-text>
             <!-- 백 서버 연결 후 이메일 제대로 담기게 기능 구현 예정 -->
-            <b-input v-model="tempEmail" disabled></b-input>
+            <b-input v-model="emailDi" disabled></b-input>
             <b-input v-model="inputCode" class="mt-3 mb-3" maxlength="6" placeholder="인증코드 입력"></b-input>
             <b-button block class="Ingle" @click="authCode">인증 확인</b-button>
           </b-card-text>
@@ -111,6 +111,7 @@ export default {
       userSend: false,
       emailSend: false,
       emailId: '',
+      emailDi: '',
       tempEmail: '',
       inputCode: '',
       name: '',
@@ -165,6 +166,7 @@ export default {
             alert('이미 존재하는 아이디 입니다. 다시 입력해주세요!')
           } else if (code == 200) {
             alert('가입에 성공하셨습니다! 로그인 해주세요.')
+            this.$router.go(0)
           } else {
             alert('가입에 실패했습니다. 다시 시도해주세요.')
             this.$router.go(0)
@@ -199,7 +201,8 @@ export default {
     sendEmail() {
       const email = `${this.emailId}@gmail.com`
       this.tempEmail = email
-      alert(`"${email}"로 이메일을 발송합니다.`)
+      this.emailDi = `${this.emailId}@uvc-company.com`
+      alert(`"${this.emailId}@uvc-company.com"로 이메일을 발송합니다.`)
       axios
         .get(process.env.VUE_APP_SERVER + `/mails/send-mail/${email}`)
         .then(response => {

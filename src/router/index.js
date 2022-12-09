@@ -12,24 +12,6 @@ const routes = [
     redirect: '/web',
     children: [
       {
-<<<<<<<<< Temporary merge branch 1
-=========
-        path: '/home',
-        component: () => import('../views/Home.vue'),
-        meta: { noLogin: true }
-      },
-      // {
-      //   path: '/dashboard',
-      //   component: () => import('../views/dashboard'),
-      //   meta: { noLogin: true }
-      // },
-      {
-        path: '/dashboard',
-        component: () => import('../views/dashboard/rough.vue'),
-        meta: { noLogin: true }
-      },
-      {
->>>>>>>>> Temporary merge branch 2
         path: '/web',
         component: () => import('../views/edukit'),
         meta: { header: false, noLogin: true }
@@ -39,11 +21,6 @@ const routes = [
         component: () => import('../views/Home.vue'),
         meta: { noLogin: true }
       },
-      // {
-      //   path: '/dashboard',
-      //   component: () => import('../views/dashboard'),
-      //   meta: { noLogin: true }
-      // },
       {
         path: '/dashboard',
         component: () => import('../views/dashboard/rough.vue'),
