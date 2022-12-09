@@ -54,26 +54,10 @@ export default {
       on: true
     }
   },
-  created() {
+  mounted() {
     this.createMqtt()
   },
   methods: {
-    async inforData() {
-      await axios
-        .get(process.env.VUE_APP_URL + '/users', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        })
-        .then(async res => {
-          this.user = res.data.data
-          console.log('inforData - response: ', this.user)
-        })
-        .catch(err => {
-          console.log('inforData - error: ', err)
-        })
-    },
-
     createMqtt() {
       // mqtt 연결
       const mqttClient = mqtt.connect(process.env.VUE_APP_MQTT)
@@ -90,20 +74,21 @@ export default {
       })
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
-        // console.log('hello mqtt')
-        this.mqttData = JSON.parse(message) // json string으로만 받을 수 있음
-        let plcData = this.mqttData.Wrapper.filter(p => p.tagId === '1' || p.tagId === '8' || p.tagId === '35')
-        this.plc.isPlcStart = plcData[0].value // 시작
-        this.plc.isPlcReset = plcData[1].value // 리셋
-        this.plc.isPlcEmergency = plcData[2].value // 비상정지
-        let controlData = this.mqttData.Wrapper.filter(
-          p => p.tagId === '9' || p.tagId === '10' || p.tagId === '11' || p.tagId === '12' || p.tagId === '13'
-        )
-        this.control.no1 = controlData[0].value // 1호기 전원
-        this.control.no2 = controlData[1].value // 2호기 전원
-        this.control.no3 = controlData[2].value // 3호기 전원
-        this.control.sen1 = controlData[3].value // 1번 센서 전원
-        this.control.sen2 = controlData[4].value // 2번 센서 전원
+        console.log('안녕 앵준아', topic)
+        // this.mqttData = JSON.parse(message) // json string으로만 받을 수 있음
+        // let plcData = this.mqttData.Wrapper.filter(p => p.tagId === '1' || p.tagId === '8' || p.tagId === '35')
+        // this.plc.isPlcStart = plcData[0].value // 시작
+        // this.plc.isPlcReset = plcData[1].value // 리셋
+        // this.plc.isPlcEmergency = plcData[2].value // 비상정지
+        // let controlData = this.mqttData.Wrapper.filter(
+        //   p => p.tagId === '9' || p.tagId === '10' || p.tagId === '11' || p.tagId === '12' || p.tagId === '13'
+        // )
+        // this.control.no1 = controlData[0].value // 1호기 전원
+        // this.control.no2 = controlData[1].value // 2호기 전원
+        // this.control.no3 = controlData[2].value // 3호기 전원
+        // this.control.sen1 = controlData[3].value // 1번 센서 전원
+        // this.control.sen2 = controlData[4].value // 2번 센서 전원
+        console.log(JSON.parse(message).Wrapper.filter(p => p.tagId === '1' || p.tagId === '8' || p.tagId === '35'))
       })
     },
 
@@ -129,10 +114,10 @@ export default {
     },
     mcStop() {
       this.publishMqtt(35, 0)
+    },
     signOut() {
       localStorage.removeItem('token')
       this.$router.push('/auth/login')
-
     }
   }
 }

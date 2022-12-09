@@ -151,7 +151,7 @@ export default {
         name: this.name,
         userid: this.userId,
         password: this.password,
-        email: this.email,
+        email: this.emailId,
         role: this.selected,
         phone: this.phone
       }
@@ -251,7 +251,6 @@ export default {
           console.log('code success : ', response)
           this.signUp()
           alert('이메일 인증에 성공하셨습니다.')
-          localStorage.setItem('email', user.email)
           localStorage.removeItem('auth')
           // this.$router.push('/auth/login')
         })

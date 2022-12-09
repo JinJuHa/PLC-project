@@ -7,7 +7,7 @@ import { Scene } from './assets/scene'
 import { Renderer } from './assets/renderer'
 import { Control } from './assets/control'
 import { Render } from './assets/render'
-import { Event } from './assets/event'
+// import { Event } from './assets/event'
 
 // import { Gui } from './plugins/gui'
 
@@ -73,7 +73,7 @@ export default async element => {
   // gui.addExample('xAxis', -4375, 25021563, scene.resource.edukit)
 
   // MQTT Event Setting
-  new Event(element, scene.resource.edukit)
+  // new Event(element, scene.resource.edukit)
 
   return element
 }
