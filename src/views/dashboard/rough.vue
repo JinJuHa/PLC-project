@@ -33,7 +33,15 @@
           style="width: 450px; height: 290px"
         ></doughnut-chart>
       </div>
-      <div class="dashboard-bar"></div>
+      <div class="dashboard-bar">
+        <bar-chart
+          id="chart"
+          ref="fruitChart"
+          :chart-data="chart.data"
+          :options="chart.options"
+          style="width: 450px; height: 290px"
+        ></bar-chart>
+      </div>
     </div>
     <div class="dashboard-footer"></div>
   </div>
@@ -41,9 +49,11 @@
 
 <script>
 import DoughnutChart from '@/components/chart/doughnutChart'
+import BarChart from '@/componernts/chart/barChart'
 export default {
   components: {
-    'doughnut-chart': DoughnutChart
+    'doughnut-chart': DoughnutChart,
+    'bar-chart': BarChart
   },
   data() {
     return {
