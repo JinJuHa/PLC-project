@@ -40,18 +40,18 @@ const routes = [
         path: '/auth/login',
         component: () => import('../views/auth/login'),
         meta: { header: false, noLogin: true }
-      },
-      {
-        path: '/auth/logout',
-        component: () => import('../views/auth/logout'),
-        meta: { header: false, noLogin: true }
       }
+      // {
+      //   path: '/auth/logout',
+      //   component: () => import('../views/auth/logout'),
+      //   meta: { header: false, noLogin: true }
+      // }
     ]
   },
   {
     path: '*',
     component: () => import('../components/NotFound.vue'),
-    meta: { header: false }
+    meta: { header: false, noLogin: true }
   }
 ]
 
