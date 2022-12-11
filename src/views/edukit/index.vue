@@ -6,7 +6,7 @@
       <button class="reset"><font-awesome-icon icon="fa-solid fa-rotate-left" /></button>
     </div>
     <div class="control-three">
-      <button v-if="on" class="remote-control" @click="on = !on">
+      <button v-if="on" class="remote-control">
         <font-awesome-icon icon="fa-solid fa-gamepad" />
       </button>
       <div v-if="!on" class="control-three-button">
@@ -56,6 +56,15 @@ export default {
   },
   mounted() {
     this.createMqtt()
+    let buttonControl = document.querySelector('.remote-control')
+    buttonControl.addEventListener('click', oneClick)
+    function oneClick() {
+      //console.log('버튼 크기조절')
+      buttonControl.style.transition = '0.5s'
+      buttonControl.style.width = `50px`
+      buttonControl.style.height = `50px`
+      this.on = false
+    }
   },
   methods: {
     createMqtt() {
@@ -154,21 +163,11 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
-/* .grid {
-  border: 2px solid red;
-} */
 .control-three-button button {
   margin: 3px;
   width: 40px;
   height: 40px;
   border-radius: 25px;
-  background: #fff;
-}
-.remote-control {
-  width: 70px;
-  height: 70px;
-  margin: 34px;
-  border-radius: 50px;
   background: #fff;
 }
 button:focus {
@@ -177,5 +176,12 @@ button:focus {
 .click-button:active {
   background-color: black;
   color: #fff;
+}
+.remote-control {
+  width: 70px;
+  height: 70px;
+  margin: 34px;
+  border-radius: 50px;
+  background: #fff;
 }
 </style>
