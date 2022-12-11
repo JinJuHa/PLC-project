@@ -43,17 +43,21 @@
         ></bar-chart>
       </div>
     </div>
-    <div class="dashboard-footer"></div>
+    <div class="dashboard-footer">
+      <line-chart></line-chart>
+    </div>
   </div>
 </template>
 
 <script>
 import DoughnutChart from '@/components/chart/doughnutChart'
 import BarChart from '@/componernts/chart/barChart'
+import LineChart from '@/components/chart/lineChart'
 export default {
   components: {
     'doughnut-chart': DoughnutChart,
-    'bar-chart': BarChart
+    'bar-chart': BarChart,
+    'line-chart': LineChart
   },
   data() {
     return {
