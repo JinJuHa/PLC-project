@@ -1,103 +1,116 @@
 <template>
-  <div class="home">
-    <div id="container" class="container">
-      <!-- 이메일 인증 전 정보 입력 -->
-      <div v-show="!userSend" class="form-container sign-up-container">
-        <form class="form" @submit.prevent="handleSubmit(signUp)">
-          <h1 class="title">Create Account</h1>
-          <input v-model="name" type="text" placeholder="Name" class="input" />
-          <b-form-select v-model="selected" :options="options"></b-form-select>
-          <input v-model="userId" type="userid" placeholder="userId" class="input" />
-          <input v-model="password" type="Password" placeholder="Password" class="input" />
-          <input v-model="phone" type="number" placeholder="Phone" class="input" />
-          <button class="button" @click="clickUserSend">Sign Up</button>
-        </form>
-      </div>
-      <!-- 이메일 중복 확인 및 인증코드 전송 -->
-      <div v-show="userSend && !emailSend" class="form-container sign-up-container">
-        <form class="form" @submit.prevent="handleSubmit(sendEmail)">
-          <p class="title">
-            인증메일 전송
-            <span class="status">> 이메일 인증 </span>
-          </p>
-          <p class="subtitle" style="margin: 20px">
-            인증 과정에서 사용하실<br />
-            이메일 주소를 입력해 주세요.
-          </p>
-          <b-card-text>
-            <div class="emailInput">
-              <b-input-group append="@" class="mr-2">
-                <b-form-input v-model="emailId" placeholder="이메일 아이디"></b-form-input>
-              </b-input-group>
-              <p>uvc-company.com</p>
-            </div>
-          </b-card-text>
-
-          <b-list-group flush>
-            <b-button class="Ingle" block @click="sendEmail">인증메일 보내기</b-button>
-            <p class="footer">
-              - 입력하신 이메일로 인증코드가 전송됩니다.<br />
-              - 이메일은 추후 계정 찾기에 이용됩니다.
+  <div>
+    <div class="home">
+      <div id="container" class="container">
+        <!-- 이메일 인증 전 정보 입력 -->
+        <div v-show="!userSend" class="form-container sign-up-container">
+          <form class="form" @submit.prevent="handleSubmit(signUp)">
+            <h1 class="title">Create Account</h1>
+            <input v-model="name" type="text" placeholder="Name" class="input" />
+            <b-form-select v-model="selected" class="select" :options="options"></b-form-select>
+            <input v-model="userId" type="userid" placeholder="User Id" class="input" />
+            <input v-model="password" type="Password" placeholder="Password" class="input" />
+            <input v-model="phone" type="number" placeholder="Phone" class="input" />
+            <button class="button" @click="clickUserSend">Sign Up</button>
+          </form>
+        </div>
+        <!-- 이메일 중복 확인 및 인증코드 전송 -->
+        <div v-show="userSend && !emailSend" class="form-container sign-up-container">
+          <form class="form" @submit.prevent="handleSubmit(sendEmail)">
+            <p class="title">
+              인증메일 전송
+              <span class="status">> 이메일 인증 </span>
             </p>
-          </b-list-group>
-        </form>
-      </div>
-      <!-- 인증코드 입력하고 가입 끝내기 -->
-      <div v-show="emailSend" class="form-container sign-up-container">
-        <form class="form" @submit.prevent="handleSubmit(authCode)">
-          <p class="title">
-            <span class="status">인증메일 전송</span>
-            > 이메일 인증
-          </p>
-          <p class="subtitle" style="margin: 20px">이메일로 발송된 인증코드를 입력해 주세요.</p>
-          <b-card-text>
-            <!-- 백 서버 연결 후 이메일 제대로 담기게 기능 구현 예정 -->
-            <b-input v-model="emailDi" disabled></b-input>
-            <b-input v-model="inputCode" class="mt-3 mb-3" maxlength="6" placeholder="인증코드 입력"></b-input>
-            <b-button block class="Ingle" @click="authCode">인증 확인</b-button>
-          </b-card-text>
-          <b-list-group flush>
-            <b-list-group-item>
-              <div>
-                <button id="show-btn" class="modalBtn" @click="$bvModal.show('emailModal')">
-                  인증메일을 받지 못하셨나요?
-                </button>
-                <b-modal id="emailModal" hide-footer>
-                  <template #modal-title>인증메일을 받지 못하셨나요?</template>
-                  <div class="d-block text-center">
-                    <b-button block @click="resend">이메일 재전송하기</b-button>
-                  </div>
-                  <b-button class="mt-3" block @click="newEmail">다른 이메일로 전송하기</b-button>
-                </b-modal>
+            <p class="subtitle" style="margin: 20px">
+              인증 과정에서 사용하실<br />
+              이메일 주소를 입력해 주세요.
+            </p>
+            <b-card-text>
+              <div class="emailInput">
+                <b-input-group append="@" class="mr-2">
+                  <b-form-input v-model="emailId" placeholder="이메일 아이디"></b-form-input>
+                </b-input-group>
+                <p>uvc-company.com</p>
               </div>
-            </b-list-group-item>
-            <!-- <b-list-group-item>Vestibulum at eros</b-list-group-item> -->
-          </b-list-group>
-        </form>
-      </div>
-      <!-- 로그인 화면 -->
-      <div class="form-container sign-in-container">
-        <form v-if="!userSend" class="form" @submit.prevent="handleSubmit(login)">
-          <h1 class="title">Sign in</h1>
-          <input v-model="userId" type="userid" placeholder="userId" class="input" />
-          <input v-model="password" type="password" placeholder="Password" class="input" />
-          <button class="button" @click="login">Sign In</button>
-        </form>
-      </div>
-      <!-- 로그인&회원가입 권유하는 화면들 -->
-      <div class="overlay-container">
-        <div class="overlay">
-          <div class="overlay-panel overlay-left">
-            <h1 class="title">Welcome Back!</h1>
-            <p class="subtitle">To keep connected with us please login with your personal info</p>
-            <button id="signIn" class="transition-button">Sign In</button>
-          </div>
-          <div class="overlay-panel overlay-right">
-            <h1 class="title">Good Day!</h1>
-            <p class="subtitle">Enter your personal details and start journey with us</p>
-            <button id="signUp" class="transition-button">Sign Up</button>
+              <b-button class="Ingle" block @click="sendEmail">인증메일 보내기</b-button>
+              <p class="footer">
+                - 입력하신 이메일로 인증코드가 전송됩니다.<br />
+                - 이메일은 추후 계정 찾기에 이용됩니다.
+              </p>
+            </b-card-text>
+          </form>
+        </div>
+        <!-- 인증코드 입력하고 가입 끝내기 -->
+        <div v-show="emailSend" class="form-container sign-up-container">
+          <form class="form" @submit.prevent="handleSubmit(authCode)">
+            <p class="title">
+              <span class="status">인증메일 전송</span>
+              > 이메일 인증
+            </p>
+            <p class="subtitle" style="margin: 20px">이메일로 발송된 인증코드를<br />입력해 주세요.</p>
+            <b-card-text>
+              <!-- 백 서버 연결 후 이메일 제대로 담기게 기능 구현 예정 -->
+              <b-input v-model="emailDi" class="emailDi-font-size" disabled></b-input>
+              <b-input v-model="inputCode" class="mt-3 mb-3" maxlength="6" placeholder="인증코드 입력"></b-input>
+              <b-button block class="Ingle" @click="authCode">인증 확인</b-button>
+            </b-card-text>
+            <b-list-group flush>
+              <b-list-group-item>
+                <div>
+                  <button id="show-btn" class="check-button" @click="$bvModal.show('emailModal')">
+                    인증메일을 받지 못하셨나요?
+                  </button>
+                  <b-modal id="emailModal" hide-footer>
+                    <template #modal-title>인증메일을 받지 못하셨나요?</template>
+                    <div class="d-block text-center">
+                      <b-button block @click="resend">이메일 재전송하기</b-button>
+                    </div>
+                    <b-button class="mt-3" block @click="newEmail">다른 이메일로 전송하기</b-button>
+                  </b-modal>
+                </div>
+              </b-list-group-item>
+            </b-list-group>
+          </form>
+        </div>
+        <!-- 로그인 화면 -->
+        <div class="form-container sign-in-container">
+          <form v-if="!userSend" class="form" @submit.prevent="handleSubmit(login)">
+            <h1 class="title">Sign in</h1>
+            <input v-model="userId" type="userid" placeholder="userId" class="input" />
+            <input v-model="password" type="password" placeholder="Password" class="input" />
+            <button class="button" @click="login">Sign In</button>
+          </form>
+        </div>
+        <!-- 로그인&회원가입 권유하는 화면들 -->
+        <div class="overlay-container">
+          <div class="overlay">
+            <div class="overlay-panel overlay-left">
+              <h1 class="title">Welcome Back!</h1>
+              <p class="subtitle">To keep connected with us please login with your personal info</p>
+              <button id="signIn" class="transition-button">Sign In</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+              <h1 class="title">Good Day!</h1>
+              <p class="subtitle">Enter your personal details and start journey with us</p>
+              <button id="signUp" class="transition-button">Sign Up</button>
+            </div>
+            <img src="../../../public/login.jpg" />
           </div>
         </div>
+      </div>
+      <div class="area">
+        <ul class="circles">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
       </div>
     </div>
   </div>
@@ -111,7 +124,7 @@ export default {
       userSend: false,
       emailSend: false,
       emailId: '',
-      emailDi: '',
+      emailDi: 'jjhh@uvc-company.com',
       tempEmail: '',
       inputCode: '',
       name: '',
@@ -219,26 +232,6 @@ export default {
           console.log('email fail : ', error)
         })
     },
-    // async duplicationCheck() {
-    //   const email = `${this.emailId}@gmail.com`
-    //   this.tempEmail = email
-    //   console.log('duplication check : ', email)
-    //   await axios
-    //     .get(process.env.VUE_APP_SERVER + '/auth/check-email/' + email)
-    //     .then(async res => {
-    //       const code = res.status
-    //       console.log('check code : ', code)
-    //       if (code == 200) {
-    //         this.sendEmail()
-    //       } else {
-    //         alert('이미 사용중인 이메일 입니다.')
-    //       }
-    //     })
-    //     .catch(err => {
-    //       alert('이미 사용중인 이메일 입니다. 다른 이메일을 지정해 주세요!')
-    //       console.log(err)
-    //     })
-    // },
 
     authCode() {
       const email = `${this.emailId}@gmail.com`
@@ -279,13 +272,15 @@ export default {
 
 .home {
   box-sizing: border-box;
-  background: #f6f5f7;
+  background: #024d92;
+  /* background: #b7d1ea; */
+  width: 100%;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   font-family: 'Montserrat', sans-serif;
-  height: 95vh;
 }
 
 .title {
@@ -294,7 +289,7 @@ export default {
 }
 
 .subtitle {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 100;
   line-height: 20px;
   letter-spacing: 0.5px;
@@ -303,12 +298,13 @@ export default {
 
 .button {
   border-radius: 20px;
-  border: 1px solid #ff4b2b;
-  background-color: #ff4b2b;
+  border: 1px solid #024d92;
+  background-color: #024d92;
   color: #ffffff;
   font-size: 12px;
   font-weight: bold;
   padding: 12px 45px;
+  margin-top: 20px;
   letter-spacing: 1px;
   text-transform: uppercase;
   transition: transform 80ms ease-in;
@@ -355,6 +351,7 @@ export default {
 
 .input {
   background-color: #eee;
+  border-radius: 5px;
   border: none;
   padding: 8px 11px;
   margin: 8px 0;
@@ -488,8 +485,139 @@ export default {
 }
 .footer {
   border-top: 1px solid rgb(135, 135, 135);
+  color: rgb(135, 135, 135);
   margin-top: 30px;
   padding-top: 30px;
   font-size: 12px;
+}
+.select {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 40px;
+}
+
+.circles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.circles li {
+  position: absolute;
+  display: block;
+  list-style: none;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  animation: animate 25s linear infinite;
+  bottom: -150px;
+}
+
+.circles li:nth-child(1) {
+  left: 25%;
+  width: 80px;
+  height: 80px;
+  animation-delay: 0s;
+}
+
+.circles li:nth-child(2) {
+  left: 10%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 2s;
+  animation-duration: 12s;
+}
+
+.circles li:nth-child(3) {
+  left: 70%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 4s;
+}
+
+.circles li:nth-child(4) {
+  left: 40%;
+  width: 60px;
+  height: 60px;
+  animation-delay: 0s;
+  animation-duration: 18s;
+}
+
+.circles li:nth-child(5) {
+  left: 65%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 0s;
+}
+
+.circles li:nth-child(6) {
+  left: 75%;
+  width: 110px;
+  height: 110px;
+  animation-delay: 3s;
+}
+
+.circles li:nth-child(7) {
+  left: 35%;
+  width: 150px;
+  height: 150px;
+  animation-delay: 7s;
+}
+
+.circles li:nth-child(8) {
+  left: 50%;
+  width: 25px;
+  height: 25px;
+  animation-delay: 15s;
+  animation-duration: 45s;
+}
+
+.circles li:nth-child(9) {
+  left: 20%;
+  width: 15px;
+  height: 15px;
+  animation-delay: 2s;
+  animation-duration: 35s;
+}
+
+.circles li:nth-child(10) {
+  left: 85%;
+  width: 150px;
+  height: 150px;
+  animation-delay: 0s;
+  animation-duration: 11s;
+}
+
+@keyframes animate {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+    border-radius: 0;
+  }
+
+  100% {
+    transform: translateY(-1000px) rotate(720deg);
+    opacity: 0;
+    border-radius: 50%;
+  }
+}
+
+.emailDi-font-size {
+  font-size: 0.9rem;
+  height: 40px;
+  padding: 12px;
+}
+.check-button {
+  background: none;
+  border: none;
+  color: rgb(113, 113, 113);
+  font-size: 0.7rem;
+  text-decoration: underline;
+}
+.check-button:focus {
+  outline: none;
 }
 </style>
