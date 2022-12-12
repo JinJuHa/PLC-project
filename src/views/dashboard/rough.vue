@@ -292,6 +292,7 @@ export default {
   height: 90vh;
   background-color: green;
   padding: 5px;
+  position: absolute;
 }
 .dashboard-header {
   display: grid;

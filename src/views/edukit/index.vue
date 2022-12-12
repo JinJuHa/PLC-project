@@ -38,6 +38,9 @@
     <div>
       <UserInfo />
     </div>
+    <div v-show="dashboardStat == true">
+      <Dashboard @dashboardOpen="dashboardStat = true" />
+    </div>
     <Edukit />
     <the-footer />
   </div>
@@ -48,12 +51,14 @@ import Edukit from './edukit.vue'
 import UserInfo from '../user/index.vue'
 import TheFooter from '../../components/layout/TheFooter.vue'
 import mqtt from 'mqtt'
+import Dashboard from '../dashboard/rough.vue'
 
 export default {
-  components: { Edukit, UserInfo, TheFooter },
+  components: { Edukit, UserInfo, TheFooter, Dashboard },
   data() {
     return {
-      on: true
+      on: true,
+      dashboardStat: false
     }
   },
   mounted() {
