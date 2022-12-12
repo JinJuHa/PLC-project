@@ -42,7 +42,7 @@
       <Dashboard />
     </div>
     <Edukit />
-    <the-footer @dashboardOpen="dashboardSet" />
+    <the-footer @dashboardOpen="dashboardStat = true" />
   </div>
 </template>
 
@@ -113,11 +113,6 @@ export default {
           alert('MQTT 데이터 전송이 실패했습니다.')
         }
       })
-    },
-    dashboardSet() {
-      console.log('열리니?')
-      this.dashboardStat = true
-      console.log('왜 안되니?')
     },
     mcStart() {
       this.publishMqtt(1, 1)

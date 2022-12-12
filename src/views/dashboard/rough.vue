@@ -49,7 +49,7 @@
         ref="lineChart"
         :chart-data="lineChart.data"
         :options="lineChart.options"
-        style="width: 450px; height: 290px"
+        style="width: 800px; height: 250px"
       ></line-chart>
     </div>
   </div>
