@@ -44,7 +44,13 @@
       </div>
     </div>
     <div class="dashboard-footer">
-      <line-chart id="chart" ref="lineChart" :chart-data="lineChart.data" :options="lineChart.options"></line-chart>
+      <line-chart
+        id="chart"
+        ref="lineChart"
+        :chart-data="lineChart.data"
+        :options="lineChart.options"
+        style="width: 450px; height: 290px"
+      ></line-chart>
     </div>
   </div>
 </template>
@@ -64,13 +70,14 @@ export default {
       담당자이름: '지미',
       doughnutChart: {
         data: {
-          labels: ['딸기', '자두', '수박', '복숭아', '메론', '망고'],
+          labels: ['불량품', '양품'],
           datasets: [
             {
-              backgroundColor: ['#A684B7', '#DD7445', '#DE9D11', '#E0D295', '#B1D166', '#78BAA1'],
+              // backgroundColor: ['#A684B7', '#DD7445', '#DE9D11', '#E0D295', '#B1D166', '#78BAA1'],
+              backgroundColor: ['#A684B7', '#DD7445'],
               borderColor: '#eee',
               hoverBorderColor: '#eee',
-              data: [50, 30, 20, 40, 60, 10]
+              data: [20, 60]
             }
           ]
         },
@@ -292,6 +299,7 @@ export default {
   height: 90vh;
   background-color: green;
   padding: 5px;
+  position: absolute;
 }
 .dashboard-header {
   display: grid;

@@ -44,8 +44,11 @@
     <div>
       <UserInfo />
     </div>
+    <div v-show="dashboardStat == true">
+      <Dashboard />
+    </div>
     <Edukit />
-    <The-footer />
+    <the-footer @dashboardOpen="dashboardSet" />
   </div>
 </template>
 
@@ -54,12 +57,14 @@ import Edukit from './edukit.vue'
 import UserInfo from '../user/index.vue'
 import TheFooter from '../../components/layout/TheFooter.vue'
 import mqtt from 'mqtt'
+import Dashboard from '../dashboard/rough.vue'
 
 export default {
-  components: { Edukit, UserInfo, TheFooter },
+  components: { Edukit, UserInfo, TheFooter, Dashboard },
   data() {
     return {
       on: true,
+      dashboardStat: false
       plc: {
         plcStart: null,
         plcStop: null,
@@ -121,7 +126,11 @@ export default {
         }
       })
     },
-
+    dashboardSet() {
+      console.log('열리니?')
+      this.dashboardStat = true
+      console.log('왜 안되니?')
+    },
     mcStart() {
       this.publishMqtt(1, 1)
     },
