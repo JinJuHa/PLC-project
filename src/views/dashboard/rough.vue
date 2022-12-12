@@ -49,8 +49,21 @@
         ref="lineChart"
         :chart-data="lineChart.data"
         :options="lineChart.options"
-        style="width: 800px; height: 250px"
+        style="width: 650px; height: 250px"
       ></line-chart>
+      <div class="dashboard-lights">
+        <div class="light red"></div>
+        <div class="light yellow"></div>
+        <div class="light green"></div>
+      </div>
+      <div class="dashboard-rates">
+        <div class="dashboard-amount">
+          <p>총 생산량</p>
+        </div>
+        <div class="dashboard-amount">
+          <p>불량품, 양품 비율</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -197,7 +210,7 @@ export default {
               pointBorderColor: 'green',
               borderWidth: 1,
               pointBorderWidth: 1,
-              data: [45, 30, 10, 100, 75, 60, 90, 10, 10, 0]
+              data: [10, 10, 10, 9, 7, 6, 9, 10, 10, 8]
             },
             {
               label: '주사위',
@@ -207,7 +220,7 @@ export default {
               pointBorderColor: 'yellow',
               borderWidth: 1,
               pointBorderWidth: 1,
-              data: [50, 100, 40, 80, 30, 20, 80, 15, 12, 20]
+              data: [5, 10, 4, 8, 3, 2, 8, 5, 2, 2]
             }
           ]
         },
@@ -417,6 +430,7 @@ export default {
   background-color: green;
   padding: 5px;
   position: absolute;
+  border-radius: 10px;
 }
 .dashboard-header {
   display: grid;
@@ -487,9 +501,33 @@ export default {
   /* background-color: yellow; */
 }
 .dashboard-footer {
+  display: grid;
+  grid-template-columns: 50% 10% 40%;
   width: 100%;
   height: 100%;
   background-color: white;
   border-radius: 10px;
+}
+.dashboard-lights {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  display: grid;
+  grid-template-rows: 33% 33% 33%;
+  padding: 10px;
+}
+.light {
+  width: 100%;
+  height: 100%;
+  border-radius: 20%;
+}
+.red {
+  background-color: red;
+}
+.yellow {
+  background-color: yellow;
+}
+.green {
+  background-color: green;
 }
 </style>

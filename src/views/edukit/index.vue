@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       on: true,
-      dashboardStat: false
+      dashboardStat: false,
       plc: {
         plcStart: null,
         plcStop: null,
