@@ -4,7 +4,7 @@
       <div id="container" class="container">
         <!-- 이메일 인증 전 정보 입력 -->
         <div v-show="!userSend" class="form-container sign-up-container">
-          <form class="form" @submit.prevent="handleSubmit(signUp)">
+          <form class="form" @submit.prevent="handleSubmit(clickUserSend)">
             <h1 class="title">Create Account</h1>
             <input v-model="name" type="text" placeholder="Name" class="input" />
             <b-form-select v-model="selected" class="select" :options="options"></b-form-select>
@@ -169,24 +169,15 @@ export default {
         role: this.selected,
         phone: this.phone
       }
-      console.log('auth/ register - axiosBody : ', axiosBody)
+      console.log('/auths/sign - axiosBody : ', axiosBody)
       await axios
         .post(process.env.VUE_APP_SERVER + '/auths/sign', axiosBody)
         .then(async res => {
-          const code = res.status
-          console.log('/users - response: ', res)
-          if (code == 400) {
-            alert('이미 존재하는 아이디 입니다. 다시 입력해주세요!')
-          } else if (code == 200) {
-            alert('가입에 성공하셨습니다! 로그인 해주세요.')
-            this.$router.go(0)
-          } else {
-            alert('가입에 실패했습니다. 다시 시도해주세요.')
-            this.$router.go(0)
-          }
+          console.log('/auths/sign - response: ', res)
+          alert('회원가입이 완료 되었습니다.')
+          this.$router.go(0)
         })
         .catch(err => {
-          alert('다시 시도해주세요!')
           console.log('errerr', err)
         })
     },
@@ -245,10 +236,8 @@ export default {
         })
         .then(response => {
           console.log('code success : ', response)
-          this.signUp()
-          alert('이메일 인증에 성공하셨습니다.')
           localStorage.removeItem('auth')
-          // this.$router.push('/auth/login')
+          this.signUp()
         })
         .catch(error => {
           console.log('code fail : ', error)

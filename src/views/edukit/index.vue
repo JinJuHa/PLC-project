@@ -1,9 +1,15 @@
 <template>
   <div>
     <div id="control-button">
-      <button class="control-but start" @click="mcStart"><font-awesome-icon icon="fa-solid fa-play" /></button>
-      <button class="control-but stop" @click="mcStop"><font-awesome-icon icon="fa-solid fa-stop" /></button>
-      <button class="control-but reset"><font-awesome-icon icon="fa-solid fa-rotate-left" /></button>
+      <button :class="plc.plcStart ? 'active-but' : 'start'" :disabled="plc.plcStart" @click="mcStart">
+        <font-awesome-icon icon="fa-solid fa-play" />
+      </button>
+      <button :class="!plc.plcStart ? 'active-but' : 'stop'" :disabled="!plc.plcStart" @click="mcStop">
+        <font-awesome-icon icon="fa-solid fa-stop" />
+      </button>
+      <button :class="plc.plcStart ? 'active-but' : 'reset'" :disabled="plc.plcStart" @click="mcReset">
+        <font-awesome-icon icon="fa-solid fa-rotate-left" />
+      </button>
     </div>
     <div class="control-three">
       <button v-if="on" class="remote-control" @click="on = !on">
@@ -59,6 +65,11 @@ export default {
     return {
       on: true,
       dashboardStat: false
+      plc: {
+        plcStart: null,
+        plcStop: null,
+        plcReset: null
+      }
     }
   },
   mounted() {
@@ -81,11 +92,12 @@ export default {
       })
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
-        // this.mqttData = JSON.parse(message) // json string으로만 받을 수 있음
+        this.mqttData = JSON.parse(message) // json string으로만 받을 수 있음
         // let plcData = this.mqttData.Wrapper.filter(p => p.tagId === '1' || p.tagId === '8' || p.tagId === '35')
-        // this.plc.isPlcStart = plcData[0].value // 시작
-        // this.plc.isPlcReset = plcData[1].value // 리셋
-        // this.plc.isPlcEmergency = plcData[2].value // 비상정지
+        let plcData = this.mqttData.Wrapper.filter(p => p.tagId === '1' || p.tagId === '8' || p.tagId === '35')
+        this.plc.plcStart = plcData[0].value // 시작
+        this.plc.plcReset = plcData[1].value // 리셋
+        this.plc.plcStop = plcData[2].value // 비상정지
         // let controlData = this.mqttData.Wrapper.filter(
         //   p => p.tagId === '9' || p.tagId === '10' || p.tagId === '11' || p.tagId === '12' || p.tagId === '13'
         // )
@@ -94,7 +106,7 @@ export default {
         // this.control.no3 = controlData[2].value // 3호기 전원
         // this.control.sen1 = controlData[3].value // 1번 센서 전원
         // this.control.sen2 = controlData[4].value // 2번 센서 전원
-        console.log(JSON.parse(message).Wrapper.filter(p => p.tagId === '1' || p.tagId === '8' || p.tagId === '35'))
+        console.log(plcData)
       })
     },
 
@@ -123,7 +135,11 @@ export default {
       this.publishMqtt(1, 1)
     },
     mcStop() {
-      this.publishMqtt(35, 0)
+      this.publishMqtt(1, 0)
+    },
+    mcReset() {
+      this.publishMqtt(1, 0)
+      this.publishMqtt(8, 1)
     },
     signOut() {
       localStorage.removeItem('token')
@@ -142,14 +158,53 @@ export default {
   top: 35px;
   right: 40px;
 }
-#control-button button {
+.active-but {
   width: 60px;
   height: 60px;
   border-radius: 30px;
   margin-bottom: 20px;
-  background: #fff;
+  color: #fff;
+  transition: 0.5s;
+  border: none;
+  background: #093053;
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
 }
-.control-but:active {
+.start {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  background: none;
+  border: 2.3px solid #fff;
+  color: #fff;
+  transition: 0.5s;
+}
+.stop {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  background: none;
+  border: 2.3px solid #fff;
+  color: #fff;
+  transition: 0.5s;
+}
+.reset {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  background: none;
+  border: 2.3px solid #fff;
+  color: #fff;
+  transition: 0.5s;
+}
+#control-button button:hover {
+  border: none;
+  background: #093053;
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
+}
+#control-button button:active {
   transform: scale(0.9);
 }
 .logout {
