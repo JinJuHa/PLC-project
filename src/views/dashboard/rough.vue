@@ -28,8 +28,8 @@
         <doughnut-chart
           id="chart"
           ref="fruitChart"
-          :chart-data="chart.data"
-          :options="chart.options"
+          :chart-data="doughnutChart.data"
+          :options="doughnutChart.options"
           style="width: 450px; height: 290px"
         ></doughnut-chart>
       </div>
@@ -37,21 +37,21 @@
         <bar-chart
           id="chart"
           ref="fruitChart"
-          :chart-data="chart.data"
-          :options="chart.options"
+          :chart-data="barChart.data"
+          :options="barChart.options"
           style="width: 450px; height: 290px"
         ></bar-chart>
       </div>
     </div>
     <div class="dashboard-footer">
-      <line-chart></line-chart>
+      <line-chart id="chart" ref="lineChart" :chart-data="lineChart.data" :options="lineChart.options"></line-chart>
     </div>
   </div>
 </template>
 
 <script>
 import DoughnutChart from '@/components/chart/doughnutChart'
-import BarChart from '@/componernts/chart/barChart'
+import BarChart from '@/components/chart/barChart'
 import LineChart from '@/components/chart/lineChart'
 export default {
   components: {
@@ -62,7 +62,7 @@ export default {
   data() {
     return {
       담당자이름: '지미',
-      chart: {
+      doughnutChart: {
         data: {
           labels: ['딸기', '자두', '수박', '복숭아', '메론', '망고'],
           datasets: [
@@ -115,6 +115,147 @@ export default {
             duration: 5000
           }
         }
+      },
+      barChart: {
+        data: {
+          labels: [1, 2, 3, 4, 5, 6],
+          datasets: [
+            {
+              backgroundColor: 'pink',
+              pointBackgroundColor: 'white',
+              borderWidth: 1,
+              borderColor: 'hotpink',
+              fill: true,
+              tension: 0.1,
+              barPercentage: 0.55,
+              data: [1200, 2000, 2500, 2200, 4000, 3000, 5000, 2000]
+            }
+          ]
+        },
+        options: {
+          plugins: {
+            legend: {
+              display: false
+            },
+            datalabels: {
+              display: false
+            },
+            tooltip: {
+              boxWidth: 15
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                padding: 3
+              }
+            },
+            y: {
+              grid: {
+                drawBorder: false,
+                color: 'black',
+                lineWidth: 1
+              },
+              min: 0,
+              max: 5000,
+              ticks: {
+                stepSize: 1000,
+                padding: 10,
+                callback: (val, index) => {
+                  return val !== 0 ? val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
+                }
+              }
+            }
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: 5000
+          }
+        }
+      },
+      lineChart: {
+        data: {
+          labels: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+          datasets: [
+            {
+              label: '트레이',
+              fill: true,
+              tension: 0.1,
+              borderColor: 'green',
+              pointBorderColor: 'green',
+              borderWidth: 1,
+              pointBorderWidth: 1,
+              data: [45, 30, 10, 100, 75, 60, 90, 10, 10, 0]
+            },
+            {
+              label: '주사위',
+              fill: true,
+              tension: 0.1,
+              borderColor: 'yellow',
+              pointBorderColor: 'yellow',
+              borderWidth: 1,
+              pointBorderWidth: 1,
+              data: [50, 100, 40, 80, 30, 20, 80, 15, 12, 20]
+            }
+          ]
+        },
+        options: {
+          plugins: {
+            legend: {
+              display: true,
+              position: 'left',
+              labels: {
+                boxWidth: 8,
+                padding: 10,
+                usePointStyle: true,
+                pointStyle: 'circle',
+                font: {
+                  size: 14
+                }
+              },
+              fullSize: true,
+              align: 'center'
+            },
+            tooltip: {
+              boxWidth: 15,
+              bodyFont: {
+                size: 14
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                padding: 3
+              }
+            },
+            y: {
+              ticks: {
+                callback: (val, index) => {
+                  return val !== 0 ? val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
+                },
+                padding: 10
+              },
+              grid: {
+                drawBorder: false,
+                color: '#323232',
+                lineWidth: 1
+              }
+            }
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: 5000
+          }
+        }
       }
     }
   },
@@ -146,7 +287,7 @@ export default {
 }
 .dashboard-container {
   display: grid;
-  grid-template-rows: 25% 45% 30%;
+  grid-template-rows: 15% 45% 40%;
   width: 90%;
   height: 90vh;
   background-color: green;
@@ -163,7 +304,7 @@ export default {
 .dashboard-headding {
   letter-spacing: 2px;
   padding: auto;
-  font-size: 35px;
+  font-size: 20px;
   width: 100%;
   height: 100%;
   text-align: center;
@@ -174,18 +315,17 @@ export default {
   grid-template-columns: 70% 30%;
   width: 100%;
   height: 100%;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
 }
 .dashboard-date {
   padding: 5px;
   color: grey;
-  font-size: 30px;
+  font-size: 25px;
 }
 .dashboard-user {
   color: darkgreen;
-  font-size: 45px;
-  padding: 20px;
+  padding: 10px;
   font-size: 30px;
 }
 .dashboard-columns {
@@ -224,6 +364,7 @@ export default {
 .dashboard-footer {
   width: 100%;
   height: 100%;
-  background-color: orangered;
+  background-color: white;
+  border-radius: 10px;
 }
 </style>
