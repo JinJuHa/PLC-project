@@ -43,7 +43,7 @@
             <b-input v-if="!see" v-model="phone"></b-input>
             <b-btn v-if="!see" variant="danger" @click="see = !see">취소</b-btn>
           </div>
-          <b-btn variant="success" class="save-button" @click="updateProfile">저장</b-btn>
+          <b-btn class="save-button" @click="updateProfile">저장</b-btn>
         </div>
       </div>
     </b-modal>
@@ -144,12 +144,17 @@ export default {
   transition: 0.5s;
 }
 .correction:hover {
-  background-color: #432a9f;
+  background-color: #024d92;
 }
 .correction:hover .pencil {
   color: #fff;
 }
 .save-button {
   margin-top: 20px;
+  background: #024d92;
+  transition: 0.5s;
+}
+.save-button:hover {
+  background: #0c365d;
 }
 </style>
