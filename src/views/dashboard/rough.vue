@@ -44,7 +44,13 @@
       </div>
     </div>
     <div class="dashboard-footer">
-      <line-chart id="chart" ref="lineChart" :chart-data="lineChart.data" :options="lineChart.options"></line-chart>
+      <line-chart
+        id="chart"
+        ref="lineChart"
+        :chart-data="lineChart.data"
+        :options="lineChart.options"
+        style="width: 450px; height: 290px"
+      ></line-chart>
     </div>
   </div>
 </template>
