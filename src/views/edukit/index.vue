@@ -1,9 +1,9 @@
 <template>
   <div>
     <div id="control-button">
-      <button class="start" @click="mcStart"><font-awesome-icon icon="fa-solid fa-play" /></button>
-      <button class="stop" @click="mcStop"><font-awesome-icon icon="fa-solid fa-stop" /></button>
-      <button class="reset"><font-awesome-icon icon="fa-solid fa-rotate-left" /></button>
+      <button class="control-but start" @click="mcStart"><font-awesome-icon icon="fa-solid fa-play" /></button>
+      <button class="control-but stop" @click="mcStop"><font-awesome-icon icon="fa-solid fa-stop" /></button>
+      <button class="control-but reset"><font-awesome-icon icon="fa-solid fa-rotate-left" /></button>
     </div>
     <div class="control-three">
       <button v-if="on" class="remote-control" @click="on = !on">
@@ -31,7 +31,9 @@
       </div>
     </div>
     <div>
-      <button class="logout" @click="signOut"><font-awesome-icon icon="fa-solid fa-power-off" /></button>
+      <button class="logout" @click="signOut">
+        <font-awesome-icon icon="fa-solid fa-power-off" /><span class="logout-text">Logout</span>
+      </button>
     </div>
     <div>
       <UserInfo />
@@ -138,9 +140,38 @@ export default {
   margin-bottom: 20px;
   background: #fff;
 }
+.control-but:active {
+  transform: scale(0.9);
+}
 .logout {
   position: absolute;
+  width: 42px;
+  height: 42px;
+  border-radius: 30px;
+  border: 2px solid #fff;
   margin: 50px;
+  color: #fff;
+  font-size: 21px;
+  background: none;
+  transition: 0.5s;
+}
+.logout-text {
+  position: absolute;
+  opacity: 0;
+  font-size: 18px;
+  padding-left: 10px;
+  transition: 0.5s;
+  color: #fff;
+}
+.logout:hover {
+  background: #093053;
+  width: 120px;
+  padding-right: 80px;
+  border: none;
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
+}
+.logout:hover .logout-text {
+  opacity: 1;
 }
 .control-three {
   position: absolute;
@@ -148,27 +179,17 @@ export default {
   width: 140px;
   height: 140px;
   bottom: 35%;
-  left: 40px;
+  left: 30px;
 }
 .control-three-button {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
-/* .grid {
-  border: 2px solid red;
-} */
 .control-three-button button {
   margin: 3px;
-  width: 40px;
-  height: 40px;
+  width: 41px;
+  height: 41px;
   border-radius: 25px;
-  background: #fff;
-}
-.remote-control {
-  width: 70px;
-  height: 70px;
-  margin: 34px;
-  border-radius: 50px;
   background: #fff;
 }
 button:focus {
@@ -177,5 +198,12 @@ button:focus {
 .click-button:active {
   background-color: black;
   color: #fff;
+}
+.remote-control {
+  width: 70px;
+  height: 70px;
+  margin: 35px;
+  border-radius: 50px;
+  background: #fff;
 }
 </style>
