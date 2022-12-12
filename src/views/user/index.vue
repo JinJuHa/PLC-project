@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button v-b-modal.modal-1 class="user-page">사용자 관리</button>
+    <!-- <button v-b-modal.modal-1>사용자 관리</button> -->
 
     <b-modal id="modal-1" hide-footer hide-header>
       <div class="user-profile">
