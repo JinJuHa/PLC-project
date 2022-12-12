@@ -64,13 +64,14 @@ export default {
       담당자이름: '지미',
       doughnutChart: {
         data: {
-          labels: ['딸기', '자두', '수박', '복숭아', '메론', '망고'],
+          labels: ['불량품', '양품'],
           datasets: [
             {
-              backgroundColor: ['#A684B7', '#DD7445', '#DE9D11', '#E0D295', '#B1D166', '#78BAA1'],
+              // backgroundColor: ['#A684B7', '#DD7445', '#DE9D11', '#E0D295', '#B1D166', '#78BAA1'],
+              backgroundColor: ['#A684B7', '#DD7445'],
               borderColor: '#eee',
               hoverBorderColor: '#eee',
-              data: [50, 30, 20, 40, 60, 10]
+              data: [20, 60]
             }
           ]
         },

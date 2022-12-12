@@ -39,10 +39,10 @@
       <UserInfo />
     </div>
     <div v-show="dashboardStat == true">
-      <Dashboard @dashboardOpen="dashboardStat = true" />
+      <Dashboard />
     </div>
     <Edukit />
-    <the-footer />
+    <the-footer @dashboardOpen="dashboardSet" />
   </div>
 </template>
 
@@ -114,7 +114,11 @@ export default {
         }
       })
     },
-
+    dashboardSet() {
+      console.log('열리니?')
+      this.dashboardStat = true
+      console.log('왜 안되니?')
+    },
     mcStart() {
       this.publishMqtt(1, 1)
     },
