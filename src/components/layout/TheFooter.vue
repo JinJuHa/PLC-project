@@ -12,7 +12,9 @@
     <transition name="menuSlide">
       <div v-show="drawerStat == true" class="menu-container">
         <div class="menu">
-          <div class="menu-icon"></div>
+          <div class="menu-icon" @click="dashboard">
+            <font-awesome-icon icon="fa-solid fa-chart-line" />
+          </div>
           <div class="menu-icon"></div>
           <div class="menu-icon"></div>
           <div class="menu-icon"></div>
@@ -33,6 +35,9 @@ export default {
   methods: {
     drawer() {
       this.drawerStat = true
+    },
+    dashboard() {
+      this.$emit('dashboardOpen')
     }
   }
 }
@@ -86,6 +91,11 @@ export default {
   width: 70px;
   background-color: orange;
   border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  color: orangered;
 }
 
 .slide-leave-from {
