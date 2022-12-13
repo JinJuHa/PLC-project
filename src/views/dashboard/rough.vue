@@ -88,7 +88,6 @@ export default {
           labels: ['불량품', '양품'],
           datasets: [
             {
-              // backgroundColor: ['#A684B7', '#DD7445', '#DE9D11', '#E0D295', '#B1D166', '#78BAA1'],
               backgroundColor: ['#A684B7', '#DD7445'],
               borderColor: '#eee',
               hoverBorderColor: '#eee',
