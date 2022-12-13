@@ -16,9 +16,8 @@
             <font-awesome-icon icon="fa-solid fa-chart-line" />
           </div>
           <div class="menu-icon"></div>
-          <div class="menu-icon"></div>
           <div v-b-modal.modal-1 class="menu-icon">
-            <font-awesome-icon icon="fa-solid fa-user" />
+            <font-awesome-icon icon="fa-solid fa-user-gear" />
             <UserInfo />
           </div>
           <div class="menu-icon" @click="$router.push('/list')">
@@ -80,28 +79,38 @@ export default {
 }
 .menu {
   height: 90px;
-  background-color: rgb(255, 245, 206);
+  background-color: rgba(255, 255, 255, 0.56);
   border-radius: 40px;
-  width: 70%;
-  margin-left: 180px;
+  width: 60%;
+  margin-left: 290px;
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
-  padding-left: 15%;
-  padding-right: 15%;
+  padding-left: 16%;
+  padding-right: 16%;
   align-items: center;
+  box-shadow: inset 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
 }
 .menu-icon {
-  height: 70px;
-  width: 70px;
-  background-color: orange;
+  height: 65px;
+  width: 65px;
+  background: orange;
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 30px;
-  color: orangered;
+  color: #fff;
+  transition: 0.5s;
   cursor: pointer;
+  box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5);
+}
+.menu-icon:hover {
+  box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1),
+    4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+}
+.menu-icon:active {
+  transform: scale(0.9);
 }
 
 .slide-leave-from {

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div>
+    <div class="user-list-page">
+      <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="$router.push('/web')" />
       <p class="user-list-title">사용자 리스트</p>
       <b-table striped hover :items="items" :fields="fields"></b-table>
     </div>
@@ -62,6 +63,21 @@ export default {
   font-size: 25px;
   font-weight: bold;
   text-align: center;
-  margin: 20px;
+  margin-bottom: 40px;
+}
+.user-list-page {
+  height: 85vh;
+  padding: 50px;
+  margin: 50px;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+.back-button {
+  position: absolute;
+  left: 70px;
+  cursor: pointer;
+  width: 100px;
+  font-size: 25px;
 }
 </style>

@@ -14,7 +14,7 @@
             <button class="button" @click="clickUserSend">Sign Up</button>
           </form>
         </div>
-        <!-- 이메일 중복 확인 및 인증코드 전송 -->
+        <!-- 이메일 인증코드 전송 -->
         <div v-show="userSend && !emailSend" class="form-container sign-up-container">
           <form class="form" @submit.prevent="handleSubmit(sendEmail)">
             <p class="title">
@@ -42,7 +42,7 @@
         </div>
         <!-- 인증코드 입력하고 가입 끝내기 -->
         <div v-show="emailSend" class="form-container sign-up-container">
-          <form class="form" @submit.prevent="handleSubmit(authCode)">
+          <form class="form" @submit.prevent="handleSubmit(authCode, resend, newEmail)">
             <p class="title">
               <span class="status">인증메일 전송</span>
               > 이메일 인증
@@ -250,7 +250,8 @@ export default {
       this.$bvModal.hide('emailModal')
     },
     newEmail() {
-      this.emailSent = true
+      this.emailSend = false
+      console.log('이메일', this.emailSend)
       this.$bvModal.hide('emailModal')
     }
   }
