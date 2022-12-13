@@ -19,6 +19,7 @@
           <p>총 생산량</p>
         </div>
         <div class="dashboard-amount">
+          <!-- tagId 17 -->
           <p>불량품, 양품 비율</p>
         </div>
       </div>
@@ -26,8 +27,8 @@
         <!-- <doughnut-chart ref="chart" :chartData="chart.data" :options="options" style="width: 450px height: 250px">
         </doughnut-chart> -->
         <doughnut-chart
-          id="chart"
-          ref="fruitChart"
+          id="accuracyChart"
+          ref="accuracyChart"
           :chart-data="doughnutChart.data"
           :options="doughnutChart.options"
           style="width: 450px; height: 290px"
@@ -35,8 +36,8 @@
       </div>
       <div class="dashboard-bar">
         <bar-chart
-          id="chart"
-          ref="fruitChart"
+          id="diceFequencyChart"
+          ref="diceFequencyChart"
           :chart-data="barChart.data"
           :options="barChart.options"
           style="width: 450px; height: 290px"
@@ -45,8 +46,8 @@
     </div>
     <div class="dashboard-footer">
       <line-chart
-        id="chart"
-        ref="lineChart"
+        id="stockChart"
+        ref="stockChart"
         :chart-data="lineChart.data"
         :options="lineChart.options"
         style="width: 650px; height: 250px"
@@ -96,6 +97,10 @@ export default {
           ]
         },
         options: {
+          title: {
+            display: true,
+            text: 'Accuracy Rate Chart'
+          },
           plugins: {
             legend: {
               display: true,
@@ -142,10 +147,9 @@ export default {
           labels: [1, 2, 3, 4, 5, 6],
           datasets: [
             {
-              backgroundColor: 'pink',
+              backgroundColor: ['#A684B7', '#DD7445', '#DE9D11', '#E0D295', '#B1D166', '#78BAA1', '#c45850'],
               pointBackgroundColor: 'white',
               borderWidth: 1,
-              borderColor: 'hotpink',
               fill: true,
               tension: 0.1,
               barPercentage: 0.55,
@@ -154,6 +158,10 @@ export default {
           ]
         },
         options: {
+          title: {
+            display: true,
+            text: 'Dice Frequency Chart'
+          },
           plugins: {
             legend: {
               display: false
@@ -225,6 +233,10 @@ export default {
           ]
         },
         options: {
+          title: {
+            display: true,
+            text: 'Stock Chart'
+          },
           plugins: {
             legend: {
               display: true,
@@ -310,7 +322,7 @@ export default {
 
       mqttClient.on('connect', () => {
         // mqtt연결 시 구독한다.
-        const topic = 'metacamp/sensor' // 구독할 topic
+        const topic = 'myEdukit' // 구독할 topic
         mqttClient.subscribe(topic, {}, (error, res) => {
           if (error) {
             console.error('mqtt client error', error)
@@ -395,7 +407,7 @@ export default {
         // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
         for (let j = 0; j < this.mqttDataList.length; j += 1) {
           const mqttData = this.mqttDataList[j]
-          const tagData = mqttData[label] // 현재 데이터셋 label과 같은 태그만 추출한다.
+          const tagData = mqttData.wrapper[22].value // 현재 데이터셋 label과 같은 태그만 추출한다.
           datas.push(tagData)
         }
         datasetDatas.push({
