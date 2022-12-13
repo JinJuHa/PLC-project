@@ -28,7 +28,7 @@ const routes = [
       },
       {
         path: '/dashboard',
-        component: () => import('../views/dashboard/rough.vue'),
+        component: () => import('../views/dashboard'),
         meta: { noLogin: true }
       },
       {

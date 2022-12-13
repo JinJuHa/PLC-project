@@ -5,7 +5,6 @@
     <div>태그: {{ selected.tagList }}</div>
     <div v-if="chartData">
       <line-chart ref="chart" :chart-data="chartData" :options="options" style="width: 500px"></line-chart>
-      <doughnut-chart ref="chart" :chart-data="chartData" :options="options" style="width: 500px"></doughnut-chart>
     </div>
   </div>
 </template>
@@ -13,12 +12,12 @@
 <script>
 import mqtt from 'mqtt'
 import LineChart from '@/components/chart/lineChart'
-import DoughnutChart from '@/components/chart/doughnutChart'
+// import DoughnutChart from '@/components/chart/doughnutChart'
 
 export default {
   components: {
-    'line-chart': LineChart,
-    'doughnut-chart': DoughnutChart
+    'line-chart': LineChart
+    // 'doughnut-chart': DoughnutChart
   },
   data() {
     return {
@@ -54,7 +53,8 @@ export default {
             {
               stacked: false,
               scaleLabel: {
-                display: true
+                display: true,
+                labelString: 'y'
               }
             }
           ]
@@ -81,7 +81,7 @@ export default {
 
       mqttClient.on('connect', () => {
         // mqtt연결 시 구독한다.
-        const topic = 'metacamp/sensor' // 구독할 topic
+        const topic = 'myEdukit' // 구독할 topic
         mqttClient.subscribe(topic, {}, (error, res) => {
           if (error) {
             console.error('mqtt client error', error)
@@ -92,24 +92,30 @@ export default {
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
         const mqttData = JSON.parse(message) // json string으로만 받을 수 있음
-        // console.log(mqttData.temperature)
-
+        let plcData = mqttData.Wrapper.filter(p => p.tagId === '21' || p.tagId === '22' || p.tagId === '0')
+        console.log('찍힘?', plcData)
+        let xAxis = plcData[0] // x
+        let yAxis = plcData[1] // y
+        let time = plcData[2] // time
+        console.log('나는나는', xAxis)
         // 선택된 devicdId만 수용함
         this.removeOldData() // 오래된 데이터 제거
 
         this.mqttDataList.push(mqttData) // 리스트에 계속 추가함
-
-        this.makeChartLabels(mqttData) // 차트라벨 생성
+        console.log('mqtt-0')
+        console.log(mqttData.Wrapper)
+        this.makeChartLabels(xAxis) // 차트라벨 생성
+        console.log('mqtt-1')
         this.makeChartData() // 차트용 데이터 작성
 
-        // if (this.selected.deviceId === mqttData.id) {
-        //   this.removeOldData() // 오래된 데이터 제거
+        if (this.selected.deviceId === mqttData.id) {
+          this.removeOldData() // 오래된 데이터 제거
 
-        //   this.mqttDataList.push(mqttData) // 리스트에 계속 추가함
+          this.mqttDataList.push(mqttData) // 리스트에 계속 추가함
 
-        //   this.makeChartLabels(mqttData) // 차트라벨 생성
-        //   this.makeChartData() // 차트용 데이터 작성
-        // }
+          this.makeChartLabels(xAxis) // 차트라벨 생성
+          this.makeChartData() // 차트용 데이터 작성
+        }
       })
     },
     removeOldData() {
@@ -120,6 +126,7 @@ export default {
       }
     },
     makeChartData() {
+      console.log('In')
       // 차트용 데이터 생성
 
       // mqtt정보가 없으면 기본 그래프를 그려준다.(이것이 없으면 그래프 자체가 나오지 않음)
@@ -133,17 +140,19 @@ export default {
             }
           ]
         }
-
+        console.log('1')
         return
       }
-
+      console.log('2')
       // 데이터셋 라벨 리스트 생성(태그 리스트(tagList)를 데이터셋 라벨로 사용한다.)
       const datasetLabels = []
       for (let i = 0; i < this.selected.tagList.length; i += 1) {
+        console.log('3')
         const tagName = this.selected.tagList[i] // tagName을 추출함
         datasetLabels.push(tagName) // tagName을 라벨로 사용함
       }
-      this.chartDatasetLabels = Array.from(new Set(datasetLabels)) // 중복 제거
+      this.chartDatasetLabels = Array.from(new Set(datasetLabels)) // 중복 제거\\
+      console.log('4')
 
       // 차트 데이터 생성
       this.chartData = {
@@ -151,9 +160,12 @@ export default {
         datasets: this.makeDatasetDatas()
       }
     },
-    makeChartLabels(mqttData) {
+    makeChartLabels(xAxis) {
       // 차트라벨(가로측) 생성
-      this.chartLabels.push(mqttData.datetime.substring(11, 19)) // datetime을 사용한다.(분:초만 추출함)
+      console.log('너 뭐니?', xAxis)
+      this.chartLabels.push(xAxis.value.substring(11, 19)) //datetime을 사용한다.(분:초만 추출함)
+      // this.chartLabels.push(mqttData.Wrapper[34].value)
+      console.log('here2?')
     },
     makeDatasetDatas() {
       // 데이터셋의 데이터 추출
@@ -162,11 +174,11 @@ export default {
       for (let i = 0; i < this.chartDatasetLabels.length; i += 1) {
         const label = this.chartDatasetLabels[i] // label을 하나씩 추출한다.
         const datas = [] // 해당 label에 속한 데이터셋의 데이터 리스트
-
         // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
         for (let j = 0; j < this.mqttDataList.length; j += 1) {
           const mqttData = this.mqttDataList[j]
-          const tagData = mqttData[label] // 현재 데이터셋 label과 같은 태그만 추출한다.
+          console.log(mqttData.Wrapper)
+          const tagData = mqttData.Wrapper[35].value // 현재 데이터셋 label과 같은 태그만 추출한다.
           datas.push(tagData)
         }
         datasetDatas.push({
