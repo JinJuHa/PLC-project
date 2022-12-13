@@ -124,7 +124,7 @@ export default {
       userSend: false,
       emailSend: false,
       emailId: '',
-      emailDi: 'jjhh@uvc-company.com',
+      emailDi: '',
       tempEmail: '',
       inputCode: '',
       name: '',

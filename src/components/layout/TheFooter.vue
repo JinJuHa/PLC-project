@@ -15,7 +15,9 @@
           <div class="menu-icon" @click="dashboard">
             <font-awesome-icon icon="fa-solid fa-chart-line" />
           </div>
-          <div class="menu-icon"></div>
+          <div class="menu-icon">
+            <font-awesome-icon icon="fa-solid fa-list" />
+          </div>
           <div v-b-modal.modal-1 class="menu-icon">
             <font-awesome-icon icon="fa-solid fa-user-gear" />
             <UserInfo />
@@ -82,11 +84,11 @@ export default {
 }
 .menu {
   height: 90px;
-  background-color: rgba(255, 255, 255, 0.56);
+  background-color: rgba(255, 255, 255, 0.634);
   border-radius: 40px;
   width: 60%;
   margin-left: 290px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   display: flex;
   justify-content: space-between;
   padding-left: 16%;
