@@ -17,8 +17,13 @@
           </div>
           <div class="menu-icon"></div>
           <div class="menu-icon"></div>
-          <div class="menu-icon"></div>
-          <div class="menu-icon"></div>
+          <div v-b-modal.modal-1 class="menu-icon">
+            <font-awesome-icon icon="fa-solid fa-user" />
+            <UserInfo />
+          </div>
+          <div class="menu-icon" @click="$router.push('/list')">
+            <font-awesome-icon icon="fa-solid fa-users" />
+          </div>
         </div>
       </div>
     </transition>
@@ -26,7 +31,10 @@
 </template>
 
 <script>
+import UserInfo from '../../views/user'
+
 export default {
+  components: { UserInfo },
   data() {
     return {
       drawerStat: false
@@ -93,6 +101,7 @@ export default {
   align-items: center;
   font-size: 30px;
   color: orangered;
+  cursor: pointer;
 }
 
 .slide-leave-from {

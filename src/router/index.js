@@ -14,11 +14,16 @@ const routes = [
       {
         path: '/web',
         component: () => import('../views/edukit'),
-        meta: { header: false, noLogin: true }
+        meta: { noLogin: true }
       },
       {
         path: '/home',
         component: () => import('../views/Home.vue'),
+        meta: { noLogin: true }
+      },
+      {
+        path: '/list',
+        component: () => import('../views/userList.vue'),
         meta: { noLogin: true }
       },
       {
