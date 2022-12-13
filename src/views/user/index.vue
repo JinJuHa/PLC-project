@@ -119,7 +119,7 @@ export default {
 .user-avatar {
   width: 80px;
   height: 80px;
-  margin-left: 65px;
+  margin-left: 38%;
   margin-bottom: 20px;
 }
 .icon-avatar {
