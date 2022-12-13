@@ -21,7 +21,7 @@
             <font-awesome-icon icon="fa-solid fa-user" />
             <UserInfo />
           </div>
-          <div class="menu-icon">
+          <div class="menu-icon" @click="$router.push('/list')">
             <font-awesome-icon icon="fa-solid fa-users" />
           </div>
         </div>
@@ -104,6 +104,7 @@ export default {
   align-items: center;
   font-size: 30px;
   color: orangered;
+  cursor: pointer;
 }
 
 .slide-leave-from {
