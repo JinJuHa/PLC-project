@@ -498,11 +498,10 @@ export default {
 .dashboard-bar {
   width: 100%;
   height: 100%;
-  /* background-color: yellow; */
 }
 .dashboard-footer {
   display: grid;
-  grid-template-columns: 50% 10% 40%;
+  grid-template-columns: 53% 7% 40%;
   width: 100%;
   height: 100%;
   background-color: white;
