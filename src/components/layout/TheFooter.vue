@@ -37,9 +37,6 @@ export default {
   methods: {
     drawer() {
       this.drawerStat = true
-    },
-    dashboard() {
-      this.$emit('dashboardOpen')
     }
   }
 }
