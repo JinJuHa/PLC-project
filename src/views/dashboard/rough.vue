@@ -16,11 +16,11 @@
     <div class="dashboard-columns">
       <div class="dashboard-rates">
         <div class="dashboard-amount">
-          <p>총 생산량</p>
+          <p>Device Id</p>
         </div>
         <div class="dashboard-amount">
           <!-- tagId 17 -->
-          <p>불량품, 양품 비율</p>
+          <p>Device Name</p>
         </div>
       </div>
       <div class="dashboard-doughnut">
@@ -53,9 +53,9 @@
         style="width: 650px; height: 250px"
       ></line-chart>
       <div class="dashboard-lights">
-        <div class="light red"></div>
-        <div class="light yellow"></div>
-        <div class="light green"></div>
+        <div class="light red-off"></div>
+        <div class="light yellow-off"></div>
+        <div class="light green-off"></div>
       </div>
       <div class="dashboard-rates">
         <div class="dashboard-amount">
@@ -91,7 +91,8 @@ export default {
               backgroundColor: ['#A684B7', '#DD7445'],
               borderColor: '#eee',
               hoverBorderColor: '#eee',
-              data: [20, 60]
+              data: []
+              // data: [20, 60]
             }
           ]
         },
@@ -152,7 +153,8 @@ export default {
               fill: true,
               tension: 0.1,
               barPercentage: 0.55,
-              data: [1200, 2000, 2500, 2200, 4000, 3000, 5000, 2000]
+              data: []
+              // data: [1200, 2000, 2500, 2200, 4000, 3000, 5000, 2000]
             }
           ]
         },
@@ -217,7 +219,8 @@ export default {
               pointBorderColor: 'green',
               borderWidth: 1,
               pointBorderWidth: 1,
-              data: [10, 10, 10, 9, 7, 6, 9, 10, 10, 8]
+              data: []
+              // data: [10, 10, 10, 9, 7, 6, 9, 10, 10, 8]
             },
             {
               label: '주사위',
@@ -227,7 +230,8 @@ export default {
               pointBorderColor: 'yellow',
               borderWidth: 1,
               pointBorderWidth: 1,
-              data: [5, 10, 4, 8, 3, 2, 8, 5, 2, 2]
+              data: []
+              // data: [5, 10, 4, 8, 3, 2, 8, 5, 2, 2]
             }
           ]
         },
@@ -332,8 +336,27 @@ export default {
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
         const mqttData = JSON.parse(message) // json string으로만 받을 수 있음
-        // console.log(mqttData.temperature)
+        let lightData = mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
+        console.log('신호등', lightData)
+        let lightGreen = lightData[0].value
+        let lightYellow = lightData[1].value
+        let lightRed = lightData[2].value
 
+        console.log('초록불켜졌니', lightGreen)
+        console.log('노랑불켜졌니', lightYellow)
+        console.log('빨강불켜졌니', lightRed)
+        if (lightGreen === true) {
+          const element = document.querySelector('.green-off')
+          element.style.backgroundColor = 'green'
+        }
+        if (lightYellow === true) {
+          const element = document.querySelector('.yellow-off')
+          element.style.backgroundColor = 'yellow'
+        }
+        if (lightRed === true) {
+          const element = document.querySelector('.red-off')
+          element.style.backgroundColor = 'red'
+        }
         // 선택된 devicdId만 수용함
         this.removeOldData() // 오래된 데이터 제거
 
@@ -531,11 +554,20 @@ export default {
   height: 100%;
   border-radius: 20%;
 }
+.red-off {
+  background-color: darkred;
+}
 .red {
   background-color: red;
 }
+.yellow-off {
+  background-color: burlywood;
+}
 .yellow {
   background-color: yellow;
+}
+.green-off {
+  background-color: darkolivegreen;
 }
 .green {
   background-color: green;

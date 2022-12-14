@@ -98,15 +98,35 @@ export default {
         this.plc.plcStart = plcData[0].value // 시작
         this.plc.plcReset = plcData[1].value // 리셋
         this.plc.plcStop = plcData[2].value // 비상정지
-        // let controlData = this.mqttData.Wrapper.filter(
-        //   p => p.tagId === '9' || p.tagId === '10' || p.tagId === '11' || p.tagId === '12' || p.tagId === '13'
-        // )
-        // this.control.no1 = controlData[0].value // 1호기 전원
-        // this.control.no2 = controlData[1].value // 2호기 전원
-        // this.control.no3 = controlData[2].value // 3호기 전원
+        let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
+        console.log('신호등', lightData)
+        let lightGreen = lightData[0].value
+        let lightYellow = lightData[1].value
+        let lightRed = lightData[2].value
+
+        console.log('초록불켜졌니', lightGreen)
+        console.log('노랑불켜졌니', lightYellow)
+        console.log('빨강불켜졌니', lightRed)
+        if (lightGreen === true) {
+          const element = document.querySelector('.green-off')
+          element.style.backgroundColor = 'green'
+        }
+        if (lightYellow === true) {
+          const element = document.querySelector('.yellow-off')
+          element.style.backgroundColor = 'yellow'
+        }
+        if (lightRed === true) {
+          const element = document.querySelector('.red-off')
+          element.style.backgroundColor = 'red'
+        }
+        // let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
+        // this.light.green = lightData[0].value // 초록
+        // this.light.yellow = lightData[1].value // 노랑
+        // this.light.red = lightData[2].value // 빨강
         // this.control.sen1 = controlData[3].value // 1번 센서 전원
         // this.control.sen2 = controlData[4].value // 2번 센서 전원
         console.log(plcData)
+        // console.log('신호등', lightData)
       })
     },
 
