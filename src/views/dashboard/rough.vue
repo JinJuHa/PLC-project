@@ -20,7 +20,8 @@
         </div>
         <div class="dashboard-amount">
           <!-- tagId 17 -->
-          <p>Device Name</p>
+          <p>작동 여부</p>
+          <p>{{ plc.plcStart }}</p>
         </div>
       </div>
       <div class="dashboard-doughnut">
@@ -570,19 +571,19 @@ export default {
   border-radius: 20%;
 }
 .red-off {
-  background-color: darkred;
+  background-color: lightsalmon;
 }
 .red {
   background-color: red;
 }
 .yellow-off {
-  background-color: burlywood;
+  background-color: lightgoldenrodyellow;
 }
 .yellow {
   background-color: yellow;
 }
 .green-off {
-  background-color: darkolivegreen;
+  background-color: lightgrey;
 }
 .green {
   background-color: green;
