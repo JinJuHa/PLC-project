@@ -76,7 +76,6 @@ class Event {
         console.log(`토픽 연결 완료: ${topic}`)
       })
       this.client.on('message', (topic, payload) => {
-
         let message = JSON.parse(payload)
         let data = message.Wrapper.filter(p => p.tagId === '21' || p.tagId === '22')
         data = data.map(p => parseInt(p.value))
