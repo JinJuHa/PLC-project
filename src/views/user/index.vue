@@ -1,7 +1,5 @@
 <template>
   <div>
-    <button v-b-modal.modal-1 class="user-page">사용자 관리</button>
-
     <b-modal id="modal-1" hide-footer hide-header>
       <div class="user-profile">
         <b-avatar class="user-avatar" variant="primary"
@@ -121,7 +119,7 @@ export default {
 .user-avatar {
   width: 80px;
   height: 80px;
-  margin-left: 65px;
+  margin-left: 38%;
   margin-bottom: 20px;
 }
 .icon-avatar {
@@ -138,7 +136,7 @@ export default {
   width: 28px;
   height: 28px;
   padding: 2px;
-  background-color: #fff;
+  background-color: rgb(255, 255, 255);
   border-radius: 20px;
   border: none;
   transition: 0.5s;
