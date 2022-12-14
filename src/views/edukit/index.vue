@@ -48,7 +48,7 @@
       <Dashboard />
     </div>
     <Edukit />
-    <the-footer @dashboardOpen="dashboardSet" />
+    <TheFooter class="footer" @dashboardOpen="dashboardSet" />
   </div>
 </template>
 
@@ -149,6 +149,9 @@ export default {
 </script>
 
 <style scoped>
+.footer {
+  position: absolute;
+}
 #control-button {
   margin-left: 20px;
   position: absolute;

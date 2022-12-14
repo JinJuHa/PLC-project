@@ -22,6 +22,11 @@ const routes = [
         meta: { noLogin: true }
       },
       {
+        path: '/test',
+        component: () => import('../views/test.vue'),
+        meta: { noLogin: true }
+      },
+      {
         path: '/list',
         component: () => import('../views/userList.vue'),
         meta: { noLogin: true }
