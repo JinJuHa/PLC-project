@@ -53,9 +53,12 @@
         style="width: 650px; height: 250px"
       ></line-chart>
       <div class="dashboard-lights">
-        <div class="light red-off"></div>
-        <div class="light yellow-off"></div>
-        <div class="light green-off"></div>
+        <div v-show="plc.lightRed === false" class="light red-off"></div>
+        <div v-show="plc.lightRed === true" class="light red"></div>
+        <div v-show="plc.lightYellow === false" class="light yellow-off"></div>
+        <div v-show="plc.lightYellow === true" class="light yellow"></div>
+        <div v-show="plc.lightGreen === false" class="light green-off"></div>
+        <div v-show="plc.lightGreen === true" class="light green"></div>
       </div>
       <div class="dashboard-rates">
         <div class="dashboard-amount">
@@ -79,6 +82,12 @@ export default {
     'doughnut-chart': DoughnutChart,
     'bar-chart': BarChart,
     'line-chart': LineChart
+  },
+  props: {
+    plc: {
+      type: Object,
+      required: true
+    }
   },
   data() {
     return {
@@ -313,12 +322,18 @@ export default {
       this.today = `${years}/${months}/${dates}`
       document.querySelector('#time').innerHTML = now.toLocaleString('ko-kr')
     }, 10)),
+      this.lightStatus(),
       this.makeChartData()
   },
   destroyed() {
     clearInterval(this.timerInterval)
   },
   methods: {
+    lightStatus() {
+      console.log('초록불 데이터 받니?', this.plc.lightGreen)
+      console.log('노랑불 데이터 받니?', this.plc.lightYellow)
+      console.log('빨강불 데이터 받니?', this.plc.lightRed)
+    },
     createMqtt() {
       // mqtt연결
       const mqttClient = mqtt.connect(process.env.VUE_APP_MQTT)
@@ -336,27 +351,27 @@ export default {
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
         const mqttData = JSON.parse(message) // json string으로만 받을 수 있음
-        let lightData = mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
-        console.log('신호등', lightData)
-        let lightGreen = lightData[0].value
-        let lightYellow = lightData[1].value
-        let lightRed = lightData[2].value
+        // let lightData = mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
+        // console.log('신호등', lightData)
+        // let lightGreen = lightData[0].value
+        // let lightYellow = lightData[1].value
+        // let lightRed = lightData[2].value
 
-        console.log('초록불켜졌니', lightGreen)
-        console.log('노랑불켜졌니', lightYellow)
-        console.log('빨강불켜졌니', lightRed)
-        if (lightGreen === true) {
-          const element = document.querySelector('.green-off')
-          element.style.backgroundColor = 'green'
-        }
-        if (lightYellow === true) {
-          const element = document.querySelector('.yellow-off')
-          element.style.backgroundColor = 'yellow'
-        }
-        if (lightRed === true) {
-          const element = document.querySelector('.red-off')
-          element.style.backgroundColor = 'red'
-        }
+        // console.log('초록불켜졌니', lightGreen)
+        // console.log('노랑불켜졌니', lightYellow)
+        // console.log('빨강불켜졌니', lightRed)
+        // if (lightGreen === true) {
+        //   const element = document.querySelector('.green-off')
+        //   element.style.backgroundColor = 'green'
+        // }
+        // if (lightYellow === true) {
+        //   const element = document.querySelector('.yellow-off')
+        //   element.style.backgroundColor = 'yellow'
+        // }
+        // if (lightRed === true) {
+        //   const element = document.querySelector('.red-off')
+        //   element.style.backgroundColor = 'red'
+        // }
         // 선택된 devicdId만 수용함
         this.removeOldData() // 오래된 데이터 제거
 

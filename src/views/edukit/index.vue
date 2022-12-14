@@ -45,7 +45,7 @@
       <UserInfo />
     </div>
     <div v-show="dashboardStat == true">
-      <Dashboard />
+      <Dashboard :plc="plc" />
     </div>
     <Edukit />
     <the-footer @dashboardOpen="dashboardStat = true" />
@@ -68,12 +68,16 @@ export default {
       plc: {
         plcStart: null,
         plcStop: null,
-        plcReset: null
+        plcReset: null,
+        lightGreen: null,
+        lightYellow: null,
+        lightRed: null
       }
     }
   },
   mounted() {
     this.createMqtt()
+    // this.lightStatus()
   },
   methods: {
     createMqtt() {
@@ -98,27 +102,31 @@ export default {
         this.plc.plcStart = plcData[0].value // 시작
         this.plc.plcReset = plcData[1].value // 리셋
         this.plc.plcStop = plcData[2].value // 비상정지
+        // 신호등
         let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
         console.log('신호등', lightData)
-        let lightGreen = lightData[0].value
-        let lightYellow = lightData[1].value
-        let lightRed = lightData[2].value
+        this.plc.lightGreen = lightData[0].value
+        this.plc.lightYellow = lightData[1].value
+        this.plc.lightRed = lightData[2].value
 
-        console.log('초록불켜졌니', lightGreen)
-        console.log('노랑불켜졌니', lightYellow)
-        console.log('빨강불켜졌니', lightRed)
-        if (lightGreen === true) {
-          const element = document.querySelector('.green-off')
-          element.style.backgroundColor = 'green'
-        }
-        if (lightYellow === true) {
-          const element = document.querySelector('.yellow-off')
-          element.style.backgroundColor = 'yellow'
-        }
-        if (lightRed === true) {
-          const element = document.querySelector('.red-off')
-          element.style.backgroundColor = 'red'
-        }
+        console.log('초록불켜졌니', this.plc.lightGreen)
+        console.log('노랑불켜졌니', this.plc.lightYellow)
+        console.log('빨강불켜졌니', this.plc.lightRed)
+        // if (this.plc.lightGreen === true) {
+        //   document.getElementById('green').classList.add('green')
+        // } else {
+        //   document.querySelector('.green').classList.add('green-off')
+        // }
+        // if (this.plc.lightYellow === true) {
+        //   document.getElementById('yellow').classList.add('yellow')
+        // } else {
+        //   document.querySelector('.yellow').classList.add('yellow-off')
+        // }
+        // if (this.plc.lightRed === true) {
+        //   document.getElementById('red').classList.add('red')
+        // } else {
+        //   document.querySelector('.red').classList.add('red-off')
+        // }
         // let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
         // this.light.green = lightData[0].value // 초록
         // this.light.yellow = lightData[1].value // 노랑
@@ -129,7 +137,6 @@ export default {
         // console.log('신호등', lightData)
       })
     },
-
     publishMqtt(id, v) {
       // mqtt pubish
       const mqttClient = mqtt.connect(process.env.VUE_APP_MQTT)
