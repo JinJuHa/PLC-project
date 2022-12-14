@@ -2,7 +2,9 @@
   <div>
     <div class="background">
       <div class="dashboard">
+        <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="$router.push('/web')" />
         <iframe
+          class="data-one"
           src="http://192.168.0.50:3000/d-solo/8ybdmNc4k/cycle-data?orgId=1&from=1670952872000&to=1670952892000&panelId=2"
           width="450"
           height="200"
@@ -32,5 +34,15 @@ export default {}
   height: 100vh;
   width: 100%;
   background-color: #024d92;
+}
+.back-button {
+  position: absolute;
+  left: 70px;
+  cursor: pointer;
+  width: 100px;
+  font-size: 25px;
+}
+.data-one {
+  margin-top: 50px;
 }
 </style>

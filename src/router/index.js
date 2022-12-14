@@ -17,11 +17,6 @@ const routes = [
         meta: { noLogin: true }
       },
       {
-        path: '/home',
-        component: () => import('../views/Home.vue'),
-        meta: { noLogin: true }
-      },
-      {
         path: '/test',
         component: () => import('../views/test.vue'),
         meta: { noLogin: true }

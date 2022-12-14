@@ -36,6 +36,29 @@
         </div>
       </div>
     </div>
+    <div class="test-page">
+      <div class="user-profile">
+        <img class="avatar" src="http://image.dongascience.com/Photo/2016/09/14750507361195.jpg" alt="Ash" />
+        <div class="username">담당자님</div>
+        <!-- {{ user.name }}  -->
+        <div class="bio">PLC Engineer</div>
+        <div class="description">I use to design websites and applications for the web.</div>
+        <ul class="data">
+          <!-- <li v-show="plc.plcStart == false">
+            <span class="entypo-heart"> 정지</span>
+          </li>
+          <li v-show="plc.plcStart == true && plc.plcStop == true">
+            <span class="entypo-heart"> 실행 중</span>
+          </li>
+          <li v-show="plc.plcStop == true && plc.plcStart == true">
+            <span class="entypo-heart"> 비상정지</span>
+          </li>
+          <li v-show="plc.plcStart == false && plc.plcReset == true">
+            <span class="entypo-heart"> 리셋</span>
+          </li> -->
+        </ul>
+      </div>
+    </div>
     <div>
       <button class="logout" @click="signOut">
         <font-awesome-icon icon="fa-solid fa-power-off" /><span class="logout-text">Logout</span>
@@ -102,9 +125,10 @@ export default {
         this.plc.plcStart = plcData[0].value // 시작
         this.plc.plcReset = plcData[1].value // 리셋
         this.plc.plcStop = plcData[2].value // 비상정지
+        // console.log('정지', this.plc.plcStop)
         // 신호등
         let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
-        console.log('신호등', lightData)
+        // console.log('신호등', lightData)
         this.plc.lightGreen = lightData[0].value
         this.plc.lightYellow = lightData[1].value
         this.plc.lightRed = lightData[2].value
@@ -133,7 +157,7 @@ export default {
         // this.light.red = lightData[2].value // 빨강
         // this.control.sen1 = controlData[3].value // 1번 센서 전원
         // this.control.sen2 = controlData[4].value // 2번 센서 전원
-        //console.log(plcData)
+        console.log(plcData)
         // console.log('신호등', lightData)
       })
     },
@@ -238,6 +262,86 @@ export default {
 </script>
 
 <style scoped>
+@import url(https://fonts.googleapis.com/css?family=Raleway|Varela+Round|Coda);
+@import url(http://weloveiconfonts.com/api/?family=entypo);
+
+[class*='entypo-']:before {
+  font-family: 'entypo', sans-serif;
+}
+
+.test-page {
+  padding: 2.23em;
+  position: absolute;
+}
+
+.user-profile {
+  margin: auto;
+  width: 25em;
+  height: 11em;
+  background: #fff;
+  border-radius: 0.3em;
+}
+
+.user-profile .username {
+  margin: auto;
+  margin-top: -4.4em;
+  margin-left: 5.8em;
+  color: #658585;
+  font-size: 1.53em;
+  font-family: 'Coda', sans-serif;
+  font-weight: bold;
+}
+.user-profile .bio {
+  margin: auto;
+  display: inline-block;
+  margin-left: 10.43em;
+  color: #e76043;
+  font-size: 0.87em;
+  font-family: 'varela round', sans-serif;
+}
+.user-profile > .description {
+  margin: auto;
+  margin-top: 1.35em;
+  margin-right: 4.43em;
+  width: 14em;
+  color: #c0c5c5;
+  font-size: 0.87em;
+  font-family: 'varela round', sans-serif;
+}
+.user-profile > img.avatar {
+  padding: 0.7em;
+  margin-left: 0.3em;
+  margin-top: 0.3em;
+  height: 6.23em;
+  width: 6.23em;
+  border-radius: 18em;
+}
+
+.user-profile ul.data {
+  margin: 2em auto;
+  height: 3.7em;
+  background: #4eb6b6;
+  text-align: center;
+  border-radius: 0 0 0.3em 0.3em;
+}
+.user-profile li {
+  margin: 0 auto;
+  padding: 1.3em;
+  width: 33.33334%;
+  display: table-cell;
+  text-align: center;
+}
+
+.user-profile span {
+  font-family: 'varela round', sans-serif;
+  color: #e3eeee;
+  white-space: nowrap;
+  font-size: 1.27em;
+  font-weight: bold;
+}
+.user-profile span:hover {
+  color: #daebea;
+}
 .footer {
   position: absolute;
   border: none;
