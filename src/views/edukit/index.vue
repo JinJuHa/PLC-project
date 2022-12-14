@@ -48,7 +48,7 @@
       <Dashboard :plc="plc" />
     </div>
     <Edukit />
-    <the-footer @dashboardOpen="dashboardStat = true" />
+    <TheFooter class="footer" @dashboardOpen="dashboardSet" />
   </div>
 </template>
 
@@ -57,6 +57,7 @@ import Edukit from './edukit.vue'
 import TheFooter from '../../components/layout/TheFooter.vue'
 import mqtt from 'mqtt'
 import Dashboard from '../dashboard/rough.vue'
+import axios from 'axios'
 
 export default {
   components: { Edukit, TheFooter, Dashboard },
@@ -132,15 +133,13 @@ export default {
         // this.light.red = lightData[2].value // 빨강
         // this.control.sen1 = controlData[3].value // 1번 센서 전원
         // this.control.sen2 = controlData[4].value // 2번 센서 전원
-        console.log(plcData)
-        // console.log('신호등', lightData)
       })
     },
     publishMqtt(id, v) {
       // mqtt pubish
       const mqttClient = mqtt.connect(process.env.VUE_APP_MQTT)
       const topic = process.env.VUE_APP_MQTT_WRITE_TOPIC // UVC-Write
-      const message = JSON.stringify({ tagId: id, value: v, userId: 1, deviceId: 2 })
+      const message = JSON.stringify({ tagId: id, value: v, userId: 1, deviceId: 1 })
       // PLC 제어에 쓰이는 모든 publish message들은
       // { "tagId" : "id값", "value" : "value값" }으로 이루어져야 합니다.
       // true와 false 같은 boolean 값은 1과(true) 0으로(false) 입력하도록 합니다.
@@ -152,25 +151,95 @@ export default {
         }
       })
     },
+    dashboardSet() {
+      this.dashboardStat = true
+    },
     mcStart() {
       this.publishMqtt(1, 1)
+      this.deviceStartControl()
     },
     mcStop() {
       this.publishMqtt(1, 0)
+      this.deviceStopControl()
     },
     mcReset() {
       this.publishMqtt(1, 0)
       this.publishMqtt(8, 1)
+      this.deviceResetControl()
     },
     signOut() {
       localStorage.removeItem('token')
       this.$router.push('/auth/login')
+    },
+    async deviceStartControl() {
+      const axiosBody = {
+        deviceid: '1',
+        control: 'START',
+        state: this.plc.plcStart
+      }
+      console.log('/devices/control/start - axiosBody : ', axiosBody)
+      await axios
+        .post(process.env.VUE_APP_SERVER + '/devices/control', axiosBody, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async res => {
+          console.log('/devices/control/start - response: ', res.data)
+        })
+        .catch(err => {
+          console.log('/devices/control/start - errerr', err)
+        })
+    },
+    async deviceStopControl() {
+      const axiosBody = {
+        deviceid: '1',
+        control: 'STOP',
+        state: this.plc.plcStop
+      }
+      console.log('/devices/control/stop - axiosBody : ', axiosBody)
+      await axios
+        .post(process.env.VUE_APP_SERVER + '/devices/control', axiosBody, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async res => {
+          console.log('/devices/control/stop - response: ', res.data)
+        })
+        .catch(err => {
+          console.log('/devices/control/stop - errerr', err)
+        })
+    },
+    async deviceResetControl() {
+      const axiosBody = {
+        deviceid: '1',
+        control: 'RESET',
+        state: this.plc.plcReset
+      }
+      console.log('/devices/control/reset - axiosBody : ', axiosBody)
+      await axios
+        .post(process.env.VUE_APP_SERVER + '/devices/control', axiosBody, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async res => {
+          console.log('/devices/control/reset - response: ', res.data)
+        })
+        .catch(err => {
+          console.log('/devices/control/reset - errerr', err)
+        })
     }
   }
 }
 </script>
 
 <style scoped>
+.footer {
+  position: absolute;
+  border: none;
+}
 #control-button {
   margin-left: 20px;
   position: absolute;
