@@ -109,9 +109,9 @@ export default {
         this.plc.lightYellow = lightData[1].value
         this.plc.lightRed = lightData[2].value
 
-        console.log('초록불켜졌니', this.plc.lightGreen)
-        console.log('노랑불켜졌니', this.plc.lightYellow)
-        console.log('빨강불켜졌니', this.plc.lightRed)
+        // console.log('초록불켜졌니', this.plc.lightGreen)
+        // console.log('노랑불켜졌니', this.plc.lightYellow)
+        // console.log('빨강불켜졌니', this.plc.lightRed)
         // if (this.plc.lightGreen === true) {
         //   document.getElementById('green').classList.add('green')
         // } else {
