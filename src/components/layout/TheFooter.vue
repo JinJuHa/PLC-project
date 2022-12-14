@@ -88,8 +88,8 @@ export default {
   padding-right: 16%;
   align-items: center;
   box-shadow: inset 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-  transform-origin: 0% 0%;
   transform: translate(0%, 150%);
+  transform-origin: 0% 0%;
   transition: transform 1s cubic-bezier(0.77, 0.2, 0.05, 1);
 }
 .menu-icon {
