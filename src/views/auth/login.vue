@@ -94,7 +94,7 @@
               <p class="subtitle">Enter your personal details and start journey with us</p>
               <button id="signUp" class="transition-button">Sign Up</button>
             </div>
-            <img src="../../../public/login.jpg" />
+            <img src="../../../public/img/login.jpg" />
           </div>
         </div>
       </div>

@@ -2,22 +2,22 @@
   <div class="footer-page">
     <div id="menuToggle">
       <input class="checkbox" type="checkbox" />
-      <!-- <div class="footer-button" @click="drawer">
-      <font-awesome-icon icon="fa-solid fa-angles-up" />
-    </div> -->
+      <div class="footer-button">
+        <font-awesome-icon class="footer-button-icon" icon="fa-solid fa-angles-up" />
+      </div>
       <div id="menu">
         <div class="menu-icon" @click="dashboard">
           <font-awesome-icon icon="fa-solid fa-chart-line" />
         </div>
-        <div class="menu-icon">
-          <font-awesome-icon icon="fa-solid fa-list" />
+        <div class="menu-icon" @click="$router.push('/data')">
+          <font-awesome-icon icon="fa-solid fa-chart-column" />
         </div>
         <div v-b-modal.modal-1 class="menu-icon">
           <font-awesome-icon icon="fa-solid fa-user-gear" />
           <UserInfo />
         </div>
         <div class="menu-icon" @click="$router.push('/list')">
-          <font-awesome-icon icon="fa-solid fa-users" />
+          <font-awesome-icon icon="fa-solid fa-address-card" />
         </div>
       </div>
     </div>
@@ -53,26 +53,24 @@ export default {
 }
 .footer-button {
   position: absolute;
-  background-color: white;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  opacity: 0.5;
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.634);
   width: 50px;
   height: 50px;
   margin-left: 50px;
+  transition: all ease 0.5s;
 }
 .footer-button-icon {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 12px;
+  left: 14px;
   cursor: pointer;
   font-size: 25px;
   text-align: center;
-  padding-top: 5px;
   color: darkgreen;
 }
 .menu-container {
   width: 100%;
-  /* position: fixed; */
   position: absolute;
   bottom: 0;
 }
@@ -135,7 +133,6 @@ export default {
   transform: translateY(-10px);
 } */
 .footer-page {
-  /* border: 2px solid red; */
   height: 120px;
   overflow: hidden;
 }
@@ -143,19 +140,21 @@ export default {
 #menuToggle input {
   position: absolute;
   display: block;
-  width: 40px;
-  height: 32px;
-  top: -7px;
-  left: -5px;
+  width: 50px;
+  height: 50px;
+  left: 50px;
   cursor: pointer;
-  opacity: 1;
+  opacity: 0;
   z-index: 2; /* and place it over the hamburger */
 }
-/* .checkbox:checked ~ .footer-button {
-  opacity: 1;
-  transform: rotate(45deg) translate(-2px, -1px);
-  background: #232323;
-} */
+.icon-button {
+  border: 1px solid red;
+  width: 50px;
+  height: 50px;
+}
+#menuToggle input:checked ~ .footer-button {
+  transform: rotate(180deg);
+}
 #menuToggle input:checked ~ #menu {
   transform: none;
 }
