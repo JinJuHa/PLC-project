@@ -12,12 +12,12 @@
         <div class="menu-icon" @click="$router.push('/data')">
           <font-awesome-icon icon="fa-solid fa-chart-column" />
         </div>
+        <div class="menu-icon" @click="$router.push('/list')">
+          <font-awesome-icon icon="fa-solid fa-address-card" />
+        </div>
         <div v-b-modal.modal-1 class="menu-icon">
           <font-awesome-icon icon="fa-solid fa-user-gear" />
           <UserInfo />
-        </div>
-        <div class="menu-icon" @click="$router.push('/list')">
-          <font-awesome-icon icon="fa-solid fa-address-card" />
         </div>
       </div>
     </div>
@@ -57,7 +57,7 @@ export default {
   background-color: rgba(255, 255, 255, 0.634);
   width: 50px;
   height: 50px;
-  margin-left: 50px;
+  margin-left: 70px;
   transition: all ease 0.5s;
 }
 .footer-button-icon {

@@ -22,12 +22,12 @@
           <div>
             <span>이메일: </span>
             <span v-if="show">
-              {{ user.email }}
+              {{ user.email }}@uvc-company.com
               <button v-if="show" class="correction" variant="outline-primary" @click="show = !show">
                 <font-awesome-icon icon="fa-solid fa-pen" class="pencil" />
               </button>
             </span>
-            <b-input v-if="!show" v-model="email"></b-input>
+            <b-input v-if="!show" v-model="email" placeholder="아이디를 적어주세요."></b-input>
             <b-btn v-if="!show" variant="danger" @click="show = !show">취소</b-btn>
           </div>
           <div>
@@ -97,7 +97,10 @@ export default {
         .then(response => {
           console.log('updateProfile - response : ', response)
           alert('회원정보가 수정 되었습니다.')
-          this.$router.go()
+          this.on = true
+          this.show = true
+          this.see = true
+          this.inforData()
         })
         .catch(error => {
           console.log('updateProfile - error : ', error)
@@ -119,7 +122,7 @@ export default {
 .user-avatar {
   width: 80px;
   height: 80px;
-  margin-left: 30%;
+  margin-left: 35%;
   margin-bottom: 20px;
 }
 .icon-avatar {
