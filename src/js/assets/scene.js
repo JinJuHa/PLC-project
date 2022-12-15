@@ -5,6 +5,9 @@ import * as THREE from 'three'
 import { Resource } from './resource'
 import { Camera } from './camera'
 import { Light } from './light'
+import { TrafficLight } from './trafficLight'
+import { VisionSensor } from './visionSensor'
+import { ToyGoods } from './toyGoods'
 
 class Scene {
   constructor(file = null) {
@@ -13,6 +16,9 @@ class Scene {
     this.resource = new Resource(file)
     this.camera = new Camera()
     this.light = new Light()
+    this.trafficLight = new TrafficLight()
+    this.visionSensor = new VisionSensor()
+    this.toyGoods = new ToyGoods()
 
     this.setScene()
     this.setMesh()
@@ -22,11 +28,6 @@ class Scene {
   setScene() {
     this.scene.background = new THREE.Color(0x101010)
 
-    // this.scene.add(this.resource.obj);
-
-    // this.scene.add(this.light.ambientLight);
-
-    // this.scene.add(this.camera.camera);
     this.scene.add(this.resource.obj)
 
     this.scene.add(this.light.ambientLight)
@@ -34,6 +35,12 @@ class Scene {
     this.scene.add(this.camera.camera)
 
     this.scene.add(this.light.dirLight)
+
+    // this.scene.add(this.resource.obj);
+
+    // this.scene.add(this.light.ambientLight);
+
+    // this.scene.add(this.camera.camera);
   }
 
   setMesh() {
@@ -44,8 +51,25 @@ class Scene {
     )
     this.mesh.rotation.x = -Math.PI / 2
     this.mesh.receiveShadow = true
-
+    // declare mesh
     this.scene.add(this.mesh)
+    // declare trafficLight
+    this.scene.add(this.trafficLight.trafficLight1)
+    this.scene.add(this.trafficLight.trafficLight2)
+    this.scene.add(this.trafficLight.trafficLight3)
+    this.scene.add(this.trafficLight.pillarTop1)
+    this.scene.add(this.trafficLight.pillarTop2)
+    this.scene.add(this.trafficLight.pillarFloor)
+    this.scene.add(this.trafficLight.pillar)
+
+    // declare visionSensor
+    this.scene.add(this.visionSensor.visionSensorFloor)
+    this.scene.add(this.visionSensor.visionSensorTowerSection)
+    this.scene.add(this.visionSensor.visionSensorJipSection)
+    this.scene.add(this.visionSensor.SensorVision)
+
+    // declare toyGoods
+    this.scene.add(this.toyGoods.defaultToy)
   }
 
   // setGrid() {
@@ -56,9 +80,9 @@ class Scene {
   //   this.scene.add(this.grid)
   // }
 
-  // setLight() {
-  //   this.scene.add(this.light.dirLight)
-  // }
+  setLight() {
+    this.scene.add(this.light.dirLight)
+  }
 
   setLightHelper() {
     this.helper = new THREE.CameraHelper(this.light.dirLight.shadow.camera)

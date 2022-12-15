@@ -29,7 +29,7 @@ class Resource {
 
       this.obj.add(cube)
     } else if (file === 'edukit') {
-      this.loader.load('fbx/body.FBX', object => {
+      this.loader.load('fbx/body2.FBX', object => {
         let obj = (this.edukit.body = object)
         obj.name = 'body'
 
@@ -65,7 +65,6 @@ class Resource {
             child.receiveShadow = true
           }
         })
-
         if (obj) this.obj.add(obj)
       })
 

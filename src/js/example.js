@@ -60,20 +60,8 @@ export default async element => {
     false
   )
 
-  // Dat.GUI Setting
-  // let gui = new Gui(element)
-  // let options = {
-  //   yAxis: -27,
-  //   xAxis: -4375
-  // }
-  // gui.addOptions(options)
-  // gui.addFolder('Example')
-
-  // gui.addExample('yAxis', -27, 1301828, scene.resource.edukit)
-  // gui.addExample('xAxis', -4375, 25021563, scene.resource.edukit)
-
   // MQTT Event Setting
-  new Event(element, scene.resource.edukit)
+  new Event(element, renderer, scene)
 
   return element
 }
