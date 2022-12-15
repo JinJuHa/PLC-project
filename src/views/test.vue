@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <h1 class="title-pen">User Profile <span>UI</span></h1>
+  <div class="test-page">
     <div class="user-profile">
       <img
         class="avatar"
@@ -22,12 +21,6 @@
         </li>
       </ul>
     </div>
-    <footer>
-      <h1>
-        inspired by
-        <a href="https://dribbble.com/shots/1033074-User-Profile"> <span class="entypo-dribbble"></span> shot</a>
-      </h1>
-    </footer>
   </div>
 </template>
 
@@ -44,18 +37,8 @@ export default {}
   font-family: 'entypo', sans-serif;
 }
 
-body {
-  background: #fffcdd;
+.test-page {
   padding: 2.23em;
-}
-
-.title-pen {
-  color: #333;
-  font-family: 'Coda', sans-serif;
-  text-align: center;
-}
-.title-pen span {
-  color: #55acee;
 }
 
 .user-profile {
@@ -125,19 +108,5 @@ body {
 }
 .user-profile span:hover {
   color: #daebea;
-}
-
-footer > h1 {
-  display: block;
-  text-align: center;
-  clear: both;
-  font-family: 'Coda', sans-serif;
-  color: #343f3d;
-  line-height: 6;
-  font-size: 1.6em;
-}
-footer > h1 a {
-  text-decoration: none;
-  color: #ea4c89;
 }
 </style>

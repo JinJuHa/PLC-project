@@ -17,8 +17,8 @@ const routes = [
         meta: { noLogin: true }
       },
       {
-        path: '/home',
-        component: () => import('../views/Home.vue'),
+        path: '/edukit/list',
+        component: () => import('../views/edukitList.vue'),
         meta: { noLogin: true }
       },
       {
@@ -42,7 +42,7 @@ const routes = [
         meta: { noLogin: true }
       },
       {
-        path: '/user',
+        path: '/mypage',
         component: () => import('../views/user')
       }
     ]

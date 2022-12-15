@@ -38,7 +38,7 @@ export default {
           }
         })
         .then(async res => {
-          this.userInfoList = res.data.list
+          this.userInfoList = res.data.data
           console.log('/users/list - res', this.userInfoList)
           for (let i = 0; i < this.userInfoList.length; i++) {
             this.items.push({
@@ -52,7 +52,7 @@ export default {
         })
         .catch(err => {
           console.log('/users/list - error : ', err)
-          if (err.response.status == 403) {
+          if (err.response.status == 401) {
             alert('사용자 리스트를 볼 권한이 없습니다.')
             this.$router.go(-1)
           }
