@@ -1,32 +1,34 @@
 <template>
-  <div>
-    <transition name="slide">
-      <div v-show="drawerStat !== true" class="footer">
-        <div class="footer-button">
-          <div class="footer-button-icon" @click="drawer">
-            <font-awesome-icon icon="fa-solid fa-angles-up" />
-          </div>
+  <div class="footer-page">
+    <div id="menuToggle">
+      <input class="checkbox" type="checkbox" />
+      <div class="footer-button">
+        <font-awesome-icon class="footer-button-icon" icon="fa-solid fa-angles-up" />
+      </div>
+      <div id="menu">
+        <div class="menu-icon" @click="dashboard">
+          <font-awesome-icon icon="fa-solid fa-chart-line" />
+        </div>
+        <div class="menu-icon" @click="$router.push('/data')">
+          <font-awesome-icon icon="fa-solid fa-chart-column" />
+        </div>
+        <div class="menu-icon" @click="$router.push('/list')">
+          <font-awesome-icon icon="fa-solid fa-address-card" />
+        </div>
+        <div v-b-modal.modal-1 class="menu-icon">
+          <font-awesome-icon icon="fa-solid fa-user-gear" />
+          <UserInfo />
         </div>
       </div>
-    </transition>
-    <transition name="menuSlide">
-      <div v-show="drawerStat == true" class="menu-container">
-        <div class="menu">
-          <div class="menu-icon" @click="$emit('dashboardOpen')">
-            <font-awesome-icon icon="fa-solid fa-chart-line" />
-          </div>
-          <div class="menu-icon"></div>
-          <div class="menu-icon"></div>
-          <div class="menu-icon"></div>
-          <div class="menu-icon"></div>
-        </div>
-      </div>
-    </transition>
+    </div>
   </div>
 </template>
 
 <script>
+import UserInfo from '../../views/user'
+
 export default {
+  components: { UserInfo },
   data() {
     return {
       drawerStat: false
@@ -35,6 +37,9 @@ export default {
   methods: {
     drawer() {
       this.drawerStat = true
+    },
+    dashboard() {
+      this.$emit('dashboardOpen')
     }
   }
 }
@@ -47,55 +52,69 @@ export default {
   bottom: 0;
 }
 .footer-button {
-  background-color: white;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  opacity: 0.5;
+  position: absolute;
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.634);
   width: 50px;
   height: 50px;
-  margin-left: 50px;
+  margin-left: 70px;
+  transition: all ease 0.5s;
 }
 .footer-button-icon {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 12px;
+  left: 14px;
   cursor: pointer;
   font-size: 25px;
   text-align: center;
-  padding-top: 5px;
   color: darkgreen;
 }
 .menu-container {
   width: 100%;
-  /* position: fixed; */
   position: absolute;
   bottom: 0;
 }
-.menu {
+#menu {
+  position: absolute;
   height: 90px;
-  background-color: rgb(255, 245, 206);
+  background-color: rgba(255, 255, 255, 0.634);
   border-radius: 40px;
-  width: 70%;
-  margin-left: 180px;
-  margin-bottom: 20px;
+  width: 60%;
+  margin-left: 290px;
+  margin-bottom: 35px;
   display: flex;
   justify-content: space-between;
-  padding-left: 15%;
-  padding-right: 15%;
+  padding-left: 16%;
+  padding-right: 16%;
   align-items: center;
+  box-shadow: inset 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+  transform: translate(0%, 150%);
+  transform-origin: 0% 0%;
+  transition: transform 1s cubic-bezier(0.77, 0.2, 0.05, 1);
 }
 .menu-icon {
-  height: 70px;
-  width: 70px;
-  background-color: orange;
+  height: 65px;
+  width: 65px;
+  background: orange;
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 30px;
-  color: orangered;
+  color: #fff;
+  transition: 0.5s;
+  cursor: pointer;
+  box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5);
+}
+.menu-icon:hover {
+  box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1),
+    4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+}
+.menu-icon:active {
+  transform: scale(0.9);
 }
 
-.slide-leave-from {
+/* .slide-leave-from {
   transform: translateY(0px);
 }
 .slide-leave-active {
@@ -112,5 +131,31 @@ export default {
 }
 .menuSlide-enter-to {
   transform: translateY(-10px);
+} */
+.footer-page {
+  height: 120px;
+  overflow: hidden;
+}
+
+#menuToggle input {
+  position: absolute;
+  display: block;
+  width: 50px;
+  height: 50px;
+  left: 50px;
+  cursor: pointer;
+  opacity: 0;
+  z-index: 2; /* and place it over the hamburger */
+}
+.icon-button {
+  border: 1px solid red;
+  width: 50px;
+  height: 50px;
+}
+#menuToggle input:checked ~ .footer-button {
+  transform: rotate(180deg);
+}
+#menuToggle input:checked ~ #menu {
+  transform: none;
 }
 </style>

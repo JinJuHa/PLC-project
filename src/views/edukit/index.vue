@@ -36,31 +36,51 @@
         </div>
       </div>
     </div>
-    <div>
+    <div class="test-page">
+      <div class="user-profile">
+        <img class="avatar" src="../../../public/img/engineer.png" alt="Ash" />
+        <div class="username">담당자님</div>
+        <button class="logout" @click="signOut">
+          <font-awesome-icon icon="fa-solid fa-power-off" /><span class="logout-text">Logout</span>
+        </button>
+        <!-- {{ user.name }}  -->
+        <div class="bio">PLC Engineer</div>
+        <div class="description">I use to design websites and applications for the web.</div>
+        <ul class="data">
+          <li v-show="plc.plcStart == false">
+            <span class="entypo-heart"> 정지</span>
+          </li>
+          <li v-show="plc.plcStart == true && plc.plcStop == true">
+            <span class="entypo-heart"> 작동 중</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- <div>
       <button class="logout" @click="signOut">
         <font-awesome-icon icon="fa-solid fa-power-off" /><span class="logout-text">Logout</span>
       </button>
-    </div>
-    <div>
+    </div> -->
+    <!-- <div>
       <UserInfo />
-    </div>
+    </div> -->
     <div v-show="dashboardStat == true">
-      <Dashboard />
+      <Dashboard :plc="plc" />
     </div>
     <Edukit />
-    <the-footer @dashboardOpen="dashboardStat = true" />
+    <TheFooter class="footer" @dashboardOpen="dashboardSet" />
   </div>
 </template>
 
 <script>
 import Edukit from './edukit.vue'
-import UserInfo from '../user/index.vue'
 import TheFooter from '../../components/layout/TheFooter.vue'
 import mqtt from 'mqtt'
 import Dashboard from '../dashboard/rough.vue'
+import axios from 'axios'
 
 export default {
-  components: { Edukit, UserInfo, TheFooter, Dashboard },
+  components: { Edukit, TheFooter, Dashboard },
   data() {
     return {
       on: true,
@@ -68,7 +88,10 @@ export default {
       plc: {
         plcStart: null,
         plcStop: null,
-        plcReset: null
+        plcReset: null,
+        lightGreen: null,
+        lightYellow: null,
+        lightRed: null
       }
     }
   },
@@ -98,23 +121,30 @@ export default {
         this.plc.plcStart = plcData[0].value // 시작
         this.plc.plcReset = plcData[1].value // 리셋
         this.plc.plcStop = plcData[2].value // 비상정지
-        // let controlData = this.mqttData.Wrapper.filter(
-        //   p => p.tagId === '9' || p.tagId === '10' || p.tagId === '11' || p.tagId === '12' || p.tagId === '13'
-        // )
-        // this.control.no1 = controlData[0].value // 1호기 전원
-        // this.control.no2 = controlData[1].value // 2호기 전원
-        // this.control.no3 = controlData[2].value // 3호기 전원
+        // console.log('정지', this.plc.plcStop)
+        // 신호등
+        let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
+        this.plc.lightGreen = lightData[0].value
+        this.plc.lightYellow = lightData[1].value
+        this.plc.lightRed = lightData[2].value
+        // let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
+        // this.light.green = lightData[0].value // 초록
+        // this.light.yellow = lightData[1].value // 노랑
+        // this.light.red = lightData[2].value // 빨강
         // this.control.sen1 = controlData[3].value // 1번 센서 전원
         // this.control.sen2 = controlData[4].value // 2번 센서 전원
+
         console.log('index.vue', plcData)
+
+        //console.log(plcData)
+        // console.log('신호등', lightData)
       })
     },
-
     publishMqtt(id, v) {
       // mqtt pubish
       const mqttClient = mqtt.connect(process.env.VUE_APP_MQTT)
       const topic = process.env.VUE_APP_MQTT_WRITE_TOPIC // UVC-Write
-      const message = JSON.stringify({ tagId: id, value: v })
+      const message = JSON.stringify({ tagId: id, value: v, userId: 1, deviceId: 1 })
       // PLC 제어에 쓰이는 모든 publish message들은
       // { "tagId" : "id값", "value" : "value값" }으로 이루어져야 합니다.
       // true와 false 같은 boolean 값은 1과(true) 0으로(false) 입력하도록 합니다.
@@ -126,25 +156,170 @@ export default {
         }
       })
     },
+    dashboardSet() {
+      this.dashboardStat = true
+    },
     mcStart() {
       this.publishMqtt(1, 1)
+      this.deviceStartControl()
     },
     mcStop() {
       this.publishMqtt(1, 0)
+      this.deviceStopControl()
     },
     mcReset() {
       this.publishMqtt(1, 0)
       this.publishMqtt(8, 1)
+      this.deviceResetControl()
     },
     signOut() {
       localStorage.removeItem('token')
       this.$router.push('/auth/login')
+    },
+    async deviceStartControl() {
+      const axiosBody = {
+        deviceid: '1',
+        control: 'START',
+        state: this.plc.plcStart
+      }
+      console.log('/devices/control/start - axiosBody : ', axiosBody)
+      await axios
+        .post(process.env.VUE_APP_SERVER + '/devices/control', axiosBody, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async res => {
+          console.log('/devices/control/start - response: ', res.data)
+        })
+        .catch(err => {
+          console.log('/devices/control/start - errerr', err)
+        })
+    },
+    async deviceStopControl() {
+      const axiosBody = {
+        deviceid: '1',
+        control: 'STOP',
+        state: this.plc.plcStop
+      }
+      console.log('/devices/control/stop - axiosBody : ', axiosBody)
+      await axios
+        .post(process.env.VUE_APP_SERVER + '/devices/control', axiosBody, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async res => {
+          console.log('/devices/control/stop - response: ', res.data)
+        })
+        .catch(err => {
+          console.log('/devices/control/stop - errerr', err)
+        })
+    },
+    async deviceResetControl() {
+      const axiosBody = {
+        deviceid: '1',
+        control: 'RESET',
+        state: this.plc.plcReset
+      }
+      console.log('/devices/control/reset - axiosBody : ', axiosBody)
+      await axios
+        .post(process.env.VUE_APP_SERVER + '/devices/control', axiosBody, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async res => {
+          console.log('/devices/control/reset - response: ', res.data)
+        })
+        .catch(err => {
+          console.log('/devices/control/reset - errerr', err)
+        })
     }
   }
 }
 </script>
 
 <style scoped>
+/* @import url(https://fonts.googleapis.com/css?family=Raleway|Varela+Round|Coda);
+@import url(http://weloveiconfonts.com/api/?family=entypo); */
+
+[class*='entypo-']:before {
+  font-family: 'entypo', sans-serif;
+}
+
+.test-page {
+  padding: 2.23em;
+  position: absolute;
+}
+
+.user-profile {
+  margin: auto;
+  width: 25em;
+  height: 8em;
+  background: #fff;
+  border-radius: 0.3em;
+}
+
+.user-profile .username {
+  margin: auto;
+  margin-top: -4.4em;
+  margin-left: 5.8em;
+  color: #658585;
+  font-size: 1.53em;
+  font-weight: bold;
+}
+.user-profile .bio {
+  margin: auto;
+  display: inline-block;
+  margin-left: 10.43em;
+  color: #e76043;
+  font-size: 0.87em;
+}
+.user-profile > .description {
+  margin: auto;
+  margin-top: 1.35em;
+  margin-right: 4.43em;
+  width: 14em;
+  color: #c0c5c5;
+  font-size: 0.87em;
+}
+.user-profile > img.avatar {
+  padding: 0.7em;
+  margin-left: 0.3em;
+  margin-top: 0.3em;
+  height: 6.23em;
+  width: 6.23em;
+  border-radius: 18em;
+}
+
+.user-profile ul.data {
+  height: 3.7em;
+  background: #4eb6b6;
+  text-align: center;
+  border-radius: 0 0 0.3em 0.3em;
+}
+.user-profile li {
+  margin: 0 auto;
+  padding: 1.3em;
+  width: 33.33334%;
+  display: table-cell;
+  text-align: center;
+}
+
+.user-profile span {
+  color: #e3eeee;
+  white-space: nowrap;
+  font-size: 1.27em;
+  font-weight: bold;
+}
+.user-profile span:hover {
+  color: #daebea;
+}
+.footer {
+  position: absolute;
+  border: none;
+}
 #control-button {
   margin-left: 20px;
   position: absolute;

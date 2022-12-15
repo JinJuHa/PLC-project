@@ -16,18 +16,20 @@
     <div class="dashboard-columns">
       <div class="dashboard-rates">
         <div class="dashboard-amount">
-          <p>총 생산량</p>
+          <p>Device Id</p>
         </div>
         <div class="dashboard-amount">
-          <p>불량품, 양품 비율</p>
+          <!-- tagId 17 -->
+          <p>작동 여부</p>
+          <p>{{ plc.plcStart }}</p>
         </div>
       </div>
       <div class="dashboard-doughnut">
         <!-- <doughnut-chart ref="chart" :chartData="chart.data" :options="options" style="width: 450px height: 250px">
         </doughnut-chart> -->
         <doughnut-chart
-          id="chart"
-          ref="fruitChart"
+          id="accuracyChart"
+          ref="accuracyChart"
           :chart-data="doughnutChart.data"
           :options="doughnutChart.options"
           style="width: 450px; height: 290px"
@@ -35,8 +37,8 @@
       </div>
       <div class="dashboard-bar">
         <bar-chart
-          id="chart"
-          ref="fruitChart"
+          id="diceFequencyChart"
+          ref="diceFequencyChart"
           :chart-data="barChart.data"
           :options="barChart.options"
           style="width: 450px; height: 290px"
@@ -45,12 +47,29 @@
     </div>
     <div class="dashboard-footer">
       <line-chart
-        id="chart"
-        ref="lineChart"
+        id="stockChart"
+        ref="stockChart"
         :chart-data="lineChart.data"
         :options="lineChart.options"
-        style="width: 800px; height: 250px"
+        style="width: 650px; height: 250px"
       ></line-chart>
+      <div class="dashboard-lights">
+        <div v-show="plc.lightRed === false" class="light red-off"></div>
+        <div v-show="plc.lightRed === true" class="light red"></div>
+        <div v-show="plc.lightYellow === false" class="light yellow-off"></div>
+        <div v-show="plc.lightYellow === true" class="light yellow"></div>
+        <div v-show="plc.lightGreen === false" class="light green-off"></div>
+        <div v-show="plc.lightGreen === true" class="light green"></div>
+      </div>
+      <div class="dashboard-rates">
+        <div class="dashboard-amount">
+          <p>총 생산량</p>
+        </div>
+        <div class="dashboard-amount">
+          <p>불량품, 양품 비율</p>
+          <p>{{ accuracyRate }} %</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -60,29 +79,42 @@ import mqtt from 'mqtt'
 import DoughnutChart from '@/components/chart/doughnutChart'
 import BarChart from '@/components/chart/barChart'
 import LineChart from '@/components/chart/lineChart'
+import axios from 'axios'
 export default {
   components: {
     'doughnut-chart': DoughnutChart,
     'bar-chart': BarChart,
     'line-chart': LineChart
   },
+  props: {
+    plc: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       담당자이름: '지미',
+      tray: 8,
+      dice: 8,
       doughnutChart: {
         data: {
           labels: ['불량품', '양품'],
           datasets: [
             {
-              // backgroundColor: ['#A684B7', '#DD7445', '#DE9D11', '#E0D295', '#B1D166', '#78BAA1'],
               backgroundColor: ['#A684B7', '#DD7445'],
               borderColor: '#eee',
               hoverBorderColor: '#eee',
-              data: [20, 60]
+              data: [0, 0]
+              // data: [20, 60]
             }
           ]
         },
         options: {
+          title: {
+            display: true,
+            text: 'Accuracy Rate Chart'
+          },
           plugins: {
             legend: {
               display: true,
@@ -129,18 +161,22 @@ export default {
           labels: [1, 2, 3, 4, 5, 6],
           datasets: [
             {
-              backgroundColor: 'pink',
+              backgroundColor: ['#A684B7', '#DD7445', '#DE9D11', '#E0D295', '#B1D166', '#78BAA1', '#c45850'],
               pointBackgroundColor: 'white',
               borderWidth: 1,
-              borderColor: 'hotpink',
               fill: true,
               tension: 0.1,
               barPercentage: 0.55,
-              data: [1200, 2000, 2500, 2200, 4000, 3000, 5000, 2000]
+              data: []
+              // data: [1200, 2000, 2500, 2200, 4000, 3000, 5000, 2000]
             }
           ]
         },
         options: {
+          title: {
+            display: true,
+            text: 'Dice Frequency Chart'
+          },
           plugins: {
             legend: {
               display: false
@@ -187,7 +223,7 @@ export default {
       },
       lineChart: {
         data: {
-          labels: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+          labels: [],
           datasets: [
             {
               label: '트레이',
@@ -197,7 +233,8 @@ export default {
               pointBorderColor: 'green',
               borderWidth: 1,
               pointBorderWidth: 1,
-              data: [45, 30, 10, 100, 75, 60, 90, 10, 10, 0]
+              data: []
+              // data: [10, 10, 10, 9, 7, 6, 9, 10, 10, 8]
             },
             {
               label: '주사위',
@@ -207,11 +244,16 @@ export default {
               pointBorderColor: 'yellow',
               borderWidth: 1,
               pointBorderWidth: 1,
-              data: [50, 100, 40, 80, 30, 20, 80, 15, 12, 20]
+              data: []
+              // data: [5, 10, 4, 8, 3, 2, 8, 5, 2, 2]
             }
           ]
         },
         options: {
+          title: {
+            display: true,
+            text: 'Stock Chart'
+          },
           plugins: {
             legend: {
               display: true,
@@ -270,7 +312,11 @@ export default {
       chartData: null, // 차트로 표현될 데이터
       chartLabels: [], // 차트에서 사용할 라벨 리스트(가로축 라벨)
       chartDatasetLabels: [], // 차트에서 사용할 데이터셋 라벨 리스트
-      chartDatasetDataList: [] // 차트에서 사용할 데이터셋 데이터 리스트
+      chartDatasetDataList: [], // 차트에서 사용할 데이터셋 데이터 리스트
+      work: 0,
+      good: 0,
+      bad: 0,
+      accuracyRate: 0
     }
   },
   created() {
@@ -286,6 +332,7 @@ export default {
       document.querySelector('#time').innerHTML = now.toLocaleString('ko-kr')
     }, 10)),
       this.makeChartData()
+    this.accuracyCheck()
   },
   destroyed() {
     clearInterval(this.timerInterval)
@@ -297,7 +344,7 @@ export default {
 
       mqttClient.on('connect', () => {
         // mqtt연결 시 구독한다.
-        const topic = 'metacamp/sensor' // 구독할 topic
+        const topic = 'myEdukit' // 구독할 topic
         mqttClient.subscribe(topic, {}, (error, res) => {
           if (error) {
             console.error('mqtt client error', error)
@@ -308,14 +355,24 @@ export default {
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
         const mqttData = JSON.parse(message) // json string으로만 받을 수 있음
-        // console.log(mqttData.temperature)
-
+        let plcData = mqttData.Wrapper.filter(p => p.tagId === '3' || p.tagId === '27')
+        // 3은 tray 작동, 27은 주사위 작동
+        if (plcData[0] === true) {
+          this.tray--
+        }
+        if (plcData[1] === false) {
+          this.dice--
+        }
         // 선택된 devicdId만 수용함
         this.removeOldData() // 오래된 데이터 제거
-
-        this.mqttDataList.push(mqttData) // 리스트에 계속 추가함
-
-        this.makeChartLabels(mqttData) // 차트라벨 생성
+        // 도넛 데이터
+        // this.doughnutChart.data.datasets.data.push(mqttData) // 리스트에 계속 추가함
+        // 바 데이터
+        // this.barChart.data.datasets.data.push(mqttData)
+        // 라인 데이터
+        // this.lineChart.data.datasets.data.push(this.tray, this.dice)
+        // 라인 차트 라벨
+        this.makeLineLabels(mqttData)
         this.makeChartData() // 차트용 데이터 작성
 
         // if (this.selected.deviceId === mqttData.id) {
@@ -367,9 +424,15 @@ export default {
         datasets: this.makeDatasetDatas()
       }
     },
-    makeChartLabels(mqttData) {
-      // 차트라벨(가로측) 생성
+    // 라인 차트 라벨(가로측) 생성
+    makeLineLabels(mqttData) {
       this.chartLabels.push(mqttData.datetime.substring(11, 19)) // datetime을 사용한다.(분:초만 추출함)
+    },
+    doughnutDatasetDatas() {
+      const doughnutData = this.doughnutChart.data.datasets[0].data
+      console.log('불량품', doughnutData[0])
+      console.log('양품', doughnutData[1])
+      doughnutData.splice(0, 2, this.bad, this.good)
     },
     makeDatasetDatas() {
       // 데이터셋의 데이터 추출
@@ -382,7 +445,7 @@ export default {
         // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
         for (let j = 0; j < this.mqttDataList.length; j += 1) {
           const mqttData = this.mqttDataList[j]
-          const tagData = mqttData[label] // 현재 데이터셋 label과 같은 태그만 추출한다.
+          const tagData = mqttData.wrapper[22].value // 현재 데이터셋 label과 같은 태그만 추출한다.
           datas.push(tagData)
         }
         datasetDatas.push({
@@ -395,6 +458,29 @@ export default {
         const color = idx === 0 ? '#1B9CFC' : '#e74c3c'
         return { ...item, borderColor: color }
       })
+    },
+    accuracyCheck() {
+      axios
+        .get(process.env.VUE_APP_SERVER + '/devices/find-cycle-all/1')
+        .then(response => {
+          const cycle = response.data.data
+          for (let i = 0; i < cycle.length; i++) {
+            this.work = this.work + cycle[i].work
+            this.good = this.good + cycle[i].good
+            this.bad = this.bad + cycle[i].bad
+          }
+          this.accuracyRate = Math.round((this.good / this.work) * 100)
+          // this.doughnutDatasetDatas()
+          const doughnutData = this.doughnutChart.data.datasets[0].data
+          doughnutData.splice(0)
+          doughnutData.push(this.bad, this.good)
+          console.log('불량품', doughnutData[0])
+          console.log('양품', doughnutData[1])
+        })
+        .catch(error => {
+          console.log('accuracyRate: ', error)
+          alert('try again!')
+        })
     }
   }
 }
@@ -417,6 +503,7 @@ export default {
   background-color: green;
   padding: 5px;
   position: absolute;
+  border-radius: 10px;
 }
 .dashboard-header {
   display: grid;
@@ -484,12 +571,44 @@ export default {
 .dashboard-bar {
   width: 100%;
   height: 100%;
-  /* background-color: yellow; */
 }
 .dashboard-footer {
+  display: grid;
+  grid-template-columns: 53% 7% 40%;
   width: 100%;
   height: 100%;
   background-color: white;
   border-radius: 10px;
+}
+.dashboard-lights {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  display: grid;
+  grid-template-rows: 33% 33% 33%;
+  padding: 10px;
+}
+.light {
+  width: 100%;
+  height: 100%;
+  border-radius: 20%;
+}
+.red-off {
+  background-color: lightsalmon;
+}
+.red {
+  background-color: red;
+}
+.yellow-off {
+  background-color: lightgoldenrodyellow;
+}
+.yellow {
+  background-color: yellow;
+}
+.green-off {
+  background-color: lightgrey;
+}
+.green {
+  background-color: green;
 }
 </style>

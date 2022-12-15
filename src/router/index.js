@@ -14,20 +14,35 @@ const routes = [
       {
         path: '/web',
         component: () => import('../views/edukit'),
-        meta: { header: false, noLogin: true }
+        meta: { noLogin: true }
       },
       {
-        path: '/home',
-        component: () => import('../views/Home.vue'),
+        path: '/edukit/list',
+        component: () => import('../views/edukitList.vue'),
+        meta: { noLogin: true }
+      },
+      {
+        path: '/test',
+        component: () => import('../views/test.vue'),
+        meta: { noLogin: true }
+      },
+      {
+        path: '/list',
+        component: () => import('../views/userList.vue'),
+        meta: { noLogin: true }
+      },
+      {
+        path: '/data',
+        component: () => import('../views/edukitdata.vue'),
         meta: { noLogin: true }
       },
       {
         path: '/dashboard',
-        component: () => import('../views/dashboard/rough.vue'),
+        component: () => import('../views/dashboard'),
         meta: { noLogin: true }
       },
       {
-        path: '/user',
+        path: '/mypage',
         component: () => import('../views/user')
       }
     ]

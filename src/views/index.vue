@@ -1,12 +1,6 @@
 <template>
-  <div>
-    <b-container fluid style="padding-left: 0px">
-      <b-col style="padding-left: 0px; padding-right: 0px">
-        <div class="content-body">
-          <router-view />
-        </div>
-      </b-col>
-    </b-container>
+  <div class="index-page">
+    <router-view />
   </div>
 </template>
 
@@ -14,4 +8,8 @@
 export default {}
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.index-page {
+  overflow: hidden;
+}
+</style>
