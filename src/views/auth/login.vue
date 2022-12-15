@@ -194,7 +194,7 @@ export default {
           const code = res.data
           localStorage.setItem('token', res.data.token)
           console.log('/auths/login - response: ', code)
-          this.$router.push('/web')
+          this.$router.push('/edukit/list')
         })
         .catch(err => {
           alert('다시 시도해주세요!')

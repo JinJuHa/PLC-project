@@ -40,6 +40,9 @@
       <div class="user-profile">
         <img class="avatar" src="../../../public/img/engineer.png" alt="Ash" />
         <div class="username">담당자님</div>
+        <button class="logout" @click="signOut">
+          <font-awesome-icon icon="fa-solid fa-power-off" /><span class="logout-text">Logout</span>
+        </button>
         <!-- {{ user.name }}  -->
         <div class="bio">PLC Engineer</div>
         <div class="description">I use to design websites and applications for the web.</div>
@@ -151,7 +154,7 @@ export default {
         // this.light.red = lightData[2].value // 빨강
         // this.control.sen1 = controlData[3].value // 1번 센서 전원
         // this.control.sen2 = controlData[4].value // 2번 센서 전원
-        console.log(plcData)
+        //console.log(plcData)
         // console.log('신호등', lightData)
       })
     },
@@ -256,8 +259,8 @@ export default {
 </script>
 
 <style scoped>
-@import url(https://fonts.googleapis.com/css?family=Raleway|Varela+Round|Coda);
-@import url(http://weloveiconfonts.com/api/?family=entypo);
+/* @import url(https://fonts.googleapis.com/css?family=Raleway|Varela+Round|Coda);
+@import url(http://weloveiconfonts.com/api/?family=entypo); */
 
 [class*='entypo-']:before {
   font-family: 'entypo', sans-serif;
@@ -282,7 +285,6 @@ export default {
   margin-left: 5.8em;
   color: #658585;
   font-size: 1.53em;
-  font-family: 'Coda', sans-serif;
   font-weight: bold;
 }
 .user-profile .bio {
@@ -291,7 +293,6 @@ export default {
   margin-left: 10.43em;
   color: #e76043;
   font-size: 0.87em;
-  font-family: 'varela round', sans-serif;
 }
 .user-profile > .description {
   margin: auto;
@@ -300,7 +301,6 @@ export default {
   width: 14em;
   color: #c0c5c5;
   font-size: 0.87em;
-  font-family: 'varela round', sans-serif;
 }
 .user-profile > img.avatar {
   padding: 0.7em;
@@ -326,7 +326,6 @@ export default {
 }
 
 .user-profile span {
-  font-family: 'varela round', sans-serif;
   color: #e3eeee;
   white-space: nowrap;
   font-size: 1.27em;

@@ -76,7 +76,14 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
+  data() {
+    return {
+      edukitList: ''
+    }
+  },
   mounted() {
     document.querySelector('.grid').addEventListener('click', function () {
       document.querySelector('.list').classList.remove('active')
@@ -91,6 +98,25 @@ export default {
       document.querySelector('.products-area-wrapper').classList.remove('gridView')
       document.querySelector('.products-area-wrapper').classList.add('tableView')
     })
+
+    this.getDevice()
+  },
+  methods: {
+    async getDevice() {
+      await axios
+        .get(process.env.VUE_APP_SERVER + '/manages/get-manage-list', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async res => {
+          this.edukitList = res.data
+          console.log('getDevice - response: ', this.edukitList)
+        })
+        .catch(err => {
+          console.log('getDevice - error: ', err)
+        })
+    }
   }
 }
 </script>
