@@ -93,6 +93,8 @@ export default {
   data() {
     return {
       담당자이름: '지미',
+      tray: 8,
+      dice: 8,
       doughnutChart: {
         data: {
           labels: ['불량품', '양품'],
@@ -323,18 +325,12 @@ export default {
       this.today = `${years}/${months}/${dates}`
       document.querySelector('#time').innerHTML = now.toLocaleString('ko-kr')
     }, 10)),
-      this.lightStatus(),
       this.makeChartData()
   },
   destroyed() {
     clearInterval(this.timerInterval)
   },
   methods: {
-    lightStatus() {
-      console.log('초록불 데이터 받니?', this.plc.lightGreen)
-      console.log('노랑불 데이터 받니?', this.plc.lightYellow)
-      console.log('빨강불 데이터 받니?', this.plc.lightRed)
-    },
     createMqtt() {
       // mqtt연결
       const mqttClient = mqtt.connect(process.env.VUE_APP_MQTT)
@@ -352,32 +348,28 @@ export default {
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
         const mqttData = JSON.parse(message) // json string으로만 받을 수 있음
-        // let lightData = mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
-        // console.log('신호등', lightData)
-        // let lightGreen = lightData[0].value
-        // let lightYellow = lightData[1].value
-        // let lightRed = lightData[2].value
-
-        // console.log('초록불켜졌니', lightGreen)
-        // console.log('노랑불켜졌니', lightYellow)
-        // console.log('빨강불켜졌니', lightRed)
-        // if (lightGreen === true) {
-        //   const element = document.querySelector('.green-off')
-        //   element.style.backgroundColor = 'green'
-        // }
-        // if (lightYellow === true) {
-        //   const element = document.querySelector('.yellow-off')
-        //   element.style.backgroundColor = 'yellow'
-        // }
-        // if (lightRed === true) {
-        //   const element = document.querySelector('.red-off')
-        //   element.style.backgroundColor = 'red'
-        // }
+        let plcData = mqttData.Wrapper.filter(p => p.tagId === '3' || p.tagId === '27')
+        // 3은 tray 작동, 27은 주사위 작동
+        if (plcData[0] === true) {
+          this.tray--
+        }
+        if (plcData[1] === false) {
+          this.dice--
+        }
         // 선택된 devicdId만 수용함
         this.removeOldData() // 오래된 데이터 제거
-
-        this.mqttDataList.push(mqttData) // 리스트에 계속 추가함
-
+        // 도넛 데이터
+        this.doughnutChart.data.datasets.data.push(mqttData) // 리스트에 계속 추가함
+        // 바 데이터
+        this.barChart.data.datasets.data.push(mqttData)
+        // 라인 데이터
+        this.lineChart.data.datasets.data.push(this.tray, this.dice)
+        // 도넛 차트 라벨
+        this.makeDoughnutLabels(mqttData)
+        // 바 차트 라벨
+        this.makeBarLabels(mqttData)
+        // 라인 차트 라벨
+        this.makeLineLabels(mqttData)
         this.makeChartLabels(mqttData) // 차트라벨 생성
         this.makeChartData() // 차트용 데이터 작성
 
