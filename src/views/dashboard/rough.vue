@@ -67,6 +67,7 @@
         </div>
         <div class="dashboard-amount">
           <p>불량품, 양품 비율</p>
+          <p>{{ accuracyRate }} %</p>
         </div>
       </div>
     </div>
@@ -78,6 +79,7 @@ import mqtt from 'mqtt'
 import DoughnutChart from '@/components/chart/doughnutChart'
 import BarChart from '@/components/chart/barChart'
 import LineChart from '@/components/chart/lineChart'
+import axios from 'axios'
 export default {
   components: {
     'doughnut-chart': DoughnutChart,
@@ -93,6 +95,8 @@ export default {
   data() {
     return {
       담당자이름: '지미',
+      tray: 8,
+      dice: 8,
       doughnutChart: {
         data: {
           labels: ['불량품', '양품'],
@@ -101,7 +105,7 @@ export default {
               backgroundColor: ['#A684B7', '#DD7445'],
               borderColor: '#eee',
               hoverBorderColor: '#eee',
-              data: []
+              data: [0, 0]
               // data: [20, 60]
             }
           ]
@@ -219,7 +223,7 @@ export default {
       },
       lineChart: {
         data: {
-          labels: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+          labels: [],
           datasets: [
             {
               label: '트레이',
@@ -308,7 +312,11 @@ export default {
       chartData: null, // 차트로 표현될 데이터
       chartLabels: [], // 차트에서 사용할 라벨 리스트(가로축 라벨)
       chartDatasetLabels: [], // 차트에서 사용할 데이터셋 라벨 리스트
-      chartDatasetDataList: [] // 차트에서 사용할 데이터셋 데이터 리스트
+      chartDatasetDataList: [], // 차트에서 사용할 데이터셋 데이터 리스트
+      work: 0,
+      good: 0,
+      bad: 0,
+      accuracyRate: 0
     }
   },
   created() {
@@ -323,18 +331,13 @@ export default {
       this.today = `${years}/${months}/${dates}`
       document.querySelector('#time').innerHTML = now.toLocaleString('ko-kr')
     }, 10)),
-      this.lightStatus(),
       this.makeChartData()
+    this.accuracyCheck()
   },
   destroyed() {
     clearInterval(this.timerInterval)
   },
   methods: {
-    lightStatus() {
-      console.log('초록불 데이터 받니?', this.plc.lightGreen)
-      console.log('노랑불 데이터 받니?', this.plc.lightYellow)
-      console.log('빨강불 데이터 받니?', this.plc.lightRed)
-    },
     createMqtt() {
       // mqtt연결
       const mqttClient = mqtt.connect(process.env.VUE_APP_MQTT)
@@ -352,33 +355,24 @@ export default {
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
         const mqttData = JSON.parse(message) // json string으로만 받을 수 있음
-        // let lightData = mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
-        // console.log('신호등', lightData)
-        // let lightGreen = lightData[0].value
-        // let lightYellow = lightData[1].value
-        // let lightRed = lightData[2].value
-
-        // console.log('초록불켜졌니', lightGreen)
-        // console.log('노랑불켜졌니', lightYellow)
-        // console.log('빨강불켜졌니', lightRed)
-        // if (lightGreen === true) {
-        //   const element = document.querySelector('.green-off')
-        //   element.style.backgroundColor = 'green'
-        // }
-        // if (lightYellow === true) {
-        //   const element = document.querySelector('.yellow-off')
-        //   element.style.backgroundColor = 'yellow'
-        // }
-        // if (lightRed === true) {
-        //   const element = document.querySelector('.red-off')
-        //   element.style.backgroundColor = 'red'
-        // }
+        let plcData = mqttData.Wrapper.filter(p => p.tagId === '3' || p.tagId === '27')
+        // 3은 tray 작동, 27은 주사위 작동
+        if (plcData[0] === true) {
+          this.tray--
+        }
+        if (plcData[1] === false) {
+          this.dice--
+        }
         // 선택된 devicdId만 수용함
         this.removeOldData() // 오래된 데이터 제거
-
-        this.mqttDataList.push(mqttData) // 리스트에 계속 추가함
-
-        this.makeChartLabels(mqttData) // 차트라벨 생성
+        // 도넛 데이터
+        // this.doughnutChart.data.datasets.data.push(mqttData) // 리스트에 계속 추가함
+        // 바 데이터
+        // this.barChart.data.datasets.data.push(mqttData)
+        // 라인 데이터
+        // this.lineChart.data.datasets.data.push(this.tray, this.dice)
+        // 라인 차트 라벨
+        this.makeLineLabels(mqttData)
         this.makeChartData() // 차트용 데이터 작성
 
         // if (this.selected.deviceId === mqttData.id) {
@@ -430,9 +424,15 @@ export default {
         datasets: this.makeDatasetDatas()
       }
     },
-    makeChartLabels(mqttData) {
-      // 차트라벨(가로측) 생성
+    // 라인 차트 라벨(가로측) 생성
+    makeLineLabels(mqttData) {
       this.chartLabels.push(mqttData.datetime.substring(11, 19)) // datetime을 사용한다.(분:초만 추출함)
+    },
+    doughnutDatasetDatas() {
+      const doughnutData = this.doughnutChart.data.datasets[0].data
+      console.log('불량품', doughnutData[0])
+      console.log('양품', doughnutData[1])
+      doughnutData.splice(0, 2, this.bad, this.good)
     },
     makeDatasetDatas() {
       // 데이터셋의 데이터 추출
@@ -458,6 +458,29 @@ export default {
         const color = idx === 0 ? '#1B9CFC' : '#e74c3c'
         return { ...item, borderColor: color }
       })
+    },
+    accuracyCheck() {
+      axios
+        .get(process.env.VUE_APP_SERVER + '/devices/find-cycle-all/1')
+        .then(response => {
+          const cycle = response.data.data
+          for (let i = 0; i < cycle.length; i++) {
+            this.work = this.work + cycle[i].work
+            this.good = this.good + cycle[i].good
+            this.bad = this.bad + cycle[i].bad
+          }
+          this.accuracyRate = Math.round((this.good / this.work) * 100)
+          // this.doughnutDatasetDatas()
+          const doughnutData = this.doughnutChart.data.datasets[0].data
+          doughnutData.splice(0)
+          doughnutData.push(this.bad, this.good)
+          console.log('불량품', doughnutData[0])
+          console.log('양품', doughnutData[1])
+        })
+        .catch(error => {
+          console.log('accuracyRate: ', error)
+          alert('try again!')
+        })
     }
   }
 }
