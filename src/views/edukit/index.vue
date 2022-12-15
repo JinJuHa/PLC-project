@@ -104,7 +104,6 @@ export default {
         this.plc.plcStop = plcData[2].value // 비상정지
         // 신호등
         let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
-        console.log('신호등', lightData)
         this.plc.lightGreen = lightData[0].value
         this.plc.lightYellow = lightData[1].value
         this.plc.lightRed = lightData[2].value
