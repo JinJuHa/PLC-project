@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       on: true,
-      dashboardStat: false
+      dashboardStat: false,
       plc: {
         plcStart: null,
         plcStop: null,
@@ -106,7 +106,7 @@ export default {
         // this.control.no3 = controlData[2].value // 3호기 전원
         // this.control.sen1 = controlData[3].value // 1번 센서 전원
         // this.control.sen2 = controlData[4].value // 2번 센서 전원
-        console.log(plcData)
+        console.log('index.vue', plcData)
       })
     },
 
