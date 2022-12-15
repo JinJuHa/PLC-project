@@ -58,10 +58,10 @@
             <div class="product-cell image">PLC name</div>
             <div class="product-cell status-cell">Status</div>
           </div>
-          <div class="products-row">
+          <div v-for="edukit in edukitList.data" :key="edukit.id" class="products-row">
             <div class="product-cell image">
               <img src="../../public/img/plc.jpg" alt="product" />
-              <span>PLC - 1</span>
+              <span>PLC - {{ edukit.name }}</span>
             </div>
             <div class="product-cell status-cell">
               <span class="cell-label">Status:</span>
@@ -81,7 +81,7 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      edukitList: ''
+      edukitList: []
     }
   },
   mounted() {
