@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="user-list-page">
-      <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="$router.push('/web')" />
+      <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="$router.go(-1)" />
       <p class="user-list-title">사용자 리스트</p>
       <b-table striped hover :items="items" :fields="fields"></b-table>
     </div>

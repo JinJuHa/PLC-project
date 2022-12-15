@@ -39,13 +39,13 @@
     <div class="test-page">
       <div class="user-profile">
         <img class="avatar" src="../../../public/img/engineer.png" alt="Ash" />
-        <div class="username">담당자님</div>
-        <button class="logout" @click="signOut">
+        <div class="username">PLC - {{ this.$route.params.id }}호기</div>
+        <!-- <button class="logout" @click="signOut">
           <font-awesome-icon icon="fa-solid fa-power-off" /><span class="logout-text">Logout</span>
-        </button>
+        </button> -->
         <!-- {{ user.name }}  -->
-        <div class="bio">PLC Engineer</div>
-        <div class="description">I use to design websites and applications for the web.</div>
+        <div class="bio">담당자: {{ name }}</div>
+        <div class="description"></div>
         <ul class="data">
           <li v-show="plc.plcStart == false">
             <span class="entypo-heart"> 정지</span>
@@ -56,11 +56,11 @@
         </ul>
       </div>
     </div>
-    <!-- <div>
+    <div>
       <button class="logout" @click="signOut">
         <font-awesome-icon icon="fa-solid fa-power-off" /><span class="logout-text">Logout</span>
       </button>
-    </div> -->
+    </div>
     <!-- <div>
       <UserInfo />
     </div> -->
@@ -92,11 +92,14 @@ export default {
         lightGreen: null,
         lightYellow: null,
         lightRed: null
-      }
+      },
+      device: '',
+      name: localStorage.getItem('user')
     }
   },
   mounted() {
     this.createMqtt()
+    this.getDeviceOne()
   },
   methods: {
     createMqtt() {
@@ -156,6 +159,21 @@ export default {
         }
       })
     },
+    async getDeviceOne() {
+      await axios
+        .get(process.env.VUE_APP_SERVER + '/devices/' + this.$route.params.id, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async res => {
+          this.device = res.data
+          console.log('/devices/ - response: ', res.data)
+        })
+        .catch(err => {
+          console.log('/devices/ - error: ', err)
+        })
+    },
     dashboardSet() {
       this.dashboardStat = true
     },
@@ -174,6 +192,7 @@ export default {
     },
     signOut() {
       localStorage.removeItem('token')
+      localStorage.removeItem('user')
       this.$router.push('/auth/login')
     },
     async deviceStartControl() {

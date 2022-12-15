@@ -12,7 +12,7 @@ const routes = [
     redirect: '/web',
     children: [
       {
-        path: '/web',
+        path: '/web/:id',
         component: () => import('../views/edukit'),
         meta: { noLogin: true }
       },

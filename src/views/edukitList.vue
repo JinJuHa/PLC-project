@@ -58,7 +58,7 @@
             <div class="product-cell image">PLC name</div>
             <div class="product-cell status-cell">Status</div>
           </div>
-          <div v-for="edukit in edukitList.data" :key="edukit.id" class="products-row">
+          <div v-for="edukit in edukitList.data" :key="edukit.id" class="products-row" @click="plcRoute(edukit.id)">
             <div class="product-cell image">
               <img src="../../public/img/plc.jpg" alt="product" />
               <span>PLC - {{ edukit.name }}</span>
@@ -116,6 +116,9 @@ export default {
         .catch(err => {
           console.log('getDevice - error: ', err)
         })
+    },
+    plcRoute(edukitId) {
+      this.$router.push(`/web/${edukitId}`)
     }
   }
 }
@@ -493,6 +496,7 @@ $font-large: 24px;
     &:hover {
       box-shadow: var(--filter-shadow);
       background-color: rgba(202, 202, 202, 0.182);
+      cursor: pointer;
     }
 
     .cell-more-button {
