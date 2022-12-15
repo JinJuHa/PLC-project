@@ -38,32 +38,26 @@
     </div>
     <div class="test-page">
       <div class="user-profile">
-        <img class="avatar" src="http://image.dongascience.com/Photo/2016/09/14750507361195.jpg" alt="Ash" />
+        <img class="avatar" src="../../../public/img/engineer.png" alt="Ash" />
         <div class="username">담당자님</div>
         <!-- {{ user.name }}  -->
         <div class="bio">PLC Engineer</div>
         <div class="description">I use to design websites and applications for the web.</div>
         <ul class="data">
-          <!-- <li v-show="plc.plcStart == false">
+          <li v-show="plc.plcStart == false">
             <span class="entypo-heart"> 정지</span>
           </li>
           <li v-show="plc.plcStart == true && plc.plcStop == true">
-            <span class="entypo-heart"> 실행 중</span>
+            <span class="entypo-heart"> 작동 중</span>
           </li>
-          <li v-show="plc.plcStop == true && plc.plcStart == true">
-            <span class="entypo-heart"> 비상정지</span>
-          </li>
-          <li v-show="plc.plcStart == false && plc.plcReset == true">
-            <span class="entypo-heart"> 리셋</span>
-          </li> -->
         </ul>
       </div>
     </div>
-    <div>
+    <!-- <div>
       <button class="logout" @click="signOut">
         <font-awesome-icon icon="fa-solid fa-power-off" /><span class="logout-text">Logout</span>
       </button>
-    </div>
+    </div> -->
     <!-- <div>
       <UserInfo />
     </div> -->
@@ -277,7 +271,7 @@ export default {
 .user-profile {
   margin: auto;
   width: 25em;
-  height: 11em;
+  height: 8em;
   background: #fff;
   border-radius: 0.3em;
 }
@@ -318,7 +312,6 @@ export default {
 }
 
 .user-profile ul.data {
-  margin: 2em auto;
   height: 3.7em;
   background: #4eb6b6;
   text-align: center;
