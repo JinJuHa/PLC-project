@@ -265,6 +265,9 @@ export default {
 [class*='entypo-']:before {
   font-family: 'entypo', sans-serif;
 }
+.alert {
+  z-index: 1000;
+}
 
 .test-page {
   padding: 2.23em;
