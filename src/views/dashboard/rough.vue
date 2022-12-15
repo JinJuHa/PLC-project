@@ -428,6 +428,12 @@ export default {
     makeLineLabels(mqttData) {
       this.chartLabels.push(mqttData.datetime.substring(11, 19)) // datetime을 사용한다.(분:초만 추출함)
     },
+    doughnutDatasetDatas() {
+      const doughnutData = this.doughnutChart.data.datasets[0].data
+      console.log('불량품', doughnutData[0])
+      console.log('양품', doughnutData[1])
+      doughnutData.splice(0, 2, this.bad, this.good)
+    },
     makeDatasetDatas() {
       // 데이터셋의 데이터 추출
       const datasetDatas = []
@@ -464,6 +470,12 @@ export default {
             this.bad = this.bad + cycle[i].bad
           }
           this.accuracyRate = Math.round((this.good / this.work) * 100)
+          // this.doughnutDatasetDatas()
+          const doughnutData = this.doughnutChart.data.datasets[0].data
+          doughnutData.splice(0)
+          doughnutData.push(this.bad, this.good)
+          console.log('불량품', doughnutData[0])
+          console.log('양품', doughnutData[1])
         })
         .catch(error => {
           console.log('accuracyRate: ', error)
