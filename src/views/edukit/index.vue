@@ -11,40 +11,14 @@
         <font-awesome-icon icon="fa-solid fa-rotate-left" />
       </button>
     </div>
-    <div class="control-three">
-      <button v-if="on" class="remote-control" @click="on = !on">
-        <font-awesome-icon icon="fa-solid fa-gamepad" />
-      </button>
-      <div v-if="!on" class="control-three-button">
-        <div class="grid"></div>
-        <div class="grid">
-          <button class="click-button"><font-awesome-icon icon="fa-solid fa-angle-up" /></button>
-        </div>
-        <div class="grid"></div>
-        <div class="grid">
-          <button class="click-button"><font-awesome-icon icon="fa-solid fa-angle-left" /></button>
-        </div>
-        <div class="grid">
-          <button class="click-button"><font-awesome-icon icon="fa-solid fa-gamepad" @click="on = !on" /></button>
-        </div>
-        <div class="grid">
-          <button class="click-button"><font-awesome-icon icon="fa-solid fa-angle-right" /></button>
-        </div>
-        <div class="grid"></div>
-        <div class="grid">
-          <button class="click-button"><font-awesome-icon icon="fa-solid fa-angle-down" /></button>
-        </div>
-      </div>
-    </div>
     <div class="test-page">
       <div class="user-profile">
-        <img class="avatar" src="../../../public/img/engineer.png" alt="Ash" />
+        <img class="avatar" src="../../../public/img/engineer.png" alt="Ash" @click="signOut" />
         <div class="username">PLC - {{ this.$route.params.id }}호기</div>
-        <!-- <button class="logout" @click="signOut">
-          <font-awesome-icon icon="fa-solid fa-power-off" /><span class="logout-text">Logout</span>
-        </button> -->
+        <button class="logout" @click="$router.push('/edukit/list')">
+          <font-awesome-icon icon="fa-solid fa-power-off" />
+        </button>
         <!-- {{ user.name }}  -->
-        <div class="bio">담당자: {{ name }}</div>
         <div class="description"></div>
         <ul class="data">
           <li v-show="plc.plcStart == false">
@@ -56,14 +30,6 @@
         </ul>
       </div>
     </div>
-    <div>
-      <button class="logout" @click="signOut">
-        <font-awesome-icon icon="fa-solid fa-power-off" /><span class="logout-text">Logout</span>
-      </button>
-    </div>
-    <!-- <div>
-      <UserInfo />
-    </div> -->
     <div v-show="dashboardStat == true">
       <Dashboard :plc="plc" />
     </div>
@@ -93,8 +59,7 @@ export default {
         lightYellow: null,
         lightRed: null
       },
-      device: '',
-      name: localStorage.getItem('user')
+      device: ''
     }
   },
   mounted() {
@@ -192,7 +157,6 @@ export default {
     },
     signOut() {
       localStorage.removeItem('token')
-      localStorage.removeItem('user')
       this.$router.push('/auth/login')
     },
     async deviceStartControl() {
@@ -260,12 +224,6 @@ export default {
 </script>
 
 <style scoped>
-/* @import url(https://fonts.googleapis.com/css?family=Raleway|Varela+Round|Coda);
-@import url(http://weloveiconfonts.com/api/?family=entypo); */
-
-[class*='entypo-']:before {
-  font-family: 'entypo', sans-serif;
-}
 .alert {
   z-index: 1000;
 }
@@ -277,16 +235,16 @@ export default {
 
 .user-profile {
   margin: auto;
-  width: 25em;
-  height: 8em;
+  width: 21em;
+  height: 6.5em;
   background: #fff;
   border-radius: 0.3em;
 }
 
 .user-profile .username {
   margin: auto;
-  margin-top: -4.4em;
-  margin-left: 5.8em;
+  margin-top: -3.7em;
+  margin-left: 5em;
   color: #658585;
   font-size: 1.53em;
   font-weight: bold;
@@ -316,7 +274,7 @@ export default {
 }
 
 .user-profile ul.data {
-  height: 3.7em;
+  height: 3em;
   background: #4eb6b6;
   text-align: center;
   border-radius: 0 0 0.3em 0.3em;
@@ -349,6 +307,13 @@ export default {
   flex-direction: column;
   top: 35px;
   right: 40px;
+}
+.avatar {
+  cursor: pointer;
+  transition: 0.5s;
+}
+.avatar:hover {
+  opacity: 0;
 }
 .active-but {
   width: 60px;
@@ -401,52 +366,22 @@ export default {
 }
 .logout {
   position: absolute;
-  width: 42px;
-  height: 42px;
+  top: 0px;
+  left: 250px;
+  width: 40px;
+  height: 40px;
   border-radius: 30px;
-  border: 2px solid #fff;
+  border: 2px solid #4eb6b6;
   margin: 50px;
-  color: #fff;
-  font-size: 21px;
+  color: #4eb6b6;
+  font-size: 19px;
   background: none;
   transition: 0.5s;
 }
-.logout-text {
-  position: absolute;
-  opacity: 0;
-  font-size: 18px;
-  padding-left: 10px;
-  transition: 0.5s;
-  color: #fff;
-}
 .logout:hover {
   background: #093053;
-  width: 120px;
-  padding-right: 80px;
   border: none;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
-}
-.logout:hover .logout-text {
-  opacity: 1;
-}
-.control-three {
-  position: absolute;
-  display: flex;
-  width: 140px;
-  height: 140px;
-  bottom: 35%;
-  left: 30px;
-}
-.control-three-button {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-}
-.control-three-button button {
-  margin: 3px;
-  width: 41px;
-  height: 41px;
-  border-radius: 25px;
-  background: #fff;
 }
 button:focus {
   outline: none;
@@ -454,12 +389,5 @@ button:focus {
 .click-button:active {
   background-color: black;
   color: #fff;
-}
-.remote-control {
-  width: 70px;
-  height: 70px;
-  margin: 35px;
-  border-radius: 50px;
-  background: #fff;
 }
 </style>

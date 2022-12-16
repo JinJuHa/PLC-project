@@ -67,7 +67,7 @@ export default {
   cursor: pointer;
   font-size: 25px;
   text-align: center;
-  color: darkgreen;
+  color: #093053;
 }
 .menu-container {
   width: 100%;

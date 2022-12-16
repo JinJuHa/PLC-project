@@ -15,8 +15,8 @@ export default {
   data() {
     return {
       userInfoList: '',
-      // Note 'isActive' is left out and will not appear in the rendered table
       fields: [
+        { key: 'pick', label: '선택', sortable: false },
         { key: 'id', label: '순서', sortable: true },
         { key: 'name', label: '이름', sortable: true },
         { key: 'role', label: '직급', sortable: true },
@@ -46,7 +46,8 @@ export default {
               phone: this.userInfoList[i].phone,
               name: this.userInfoList[i].name,
               email: `${this.userInfoList[i].email}@uvc-company.com`,
-              role: this.userInfoList[i].role
+              role: this.userInfoList[i].role,
+              pick: '선택'
             })
           }
         })
