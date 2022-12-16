@@ -11,7 +11,7 @@ class Camera {
   }
 
   setCamera() {
-    this.camera.position.set(100, 100, 100)
+    this.camera.position.set(0, 100, 200)
   }
 
   get cameraElement() {
