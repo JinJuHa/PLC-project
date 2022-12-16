@@ -112,10 +112,9 @@ class Event {
   }
 
   async removeGoods(scene, no1) {
-    console.log('scene.toyGoods', scene.toyGoods)
-    console.log(typeof scene)
-    var selectedObject = scene.toyGoods.ToyGoods.getObjectByName('기본 장난감')
-    scene.remove(selectedObject)
+    console.log('scene.toyGoods', scene)
+    // scene.remove(scene.toyGoods.defaultToy)
+    // console.log('here?')
     no1 = false
   }
 }
