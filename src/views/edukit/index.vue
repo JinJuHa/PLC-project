@@ -50,6 +50,7 @@ export default {
       on: true,
       dashboardStat: false,
       plc: {
+        id: null,
         plcStart: null,
         plcStop: null,
         plcReset: null,
@@ -65,6 +66,7 @@ export default {
   mounted() {
     this.createMqtt()
     this.getDeviceOne()
+    this.deviceIdCheck()
   },
   methods: {
     createMqtt() {
@@ -98,7 +100,6 @@ export default {
         let diceData = this.mqttData.Wrapper.filter(p => p.tagId === '37' || p.tagId === '40')
         this.plc.no3Active = diceData[0].value
         this.plc.diceValue = diceData[1].value
-
       })
     },
     publishMqtt(id, v) {
@@ -211,6 +212,9 @@ export default {
         .catch(err => {
           console.log('/devices/control/reset - errerr', err)
         })
+    },
+    deviceIdCheck() {
+      this.plc.id = this.$route.params.id
     }
   }
 }

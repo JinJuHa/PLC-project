@@ -17,6 +17,7 @@
       <div class="dashboard-rates">
         <div class="dashboard-amount">
           <p>Device Id</p>
+          <p>PLC - {{ plc.id }}호기</p>
         </div>
         <div class="dashboard-amount">
           <!-- tagId 17 -->
@@ -64,7 +65,7 @@
           <p>총 생산량</p>
         </div>
         <div class="dashboard-amount">
-          <p>불량품, 양품 비율</p>
+          <p>양품 생산율</p>
           <p>{{ accuracyRate }} %</p>
         </div>
       </div>
@@ -179,6 +180,9 @@ export default {
           ]
         },
         options: {
+          legend: {
+            display: false
+          },
           title: {
             display: true,
             text: 'Dice Frequency Chart'
@@ -192,9 +196,6 @@ export default {
             },
             tooltip: {
               boxWidth: 15
-            },
-            legend: {
-              display: false
             }
           },
           scales: {
@@ -342,6 +343,7 @@ export default {
       this.makeChartData()
     this.accuracyCheck()
     this.renderChart(this.chartData, this.options)
+    this.deviceIdCheck()
   },
   destroyed() {
     clearInterval(this.timerInterval)
@@ -580,7 +582,7 @@ export default {
         })
         .catch(error => {
           console.log('accuracyRate: ', error)
-          //alert('try again!')
+          alert('try again!')
         })
     }
   }
