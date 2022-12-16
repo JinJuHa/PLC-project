@@ -134,7 +134,7 @@ export default {
         // this.control.sen1 = controlData[3].value // 1번 센서 전원
         // this.control.sen2 = controlData[4].value // 2번 센서 전원
 
-        console.log('index.vue', plcData)
+        // console.log('index.vue', plcData)
 
         //console.log(plcData)
         // console.log('신호등', lightData)
@@ -149,7 +149,7 @@ export default {
       // { "tagId" : "id값", "value" : "value값" }으로 이루어져야 합니다.
       // true와 false 같은 boolean 값은 1과(true) 0으로(false) 입력하도록 합니다.
       mqttClient.publish(topic, message, error => {
-        console.log('message', message)
+        // console.log('message', message)
         if (error) {
           // console.error('mqtt client error', error)
           alert('MQTT 데이터 전송이 실패했습니다.')
@@ -184,7 +184,7 @@ export default {
       }
       console.log('/devices/control/start - axiosBody : ', axiosBody)
       await axios
-        .post(process.env.VUE_APP_SERVER + '/devices/control', axiosBody, {
+        .post(process.env.VUE_APP_SERVER + '/logs/control', axiosBody, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -204,7 +204,7 @@ export default {
       }
       console.log('/devices/control/stop - axiosBody : ', axiosBody)
       await axios
-        .post(process.env.VUE_APP_SERVER + '/devices/control', axiosBody, {
+        .post(process.env.VUE_APP_SERVER + '/logs/control', axiosBody, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -224,7 +224,7 @@ export default {
       }
       console.log('/devices/control/reset - axiosBody : ', axiosBody)
       await axios
-        .post(process.env.VUE_APP_SERVER + '/devices/control', axiosBody, {
+        .post(process.env.VUE_APP_SERVER + '/logs/control', axiosBody, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }

@@ -91,14 +91,14 @@ class Event {
           console.log('red off')
           scene.trafficLight.trafficLight3.material.color.set(0x660000)
         }
-        if (data[0].value || no1) {
-          console.log('No1_action - true')
-          no1 = true
-          this.moveGoods(scene)
-          if (scene.toyGoods.defaultToy.position.x >= 5) {
-            this.removeGoods(scene, no1)
-          }
-        }
+        // if (data[0].value || no1) {
+        //   console.log('No1_action - true')
+        //   no1 = true
+        //   this.moveGoods(scene)
+        //   if (scene.toyGoods.defaultToy.position.x >= 5) {
+        //     this.removeGoods(scene, no1)
+        //   }
+        // }
 
         data = data.map(p => parseInt(p.value))
         edukit['yAxis'] = data[5]
@@ -107,16 +107,18 @@ class Event {
     })
   }
 
-  async moveGoods(scene) {
-    scene.toyGoods.defaultToy.position.x += 0.5
-  }
+  // async moveGoods(scene) {
+  //   console.log('moveGoods')
+  //   console.log('scene.toyGoods.obj', scene.toyGoods.obj.children[0])
+  //   scene.toyGoods.obj.children[0].position.x += 0.5
+  // }
 
-  async removeGoods(scene, no1) {
-    console.log('scene.toyGoods', scene)
-    // scene.remove(scene.toyGoods.defaultToy)
-    // console.log('here?')
-    no1 = false
-  }
+  // async removeGoods(scene, no1) {
+  //   console.log('scene.toyGoods', scene)
+  //   // scene.remove(scene.toyGoods.defaultToy)
+  //   // console.log('here?')
+  //   no1 = false
+  // }
 }
 
 export { Event }
