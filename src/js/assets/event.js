@@ -45,7 +45,7 @@ class Event {
 
     this.client.on('connect', () => {
       console.log('MQTT Connected')
-      console.log('subscribeMqtt- scene', scene)
+      // console.log('subscribeMqtt- scene', scene)
 
       this.client.subscribe([topic], () => {
         console.log(`토픽 연결 완료: ${topic}`)
@@ -64,8 +64,8 @@ class Event {
             p.tagId === '3' ||
             p.tagId === '39'
         )
-        console.log(data)
-        console.log(edukit)
+        // console.log(data)
+        // console.log(edukit)
 
         // greenLight status
         if (data[1].value === true) {
@@ -92,7 +92,7 @@ class Event {
           scene.trafficLight.trafficLight3.material.color.set(0x660000)
         }
         if (data[0].value || no1) {
-          console.log('No1_action - true')
+          // console.log('No1_action - true')
           no1 = true
           this.moveGoods(scene)
           if (scene.toyGoods.defaultToy.position.x >= 5) {
@@ -111,13 +111,13 @@ class Event {
     scene.toyGoods.defaultToy.position.x += 0.5
   }
 
-  async removeGoods(scene, no1) {
-    console.log('scene.toyGoods', scene.toyGoods)
-    console.log(typeof scene)
-    var selectedObject = scene.toyGoods.ToyGoods.getObjectByName('기본 장난감')
-    scene.remove(selectedObject)
-    no1 = false
-  }
+  // async removeGoods(scene, no1) {
+  //   // console.log('scene.toyGoods', scene.toyGoods)
+  //   // console.log(typeof scene)
+  //   var selectedObject = scene.toyGoods.ToyGoods.getObjectByName('기본 장난감')
+  //   scene.remove(selectedObject)
+  //   no1 = false
+  // }
 }
 
 export { Event }
