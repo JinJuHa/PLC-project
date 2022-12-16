@@ -18,15 +18,10 @@
         <button class="logout" @click="$router.push('/edukit/list')">
           <font-awesome-icon icon="fa-solid fa-power-off" />
         </button>
-        <!-- {{ user.name }}  -->
         <div class="description"></div>
         <ul class="data">
-          <li v-show="plc.plcStart == false">
-            <span class="entypo-heart"> 정지</span>
-          </li>
-          <li v-show="plc.plcStart == true && plc.plcStop == true">
-            <span class="entypo-heart"> 작동 중</span>
-          </li>
+          <li v-show="plc.plcStart == false">정지</li>
+          <li v-show="plc.plcStart == true && plc.plcStop == true">작동 중</li>
         </ul>
       </div>
     </div>
@@ -278,13 +273,6 @@ export default {
   background: #4eb6b6;
   text-align: center;
   border-radius: 0 0 0.3em 0.3em;
-}
-.user-profile li {
-  margin: 0 auto;
-  padding: 1.3em;
-  width: 33.33334%;
-  display: table-cell;
-  text-align: center;
 }
 
 .user-profile span {

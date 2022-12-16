@@ -29,7 +29,8 @@ class Resource {
 
       this.obj.add(cube)
     } else if (file === 'edukit') {
-      this.loader.load('fbx/body2.FBX', object => {
+      console.log('test')
+      this.loader.load('/fbx/body2.FBX', object => {
         let obj = (this.edukit.body = object)
         obj.name = 'body'
 
@@ -44,8 +45,9 @@ class Resource {
 
         if (obj) this.obj.add(obj)
       })
+      console.log('test1')
 
-      this.loader.load('fbx/StaticMesh1.FBX', object => {
+      this.loader.load('/fbx/StaticMesh1.FBX', object => {
         // 3호기 집게
         let obj = (this.edukit.staticMesh1 = object)
         obj.name = 'StaticMesh1'
@@ -67,8 +69,9 @@ class Resource {
         })
         if (obj) this.obj.add(obj)
       })
+      console.log('test2')
 
-      this.loader.load('fbx/StaticMesh2.FBX', object => {
+      this.loader.load('/fbx/StaticMesh2.FBX', object => {
         // 3호기 집게 축
         let obj = (this.edukit.staticMesh2 = object)
         obj.name = 'StaticMesh2'
@@ -91,8 +94,9 @@ class Resource {
 
         if (obj) this.obj.add(obj)
       })
+      console.log('test3')
 
-      this.loader.load('fbx/StaticMesh3.FBX', object => {
+      this.loader.load('/fbx/StaticMesh3.FBX', object => {
         // 3호기 Y축
         let obj = (this.edukit.staticMesh3 = object)
         obj.name = 'StaticMesh3'
@@ -114,8 +118,9 @@ class Resource {
 
         if (obj) this.obj.add(obj)
       })
+      console.log('test4')
 
-      this.loader.load('fbx/StaticMesh4.FBX', object => {
+      this.loader.load('/fbx/StaticMesh4.FBX', object => {
         // 3호기 몸체
         let obj = (this.edukit.staticMesh4 = object)
         obj.name = 'StaticMesh4'

@@ -12,9 +12,16 @@ const routes = [
     redirect: '/web',
     children: [
       {
-        path: '/web/:id',
+        path: '/web',
         component: () => import('../views/edukit'),
-        meta: { noLogin: true }
+        meta: { noLogin: true },
+        children: [
+          {
+            path: ':id',
+            component: () => import('../views/edukit'),
+            meta: { noLogin: true }
+          }
+        ]
       },
       {
         path: '/edukit/list',
