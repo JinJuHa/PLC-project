@@ -64,35 +64,35 @@ class Event {
             p.tagId === '3' ||
             p.tagId === '39'
         )
-        //console.log(data)
-        //console.log(edukit)
+        console.log(data)
+        console.log(edukit)
 
         // greenLight status
         if (data[1].value === true) {
-          //console.log('green on')
+          console.log('green on')
           scene.trafficLight.trafficLight1.material.color.set(0x00ff00)
         } else if (data[1].value === false) {
-          //console.log('green off')
+          console.log('green off')
           scene.trafficLight.trafficLight1.material.color.set(0x003300)
         }
         // yellowLight status
         if (data[2].value === true) {
-          //console.log('yellow on')
+          console.log('yellow on')
           scene.trafficLight.trafficLight2.material.color.set(0xffff00)
         } else if (data[2].value === false) {
-          //console.log('yellow off')
+          console.log('yellow off')
           scene.trafficLight.trafficLight2.material.color.set(0x996600)
         }
         // redLight status
         if (data[3].value === true) {
-          //console.log('red on')
+          console.log('red on')
           scene.trafficLight.trafficLight3.material.color.set(0xff0000)
         } else if (data[3].value === false) {
-          //console.log('red off')
+          console.log('red off')
           scene.trafficLight.trafficLight3.material.color.set(0x660000)
         }
         if (data[0].value || no1) {
-          //console.log('No1_action - true')
+          console.log('No1_action - true')
           no1 = true
           this.moveGoods(scene)
           if (scene.toyGoods.defaultToy.position.x >= 5) {
@@ -108,16 +108,17 @@ class Event {
   }
 
   async moveGoods(scene) {
-    scene.toyGoods.defaultToy.position.x += 0.5
+    console.log('moveGoods')
+    console.log(scene)
+    // scene.toyGoods.defaultToy.position.x += 0.5
   }
 
-  // async removeGoods(scene, no1) {
-  //   console.log('scene.toyGoods', scene.toyGoods)
-  //   //console.log(typeof scene)
-  //   var selectedObject = scene.toyGoods.ToyGoods.getObjectByName('기본 장난감')
-  //   scene.remove(selectedObject)
-  //   no1 = false
-  // }
+  async removeGoods(scene, no1) {
+    console.log('scene.toyGoods', scene)
+    // scene.remove(scene.toyGoods.defaultToy)
+    // console.log('here?')
+    no1 = false
+  }
 }
 
 export { Event }
