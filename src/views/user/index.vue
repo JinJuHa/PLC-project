@@ -73,7 +73,8 @@ export default {
           }
         })
         .then(async res => {
-          this.user = res.data
+          this.user = res.data.data
+          localStorage.setItem('user', this.user.name)
           console.log('inforData - response: ', this.user)
         })
         .catch(err => {

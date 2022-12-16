@@ -2,7 +2,7 @@
   <div>
     <div class="background">
       <div class="dashboard">
-        <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="$router.push('/web')" />
+        <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="$router.go(-1)" />
         <iframe
           class="data-one"
           src="http://192.168.0.50:3000/d-solo/8ybdmNc4k/cycle-data?orgId=1&from=1670952872000&to=1670952892000&panelId=2"
