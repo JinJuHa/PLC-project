@@ -580,7 +580,7 @@ export default {
         })
         .catch(error => {
           console.log('accuracyRate: ', error)
-          alert('try again!')
+          //alert('try again!')
         })
     }
   }
