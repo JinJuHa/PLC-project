@@ -45,7 +45,7 @@ class Event {
 
     this.client.on('connect', () => {
       console.log('MQTT Connected')
-      console.log('subscribeMqtt- scene', scene)
+      // console.log('subscribeMqtt- scene', scene)
 
       this.client.subscribe([topic], () => {
         console.log(`토픽 연결 완료: ${topic}`)
@@ -64,8 +64,8 @@ class Event {
             p.tagId === '3' ||
             p.tagId === '39'
         )
-        console.log(data)
-        console.log(edukit)
+        // console.log(data)
+        // console.log(edukit)
 
         // greenLight status
         if (data[1].value === true) {
@@ -91,6 +91,7 @@ class Event {
           console.log('red off')
           scene.trafficLight.trafficLight3.material.color.set(0x660000)
         }
+<<<<<<< HEAD
         // if (data[0].value || no1) {
         //   console.log('No1_action - true')
         //   no1 = true
@@ -99,6 +100,16 @@ class Event {
         //     this.removeGoods(scene, no1)
         //   }
         // }
+=======
+        if (data[0].value || no1) {
+          // console.log('No1_action - true')
+          no1 = true
+          this.moveGoods(scene)
+          if (scene.toyGoods.defaultToy.position.x >= 5) {
+            this.removeGoods(scene, no1)
+          }
+        }
+>>>>>>> main
 
         data = data.map(p => parseInt(p.value))
         edukit['yAxis'] = data[5]
@@ -107,11 +118,19 @@ class Event {
     })
   }
 
+<<<<<<< HEAD
   // async moveGoods(scene) {
   //   console.log('moveGoods')
   //   console.log('scene.toyGoods.obj', scene.toyGoods.obj.children[0])
   //   scene.toyGoods.obj.children[0].position.x += 0.5
   // }
+=======
+  async moveGoods(scene) {
+    console.log('moveGoods')
+    console.log(scene)
+    // scene.toyGoods.defaultToy.position.x += 0.5
+  }
+>>>>>>> main
 
   // async removeGoods(scene, no1) {
   //   console.log('scene.toyGoods', scene)

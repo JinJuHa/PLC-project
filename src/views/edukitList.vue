@@ -4,6 +4,8 @@
       <div class="app-content">
         <div class="app-content-header">
           <h1 class="app-content-headerText">Device list</h1>
+          <b-button @click="signOut">로그아웃</b-button>
+          <b-button @click="deviceAdd">디바이스 추가</b-button>
         </div>
         <div class="app-content-actions">
           <div class="app-content-actions-wrapper">
@@ -58,10 +60,10 @@
             <div class="product-cell image">PLC name</div>
             <div class="product-cell status-cell">Status</div>
           </div>
-          <div class="products-row">
+          <div v-for="edukit in edukitList.data" :key="edukit.id" class="products-row" @click="plcRoute(edukit.id)">
             <div class="product-cell image">
               <img src="../../public/img/plc.jpg" alt="product" />
-              <span>PLC - 1</span>
+              <span>PLC - {{ edukit.name }}</span>
             </div>
             <div class="product-cell status-cell">
               <span class="cell-label">Status:</span>
@@ -81,7 +83,7 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      edukitList: ''
+      edukitList: []
     }
   },
   mounted() {
@@ -102,6 +104,10 @@ export default {
     this.getDevice()
   },
   methods: {
+    signOut() {
+      localStorage.removeItem('token')
+      this.$router.push('/auth/login')
+    },
     async getDevice() {
       await axios
         .get(process.env.VUE_APP_SERVER + '/manages/get-manage-list', {
@@ -116,6 +122,31 @@ export default {
         .catch(err => {
           console.log('getDevice - error: ', err)
         })
+    },
+    async deviceAdd() {
+      await axios
+        .post(
+          process.env.VUE_APP_SERVER + '/devices/insert',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        )
+        .then(async res => {
+          const code = res.data
+          console.log('/deviceAdd - response: ', code)
+          alert('디바이스가 추가 되었습니다.')
+          this.getDevice()
+        })
+        .catch(err => {
+          console.log('/deviceAdd - error: ', err)
+          alert('디바이스를 추가할 권한이 없습니다.')
+        })
+    },
+    plcRoute(edukitId) {
+      this.$router.push(`/web/${edukitId}`)
     }
   }
 }
@@ -493,6 +524,7 @@ $font-large: 24px;
     &:hover {
       box-shadow: var(--filter-shadow);
       background-color: rgba(202, 202, 202, 0.182);
+      cursor: pointer;
     }
 
     .cell-more-button {

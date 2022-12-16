@@ -97,7 +97,6 @@ export default {
         let xAxis = plcData[0] // x
         let yAxis = plcData[1] // y
         let time = plcData[2] // time
-        console.log('나는나는', xAxis)
         // 선택된 devicdId만 수용함
         this.removeOldData() // 오래된 데이터 제거
 

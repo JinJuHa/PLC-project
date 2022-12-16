@@ -11,59 +11,23 @@
         <font-awesome-icon icon="fa-solid fa-rotate-left" />
       </button>
     </div>
-    <div class="control-three">
-      <button v-if="on" class="remote-control" @click="on = !on">
-        <font-awesome-icon icon="fa-solid fa-gamepad" />
-      </button>
-      <div v-if="!on" class="control-three-button">
-        <div class="grid"></div>
-        <div class="grid">
-          <button class="click-button"><font-awesome-icon icon="fa-solid fa-angle-up" /></button>
-        </div>
-        <div class="grid"></div>
-        <div class="grid">
-          <button class="click-button"><font-awesome-icon icon="fa-solid fa-angle-left" /></button>
-        </div>
-        <div class="grid">
-          <button class="click-button"><font-awesome-icon icon="fa-solid fa-gamepad" @click="on = !on" /></button>
-        </div>
-        <div class="grid">
-          <button class="click-button"><font-awesome-icon icon="fa-solid fa-angle-right" /></button>
-        </div>
-        <div class="grid"></div>
-        <div class="grid">
-          <button class="click-button"><font-awesome-icon icon="fa-solid fa-angle-down" /></button>
-        </div>
-      </div>
-    </div>
     <div class="test-page">
       <div class="user-profile">
-        <img class="avatar" src="../../../public/img/engineer.png" alt="Ash" />
-        <div class="username">담당자님</div>
-        <button class="logout" @click="signOut">
-          <font-awesome-icon icon="fa-solid fa-power-off" /><span class="logout-text">Logout</span>
+        <img class="avatar" src="../../../public/img/engineer.png" />
+        <img class="avatar-logout" src="../../../public/img/logout.png" alt="logout" @click="signOut" />
+        <div class="username">PLC - {{ this.$route.params.id }}호기</div>
+        <button class="logout" @click="$router.push('/edukit/list')">
+          <font-awesome-icon icon="fa-solid fa-power-off" />
         </button>
-        <!-- {{ user.name }}  -->
-        <div class="bio">PLC Engineer</div>
-        <div class="description">I use to design websites and applications for the web.</div>
+        <div class="description"></div>
         <ul class="data">
-          <li v-show="plc.plcStart == false">
-            <span class="entypo-heart"> 정지</span>
-          </li>
+          <li v-show="plc.plcStart == false"><font-awesome-icon icon="fa-solid fa-stop" /> 정지</li>
           <li v-show="plc.plcStart == true && plc.plcStop == true">
-            <span class="entypo-heart"> 작동 중</span>
+            <font-awesome-icon icon="fa-solid fa-forward" /> 작동 중
           </li>
         </ul>
       </div>
     </div>
-    <!-- <div>
-      <button class="logout" @click="signOut">
-        <font-awesome-icon icon="fa-solid fa-power-off" /><span class="logout-text">Logout</span>
-      </button>
-    </div> -->
-    <!-- <div>
-      <UserInfo />
-    </div> -->
     <div v-show="dashboardStat == true">
       <Dashboard :plc="plc" />
     </div>
@@ -91,12 +55,16 @@ export default {
         plcReset: null,
         lightGreen: null,
         lightYellow: null,
-        lightRed: null
-      }
+        lightRed: null,
+        no3Active: null,
+        diceValue: null
+      },
+      device: ''
     }
   },
   mounted() {
     this.createMqtt()
+    this.getDeviceOne()
   },
   methods: {
     createMqtt() {
@@ -121,23 +89,18 @@ export default {
         this.plc.plcStart = plcData[0].value // 시작
         this.plc.plcReset = plcData[1].value // 리셋
         this.plc.plcStop = plcData[2].value // 비상정지
-        // console.log('정지', this.plc.plcStop)
         // 신호등
         let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
         this.plc.lightGreen = lightData[0].value
         this.plc.lightYellow = lightData[1].value
         this.plc.lightRed = lightData[2].value
-        // let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
-        // this.light.green = lightData[0].value // 초록
-        // this.light.yellow = lightData[1].value // 노랑
-        // this.light.red = lightData[2].value // 빨강
-        // this.control.sen1 = controlData[3].value // 1번 센서 전원
-        // this.control.sen2 = controlData[4].value // 2번 센서 전원
+        // 주사위 데이터
+        let diceData = this.mqttData.Wrapper.filter(p => p.tagId === '37' || p.tagId === '40')
+        this.plc.no3Active = diceData[0].value
+        this.plc.diceValue = diceData[1].value
 
         // console.log('index.vue', plcData)
 
-        //console.log(plcData)
-        // console.log('신호등', lightData)
       })
     },
     publishMqtt(id, v) {
@@ -155,6 +118,21 @@ export default {
           alert('MQTT 데이터 전송이 실패했습니다.')
         }
       })
+    },
+    async getDeviceOne() {
+      await axios
+        .get(process.env.VUE_APP_SERVER + '/devices/' + this.$route.params.id, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async res => {
+          this.device = res.data
+          console.log('/devices/ - response: ', res.data)
+        })
+        .catch(err => {
+          console.log('/devices/ - error: ', err)
+        })
     },
     dashboardSet() {
       this.dashboardStat = true
@@ -241,11 +219,8 @@ export default {
 </script>
 
 <style scoped>
-/* @import url(https://fonts.googleapis.com/css?family=Raleway|Varela+Round|Coda);
-@import url(http://weloveiconfonts.com/api/?family=entypo); */
-
-[class*='entypo-']:before {
-  font-family: 'entypo', sans-serif;
+.alert {
+  z-index: 1000;
 }
 
 .test-page {
@@ -255,16 +230,16 @@ export default {
 
 .user-profile {
   margin: auto;
-  width: 25em;
-  height: 8em;
+  width: 21em;
+  height: 6.5em;
   background: #fff;
   border-radius: 0.3em;
 }
 
 .user-profile .username {
   margin: auto;
-  margin-top: -4.4em;
-  margin-left: 5.8em;
+  margin-top: -3.7em;
+  margin-left: 4.6em;
   color: #658585;
   font-size: 1.53em;
   font-weight: bold;
@@ -284,7 +259,7 @@ export default {
   color: #c0c5c5;
   font-size: 0.87em;
 }
-.user-profile > img.avatar {
+.user-profile > img {
   padding: 0.7em;
   margin-left: 0.3em;
   margin-top: 0.3em;
@@ -294,17 +269,18 @@ export default {
 }
 
 .user-profile ul.data {
-  height: 3.7em;
+  height: 3em;
   background: #4eb6b6;
   text-align: center;
   border-radius: 0 0 0.3em 0.3em;
 }
-.user-profile li {
-  margin: 0 auto;
-  padding: 1.3em;
-  width: 33.33334%;
-  display: table-cell;
-  text-align: center;
+
+.data li {
+  color: #fff;
+  list-style: none;
+  font-weight: bold;
+  padding-top: 10px;
+  padding-right: 45px;
 }
 
 .user-profile span {
@@ -327,6 +303,23 @@ export default {
   flex-direction: column;
   top: 35px;
   right: 40px;
+}
+.avatar {
+  cursor: pointer;
+  transition: 0.5s;
+}
+.avatar:hover {
+  opacity: 0;
+}
+.avatar-logout {
+  position: absolute;
+  left: 36px;
+  cursor: pointer;
+  transition: 0.5s;
+  opacity: 0;
+}
+.avatar-logout:hover {
+  opacity: 1;
 }
 .active-but {
   width: 60px;
@@ -379,52 +372,22 @@ export default {
 }
 .logout {
   position: absolute;
-  width: 42px;
-  height: 42px;
+  top: 0px;
+  left: 250px;
+  width: 40px;
+  height: 40px;
   border-radius: 30px;
-  border: 2px solid #fff;
+  border: 2px solid #4eb6b6;
   margin: 50px;
-  color: #fff;
-  font-size: 21px;
+  color: #4eb6b6;
+  font-size: 19px;
   background: none;
   transition: 0.5s;
 }
-.logout-text {
-  position: absolute;
-  opacity: 0;
-  font-size: 18px;
-  padding-left: 10px;
-  transition: 0.5s;
-  color: #fff;
-}
 .logout:hover {
-  background: #093053;
-  width: 120px;
-  padding-right: 80px;
-  border: none;
+  background: #4eb6b6;
+  color: #fff;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
-}
-.logout:hover .logout-text {
-  opacity: 1;
-}
-.control-three {
-  position: absolute;
-  display: flex;
-  width: 140px;
-  height: 140px;
-  bottom: 35%;
-  left: 30px;
-}
-.control-three-button {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-}
-.control-three-button button {
-  margin: 3px;
-  width: 41px;
-  height: 41px;
-  border-radius: 25px;
-  background: #fff;
 }
 button:focus {
   outline: none;
@@ -432,12 +395,5 @@ button:focus {
 .click-button:active {
   background-color: black;
   color: #fff;
-}
-.remote-control {
-  width: 70px;
-  height: 70px;
-  margin: 35px;
-  border-radius: 50px;
-  background: #fff;
 }
 </style>
