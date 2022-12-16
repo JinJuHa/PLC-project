@@ -105,7 +105,7 @@ export default {
       mqttClient.on('connect', () => {
         // mqtt 연결 시 구독한다.
         console.log('mqtt success')
-        const topic = process.env.VUE_APP_MQTT_TOPIC // 구독할 토픽: "myEdukit"
+        const topic = process.env.VUE_APP_MQTT_SUB_TOPIC // 구독할 토픽: "myEdukit"
         mqttClient.subscribe(topic, {}, (error, res) => {
           if (error) {
             // console.error('mqtt client error', error)
@@ -143,7 +143,7 @@ export default {
     publishMqtt(id, v) {
       // mqtt pubish
       const mqttClient = mqtt.connect(process.env.VUE_APP_MQTT)
-      const topic = process.env.VUE_APP_MQTT_WRITE_TOPIC // UVC-Write
+      const topic = process.env.VUE_APP_MQTT_PUB_TOPIC // UVC-Write
       const message = JSON.stringify({ tagId: id, value: v, userId: 1, deviceId: 1 })
       // PLC 제어에 쓰이는 모든 publish message들은
       // { "tagId" : "id값", "value" : "value값" }으로 이루어져야 합니다.
