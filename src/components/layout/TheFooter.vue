@@ -140,9 +140,9 @@ export default {
 #menuToggle input {
   position: absolute;
   display: block;
-  width: 50px;
-  height: 50px;
-  left: 50px;
+  width: 55px;
+  height: 55px;
+  left: 70px;
   cursor: pointer;
   opacity: 0;
   z-index: 2; /* and place it over the hamburger */

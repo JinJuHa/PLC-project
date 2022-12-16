@@ -4,6 +4,7 @@
       <div class="app-content">
         <div class="app-content-header">
           <h1 class="app-content-headerText">Device list</h1>
+          <b-button @click="deviceAdd">디바이스 추가</b-button>
         </div>
         <div class="app-content-actions">
           <div class="app-content-actions-wrapper">
@@ -115,6 +116,28 @@ export default {
         })
         .catch(err => {
           console.log('getDevice - error: ', err)
+        })
+    },
+    async deviceAdd() {
+      await axios
+        .post(
+          process.env.VUE_APP_SERVER + '/devices/insert',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        )
+        .then(async res => {
+          const code = res.data
+          console.log('/deviceAdd - response: ', code)
+          alert('디바이스가 추가 되었습니다.')
+          this.getDevice()
+        })
+        .catch(err => {
+          console.log('/deviceAdd - error: ', err)
+          alert('디바이스를 추가할 권한이 없습니다.')
         })
     },
     plcRoute(edukitId) {

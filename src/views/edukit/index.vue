@@ -13,15 +13,18 @@
     </div>
     <div class="test-page">
       <div class="user-profile">
-        <img class="avatar" src="../../../public/img/engineer.png" alt="Ash" @click="signOut" />
+        <img class="avatar" src="../../../public/img/engineer.png" />
+        <img class="avatar-logout" src="../../../public/img/logout.png" alt="logout" @click="signOut" />
         <div class="username">PLC - {{ this.$route.params.id }}호기</div>
         <button class="logout" @click="$router.push('/edukit/list')">
           <font-awesome-icon icon="fa-solid fa-power-off" />
         </button>
         <div class="description"></div>
         <ul class="data">
-          <li v-show="plc.plcStart == false">정지</li>
-          <li v-show="plc.plcStart == true && plc.plcStop == true">작동 중</li>
+          <li v-show="plc.plcStart == false"><font-awesome-icon icon="fa-solid fa-stop" /> 정지</li>
+          <li v-show="plc.plcStart == true && plc.plcStop == true">
+            <font-awesome-icon icon="fa-solid fa-forward" /> 작동 중
+          </li>
         </ul>
       </div>
     </div>
@@ -97,7 +100,7 @@ export default {
         // this.control.sen1 = controlData[3].value // 1번 센서 전원
         // this.control.sen2 = controlData[4].value // 2번 센서 전원
 
-        console.log('index.vue', plcData)
+        //console.log('index.vue', plcData, this.plc.plcStart)
 
         //console.log(plcData)
         // console.log('신호등', lightData)
@@ -162,7 +165,7 @@ export default {
       }
       console.log('/devices/control/start - axiosBody : ', axiosBody)
       await axios
-        .post(process.env.VUE_APP_SERVER + '/devices/control', axiosBody, {
+        .post(process.env.VUE_APP_SERVER + '/logs/control', axiosBody, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -182,7 +185,7 @@ export default {
       }
       console.log('/devices/control/stop - axiosBody : ', axiosBody)
       await axios
-        .post(process.env.VUE_APP_SERVER + '/devices/control', axiosBody, {
+        .post(process.env.VUE_APP_SERVER + '/logs/control', axiosBody, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -202,7 +205,7 @@ export default {
       }
       console.log('/devices/control/reset - axiosBody : ', axiosBody)
       await axios
-        .post(process.env.VUE_APP_SERVER + '/devices/control', axiosBody, {
+        .post(process.env.VUE_APP_SERVER + '/logs/control', axiosBody, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -239,7 +242,7 @@ export default {
 .user-profile .username {
   margin: auto;
   margin-top: -3.7em;
-  margin-left: 5em;
+  margin-left: 4.6em;
   color: #658585;
   font-size: 1.53em;
   font-weight: bold;
@@ -259,7 +262,7 @@ export default {
   color: #c0c5c5;
   font-size: 0.87em;
 }
-.user-profile > img.avatar {
+.user-profile > img {
   padding: 0.7em;
   margin-left: 0.3em;
   margin-top: 0.3em;
@@ -273,6 +276,14 @@ export default {
   background: #4eb6b6;
   text-align: center;
   border-radius: 0 0 0.3em 0.3em;
+}
+
+.data li {
+  color: #fff;
+  list-style: none;
+  font-weight: bold;
+  padding-top: 10px;
+  padding-right: 45px;
 }
 
 .user-profile span {
@@ -302,6 +313,16 @@ export default {
 }
 .avatar:hover {
   opacity: 0;
+}
+.avatar-logout {
+  position: absolute;
+  left: 36px;
+  cursor: pointer;
+  transition: 0.5s;
+  opacity: 0;
+}
+.avatar-logout:hover {
+  opacity: 1;
 }
 .active-but {
   width: 60px;
@@ -367,8 +388,8 @@ export default {
   transition: 0.5s;
 }
 .logout:hover {
-  background: #093053;
-  border: none;
+  background: #4eb6b6;
+  color: #fff;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
 }
 button:focus {
