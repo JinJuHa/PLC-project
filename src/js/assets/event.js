@@ -108,13 +108,13 @@ class Event {
   }
 
   async moveGoods(scene) {
-    console.log('moveGoods')
-    console.log(scene)
+    // console.log('moveGoods')
+    // console.log(scene)
     // scene.toyGoods.defaultToy.position.x += 0.5
   }
 
   async removeGoods(scene, no1) {
-    console.log('scene.toyGoods', scene)
+    // console.log('scene.toyGoods', scene)
     // scene.remove(scene.toyGoods.defaultToy)
     // console.log('here?')
     no1 = false

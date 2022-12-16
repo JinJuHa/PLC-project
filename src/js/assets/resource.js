@@ -45,7 +45,7 @@ class Resource {
 
         if (obj) this.obj.add(obj)
       })
-      console.log('test1')
+      // console.log('test1')
 
       this.loader.load('/fbx/StaticMesh1.FBX', object => {
         // 3호기 집게
@@ -69,7 +69,7 @@ class Resource {
         })
         if (obj) this.obj.add(obj)
       })
-      console.log('test2')
+      // console.log('test2')
 
       this.loader.load('/fbx/StaticMesh2.FBX', object => {
         // 3호기 집게 축
@@ -94,7 +94,7 @@ class Resource {
 
         if (obj) this.obj.add(obj)
       })
-      console.log('test3')
+      // console.log('test3')
 
       this.loader.load('/fbx/StaticMesh3.FBX', object => {
         // 3호기 Y축
@@ -118,7 +118,7 @@ class Resource {
 
         if (obj) this.obj.add(obj)
       })
-      console.log('test4')
+      // console.log('test4')
 
       this.loader.load('/fbx/StaticMesh4.FBX', object => {
         // 3호기 몸체

@@ -94,7 +94,7 @@ export default {
   watch: {
     barChart: {
       handler() {
-        this.renderChart(this.chartData, this.options)
+        this.renderChart(this.data, this.options)
       },
       deep: true
     }
@@ -175,7 +175,7 @@ export default {
               tension: 1,
               // label: '',
               barPercentage: 0.55,
-              data: [2, 3, 5, 7, 4, 3]
+              data: [1, 2, 0, 0, 0, 0]
             }
           ]
         },
@@ -188,9 +188,6 @@ export default {
             text: 'Dice Frequency Chart'
           },
           plugins: {
-            // legend: {
-            //   display: false
-            // },
             datalabels: {
               display: false
             },
@@ -208,7 +205,7 @@ export default {
               }
             },
             y: {
-              brginAtZero: true,
+              beginAtZero: true,
               grid: {
                 drawBorder: false,
                 color: 'black',
@@ -317,7 +314,7 @@ export default {
       },
       maxDataLength: 20, // TODO: 현재 차트에서 출력할 데이터의 최대크기(화면에서 입력 가능하도록 한다.)
       mqttDataList: [], // mqtt를 통해 받은 데이터(리스트로 계속 추가됨)
-      chartData: null, // 차트로 표현될 데이터
+      chartData: [0, 0, 0, 0, 0, 0], // 차트로 표현될 데이터
       chartLabels: [], // 차트에서 사용할 라벨 리스트(가로축 라벨)
       chartDatasetLabels: [], // 차트에서 사용할 데이터셋 라벨 리스트
       chartDatasetDataList: [], // 차트에서 사용할 데이터셋 데이터 리스트
@@ -342,7 +339,7 @@ export default {
     }, 10)),
       this.makeChartData()
     this.accuracyCheck()
-    this.renderChart(this.chartData, this.options)
+    this.renderChart(this.barChart.data.datasets[0].data, this.options)
     this.deviceIdCheck()
   },
   destroyed() {
