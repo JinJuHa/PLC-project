@@ -55,7 +55,9 @@ export default {
         plcReset: null,
         lightGreen: null,
         lightYellow: null,
-        lightRed: null
+        lightRed: null,
+        no3Active: null,
+        diceValue: null
       },
       device: ''
     }
@@ -87,23 +89,16 @@ export default {
         this.plc.plcStart = plcData[0].value // 시작
         this.plc.plcReset = plcData[1].value // 리셋
         this.plc.plcStop = plcData[2].value // 비상정지
-        // console.log('정지', this.plc.plcStop)
         // 신호등
         let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
         this.plc.lightGreen = lightData[0].value
         this.plc.lightYellow = lightData[1].value
         this.plc.lightRed = lightData[2].value
-        // let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
-        // this.light.green = lightData[0].value // 초록
-        // this.light.yellow = lightData[1].value // 노랑
-        // this.light.red = lightData[2].value // 빨강
-        // this.control.sen1 = controlData[3].value // 1번 센서 전원
-        // this.control.sen2 = controlData[4].value // 2번 센서 전원
+        // 주사위 데이터
+        let diceData = this.mqttData.Wrapper.filter(p => p.tagId === '37' || p.tagId === '40')
+        this.plc.no3Active = diceData[0].value
+        this.plc.diceValue = diceData[1].value
 
-        //console.log('index.vue', plcData, this.plc.plcStart)
-
-        //console.log(plcData)
-        // console.log('신호등', lightData)
       })
     },
     publishMqtt(id, v) {
