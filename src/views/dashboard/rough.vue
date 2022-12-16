@@ -461,7 +461,7 @@ export default {
     },
     accuracyCheck() {
       axios
-        .get(process.env.VUE_APP_SERVER + '/devices/find-cycle-all/1')
+        .get(process.env.VUE_APP_SERVER + '/logs/find-cycle-all/1')
         .then(response => {
           const cycle = response.data.data
           for (let i = 0; i < cycle.length; i++) {
