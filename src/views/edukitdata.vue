@@ -3,13 +3,26 @@
     <div class="background">
       <div class="dashboard">
         <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="$router.go(-1)" />
-        <iframe
-          class="data-one"
-          src="http://192.168.0.50:3000/d-solo/8ybdmNc4k/cycle-data?orgId=1&from=1670952872000&to=1670952892000&panelId=2"
-          width="450"
-          height="200"
-          frameborder="0"
-        ></iframe>
+        <div>
+          <iframe
+            src="http://192.168.0.50:3000/d-solo/8ybdmNc4k/cycle-data?orgId=1&from=1670952872000&to=1670952892000&panelId=6"
+            width="450"
+            height="200"
+            frameborder="0"
+          ></iframe
+          ><iframe
+            src="http://192.168.0.50:3000/d-solo/8ybdmNc4k/cycle-data?orgId=1&from=1670952872000&to=1670952892000&panelId=4"
+            width="450"
+            height="200"
+            frameborder="0"
+          ></iframe
+          ><iframe
+            src="http://192.168.0.50:3000/d-solo/8ybdmNc4k/cycle-data?orgId=1&from=1670952872000&to=1670952892000&panelId=2"
+            width="450"
+            height="200"
+            frameborder="0"
+          ></iframe>
+        </div>
       </div>
     </div>
   </div>
@@ -41,8 +54,5 @@ export default {}
   cursor: pointer;
   width: 100px;
   font-size: 25px;
-}
-.data-one {
-  margin-top: 50px;
 }
 </style>

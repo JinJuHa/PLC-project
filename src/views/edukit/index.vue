@@ -28,7 +28,7 @@
         </ul>
       </div>
     </div>
-    <div v-show="dashboardStat == true">
+    <div v-show="dashboardStat == true" class="monitoring">
       <Dashboard :plc="plc" />
     </div>
     <Edukit />
@@ -222,6 +222,12 @@ export default {
 </script>
 
 <style scoped>
+.monitoring {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+}
 .alert {
   z-index: 1000;
 }

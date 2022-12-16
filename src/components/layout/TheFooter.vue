@@ -1,7 +1,7 @@
 <template>
   <div class="footer-page">
     <div id="menuToggle">
-      <input class="checkbox" type="checkbox" />
+      <input class="checkbox" type="checkbox" checked />
       <div class="footer-button">
         <font-awesome-icon class="footer-button-icon" icon="fa-solid fa-angles-up" />
       </div>
@@ -31,7 +31,8 @@ export default {
   components: { UserInfo },
   data() {
     return {
-      drawerStat: false
+      drawerStat: false,
+      dashboardX: false
     }
   },
   methods: {
@@ -40,6 +41,9 @@ export default {
     },
     dashboard() {
       this.$emit('dashboardOpen')
+    },
+    dashX() {
+      this.dashboardX = true
     }
   }
 }
@@ -76,9 +80,9 @@ export default {
 }
 #menu {
   position: absolute;
-  height: 90px;
+  height: 100px;
   background-color: rgba(255, 255, 255, 0.634);
-  border-radius: 40px;
+  border-radius: 50px;
   width: 60%;
   margin-left: 290px;
   margin-bottom: 35px;
@@ -88,7 +92,7 @@ export default {
   padding-right: 16%;
   align-items: center;
   box-shadow: inset 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-  transform: translate(0%, 150%);
+  transform: translate(0%, 165%);
   transform-origin: 0% 0%;
   transition: transform 1s cubic-bezier(0.77, 0.2, 0.05, 1);
 }
@@ -113,27 +117,8 @@ export default {
 .menu-icon:active {
   transform: scale(0.9);
 }
-
-/* .slide-leave-from {
-  transform: translateY(0px);
-}
-.slide-leave-active {
-  transition: all 3s;
-}
-.slide-leave-to {
-  transform: translateY(100px);
-}
-.menuSlide-enter-from {
-  transform: translateY(90px);
-}
-.menuSlide-enter-active {
-  transition: all 2s;
-}
-.menuSlide-enter-to {
-  transform: translateY(-10px);
-} */
 .footer-page {
-  height: 120px;
+  height: 140px;
   overflow: hidden;
 }
 

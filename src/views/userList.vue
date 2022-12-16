@@ -19,7 +19,9 @@
           </div>
         </div>
       </b-modal>
-      <b-table striped hover :items="items" :fields="fields"></b-table>
+      <div class="table-list">
+        <b-table striped hover :items="items" :fields="fields"></b-table>
+      </div>
     </div>
   </div>
 </template>
@@ -155,5 +157,10 @@ export default {
   cursor: pointer;
   width: 100px;
   font-size: 25px;
+}
+.table-list {
+  height: 53vh;
+  width: 100%;
+  overflow-y: scroll;
 }
 </style>

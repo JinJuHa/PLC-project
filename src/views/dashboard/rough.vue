@@ -1,6 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-header">
+      <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="dashxx" />
       <div class="dashboard-headding"><p>Dashboard</p></div>
       <div class="dashboard-info">
         <div class="dashboard-date">
@@ -338,6 +339,9 @@ export default {
     clearInterval(this.timerInterval)
   },
   methods: {
+    dashxx() {
+      // this.$emit('dashboardX')
+    },
     createMqtt() {
       // mqtt연결
       const mqttClient = mqtt.connect(process.env.VUE_APP_MQTT)
@@ -498,11 +502,11 @@ export default {
 .dashboard-container {
   display: grid;
   grid-template-rows: 15% 45% 40%;
-  width: 90%;
-  height: 90vh;
-  background-color: green;
+  width: 100%;
+  height: 100vh;
+  background: green;
   padding: 5px;
-  position: absolute;
+  /* position: absolute; */
   border-radius: 10px;
 }
 .dashboard-header {
