@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div id="alert-connection">
+      <!-- <button @click="delayedAlert">Show alert for 2s</button> -->
+      <b-alert v-model="showAlert">
+        {{ alertMessage }}
+      </b-alert>
+    </div>
     <div id="control-button">
       <button :class="plc.plcStart ? 'active-but' : 'start'" :disabled="plc.plcStart" @click="mcStart">
         <font-awesome-icon icon="fa-solid fa-play" />
@@ -14,9 +20,8 @@
     <div class="test-page">
       <div class="user-profile">
         <img class="avatar" src="../../../public/img/engineer.png" />
-        <img class="avatar-logout" src="../../../public/img/logout.png" alt="logout" @click="signOut" />
         <div class="username">PLC - {{ this.$route.params.id }}호기</div>
-        <button class="logout" @click="$router.push('/edukit/list')">
+        <button class="logout" @click="signOut">
           <font-awesome-icon icon="fa-solid fa-power-off" />
         </button>
         <div class="description"></div>
@@ -47,6 +52,8 @@ export default {
   components: { Edukit, TheFooter, Dashboard },
   data() {
     return {
+      showAlert: false,
+      alertMessage: 'This is the alert message',
       on: true,
       dashboardStat: false,
       plc: {
@@ -79,6 +86,12 @@ export default {
           }
         })
       })
+      if (this.plc.plcStart == null) {
+        this.showAlert = true
+        setTimeout(() => {
+          this.showAlert = false
+        }, 5000)
+      }
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
         this.mqttData = JSON.parse(message) // json string으로만 받을 수 있음
@@ -93,6 +106,9 @@ export default {
         this.plc.lightGreen = lightData[0].value
         this.plc.lightYellow = lightData[1].value
         this.plc.lightRed = lightData[2].value
+        // if (!(this.plc.plcStart == null)) {
+        //   this.showAlert = false
+        // }
         // let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
         // this.light.green = lightData[0].value // 초록
         // this.light.yellow = lightData[1].value // 노랑
@@ -222,6 +238,10 @@ export default {
 </script>
 
 <style scoped>
+#alert-connection {
+  position: absolute;
+  z-index: 100;
+}
 .monitoring {
   position: absolute;
   width: 100%;
@@ -312,23 +332,6 @@ export default {
   flex-direction: column;
   top: 35px;
   right: 40px;
-}
-.avatar {
-  cursor: pointer;
-  transition: 0.5s;
-}
-.avatar:hover {
-  opacity: 0;
-}
-.avatar-logout {
-  position: absolute;
-  left: 36px;
-  cursor: pointer;
-  transition: 0.5s;
-  opacity: 0;
-}
-.avatar-logout:hover {
-  opacity: 1;
 }
 .active-but {
   width: 60px;

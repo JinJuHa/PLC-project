@@ -4,7 +4,6 @@
       <div class="app-content">
         <div class="app-content-header">
           <h1 class="app-content-headerText">Device list</h1>
-          <b-button @click="signOut">로그아웃</b-button>
           <b-button @click="deviceAdd">디바이스 추가</b-button>
         </div>
         <div class="app-content-actions">
