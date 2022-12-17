@@ -45,15 +45,6 @@
           <p class="plc-info">{{ accuracyRate }} %</p>
         </div>
       </div>
-      <!-- <div class="dashboard-bar">
-        <bar-chart
-          id="diceFequencyChart"
-          ref="diceFequencyChart"
-          :chart-data="barChart.data"
-          :options="barChart.options"
-          style="width: 450px; height: 290px"
-        ></bar-chart>
-      </div> -->
     </div>
     <div class="dashboard-footer">
       <line-chart
@@ -77,18 +68,8 @@
           ref="diceFequencyChart"
           :chart-data="barChart.data"
           :options="barChart.options"
-          style="width: 450px; height: 290px"
         ></bar-chart>
       </div>
-      <!-- <div class="dashboard-rates">
-        <div class="dashboard-amount">
-          <p>총 생산량</p>
-        </div>
-        <div class="dashboard-amount">
-          <p>양품 생산율</p>
-          <p>{{ accuracyRate }} %</p>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -184,9 +165,8 @@ export default {
               borderWidth: 1,
               fill: true,
               tension: 1,
-              // label: '',
               barPercentage: 0.55,
-              data: [1, 2, 0, 0, 0, 0]
+              data: [0, 0, 0, 0, 0, 0]
             }
           ]
         },
@@ -230,7 +210,7 @@ export default {
               }
             }
           },
-          responsive: true,
+          responsive: false,
           maintainAspectRatio: false,
           animation: {
             duration: 5000
@@ -336,14 +316,14 @@ export default {
       accuracyRate: 0
     }
   },
-  watch: {
-    barChart: {
-      handler() {
-        this.renderChart(this.data, this.options)
-      },
-      deep: true
-    }
-  },
+  // watch: {
+  //   barChart: {
+  //     handler() {
+  //       this.renderChart(this.data, this.options)
+  //     },
+  //     deep: true
+  //   }
+  // },
   created() {
     this.createMqtt()
   },
@@ -358,7 +338,7 @@ export default {
     }, 10)),
       this.makeChartData()
     this.accuracyCheck()
-    this.renderChart(this.barChart.data.datasets[0].data, this.options)
+    // this.renderChart(this.barChart.data.datasets[0].data, this.options)
     this.deviceIdCheck()
   },
   destroyed() {
@@ -636,7 +616,7 @@ export default {
   width: 100%;
   height: 100%;
   color: white;
-  padding: 5px;
+  /* padding: 5px; */
 }
 .dashboard-headding {
   letter-spacing: 2px;
@@ -652,7 +632,7 @@ export default {
   grid-template-columns: 70% 30%;
   width: 100%;
   height: 100%;
-  padding: 10px;
+  /* padding: 10px; */
   border-radius: 10px;
 }
 .dashboard-date {
@@ -662,7 +642,7 @@ export default {
 }
 .dashboard-user {
   color: darkgreen;
-  padding: 10px;
+  /* padding: 10px; */
   font-size: 30px;
 }
 .dashboard-columns {
@@ -694,19 +674,19 @@ export default {
 }
 .dashboard-bar {
   width: 100%;
-  height: 100%;
+  height: 300px;
 }
 .dashboard-footer {
   display: grid;
   grid-template-columns: 53% 7% 40%;
   width: 100%;
-  height: 100%;
+  height: 300px;
   background-color: white;
   border-radius: 10px;
 }
 .dashboard-lights {
   width: 100%;
-  height: 100%;
+  height: 300px;
   background-color: black;
   display: grid;
   grid-template-rows: 33% 33% 33%;
