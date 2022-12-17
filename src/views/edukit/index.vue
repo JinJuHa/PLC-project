@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div id="alert-connection">
+      <!-- <button @click="delayedAlert">Show alert for 2s</button> -->
+      <b-alert v-model="showAlert">
+        {{ alertMessage }}
+      </b-alert>
+    </div>
     <div id="control-button">
       <button :class="plc.plcStart ? 'active-but' : 'start'" :disabled="plc.plcStart" @click="mcStart">
         <font-awesome-icon icon="fa-solid fa-play" />
@@ -14,9 +20,8 @@
     <div class="test-page">
       <div class="user-profile">
         <img class="avatar" src="../../../public/img/engineer.png" />
-        <img class="avatar-logout" src="../../../public/img/logout.png" alt="logout" @click="signOut" />
         <div class="username">PLC - {{ this.$route.params.id }}호기</div>
-        <button class="logout" @click="$router.push('/edukit/list')">
+        <button class="logout" @click="signOut">
           <font-awesome-icon icon="fa-solid fa-power-off" />
         </button>
         <div class="description"></div>
@@ -47,18 +52,17 @@ export default {
   components: { Edukit, TheFooter, Dashboard },
   data() {
     return {
+      showAlert: false,
+      alertMessage: 'This is the alert message',
       on: true,
       dashboardStat: false,
       plc: {
-        id: null,
         plcStart: null,
         plcStop: null,
         plcReset: null,
         lightGreen: null,
         lightYellow: null,
-        lightRed: null,
-        no3Active: null,
-        diceValue: null
+        lightRed: null
       },
       device: ''
     }
@@ -66,7 +70,6 @@ export default {
   mounted() {
     this.createMqtt()
     this.getDeviceOne()
-    this.deviceIdCheck()
   },
   methods: {
     createMqtt() {
@@ -83,6 +86,12 @@ export default {
           }
         })
       })
+      if (this.plc.plcStart == null) {
+        this.showAlert = true
+        setTimeout(() => {
+          this.showAlert = false
+        }, 5000)
+      }
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
         this.mqttData = JSON.parse(message) // json string으로만 받을 수 있음
@@ -91,15 +100,26 @@ export default {
         this.plc.plcStart = plcData[0].value // 시작
         this.plc.plcReset = plcData[1].value // 리셋
         this.plc.plcStop = plcData[2].value // 비상정지
+        // console.log('정지', this.plc.plcStop)
         // 신호등
         let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
         this.plc.lightGreen = lightData[0].value
         this.plc.lightYellow = lightData[1].value
         this.plc.lightRed = lightData[2].value
-        // 주사위 데이터
-        let diceData = this.mqttData.Wrapper.filter(p => p.tagId === '37' || p.tagId === '40')
-        this.plc.no3Active = diceData[0].value
-        this.plc.diceValue = diceData[1].value
+        // if (!(this.plc.plcStart == null)) {
+        //   this.showAlert = false
+        // }
+        // let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
+        // this.light.green = lightData[0].value // 초록
+        // this.light.yellow = lightData[1].value // 노랑
+        // this.light.red = lightData[2].value // 빨강
+        // this.control.sen1 = controlData[3].value // 1번 센서 전원
+        // this.control.sen2 = controlData[4].value // 2번 센서 전원
+
+        //console.log('index.vue', plcData, this.plc.plcStart)
+
+        //console.log(plcData)
+        // console.log('신호등', lightData)
       })
     },
     publishMqtt(id, v) {
@@ -212,15 +232,16 @@ export default {
         .catch(err => {
           console.log('/devices/control/reset - errerr', err)
         })
-    },
-    deviceIdCheck() {
-      this.plc.id = this.$route.params.id
     }
   }
 }
 </script>
 
 <style scoped>
+#alert-connection {
+  position: absolute;
+  z-index: 100;
+}
 .monitoring {
   position: absolute;
   width: 100%;
@@ -311,23 +332,6 @@ export default {
   flex-direction: column;
   top: 35px;
   right: 40px;
-}
-.avatar {
-  cursor: pointer;
-  transition: 0.5s;
-}
-.avatar:hover {
-  opacity: 0;
-}
-.avatar-logout {
-  position: absolute;
-  left: 36px;
-  cursor: pointer;
-  transition: 0.5s;
-  opacity: 0;
-}
-.avatar-logout:hover {
-  opacity: 1;
 }
 .active-but {
   width: 60px;

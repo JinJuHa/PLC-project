@@ -8,6 +8,7 @@
         <div class="user-profile">
           <div class="user-info">
             <div>
+              <p>※ 관리자만 디바이스 권한을 변경할 수 있습니다.</p>
               <span>이름: </span>
               <b-form-select v-model="selected" :options="options"></b-form-select>
             </div>

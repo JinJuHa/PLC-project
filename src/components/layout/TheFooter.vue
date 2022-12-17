@@ -6,6 +6,11 @@
         <font-awesome-icon class="footer-button-icon" icon="fa-solid fa-angles-up" />
       </div>
       <div id="menu">
+        <div class="menu-icon" @click="$router.push('/edukit/list')">
+          <font-awesome-icon icon="fa-solid fa-list" />
+          <!-- <span class="description">디바이스 리스트</span> -->
+          <span class="description">Device List</span>
+        </div>
         <div class="menu-icon" @click="dashboard">
           <font-awesome-icon icon="fa-solid fa-chart-line" />
         </div>
@@ -49,7 +54,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .footer {
   width: 100%;
   position: fixed;
@@ -78,9 +83,22 @@ export default {
   position: absolute;
   bottom: 0;
 }
+.description {
+  position: absolute;
+  text-align: center;
+  width: 65px;
+  bottom: 5px;
+  font-size: 12px;
+  color: #fff;
+  // font-weight: bold;
+}
+// .description {
+//   box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1),
+//     4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+// }
 #menu {
   position: absolute;
-  height: 100px;
+  height: 115px;
   background-color: rgba(255, 255, 255, 0.634);
   border-radius: 50px;
   width: 60%;
@@ -88,8 +106,8 @@ export default {
   margin-bottom: 35px;
   display: flex;
   justify-content: space-between;
-  padding-left: 16%;
-  padding-right: 16%;
+  padding-left: 13%;
+  padding-right: 13%;
   align-items: center;
   box-shadow: inset 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
   transform: translate(0%, 165%);
@@ -113,6 +131,9 @@ export default {
 .menu-icon:hover {
   box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1),
     4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+  .description {
+    text-shadow: inherit;
+  }
 }
 .menu-icon:active {
   transform: scale(0.9);
