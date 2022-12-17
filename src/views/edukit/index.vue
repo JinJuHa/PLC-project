@@ -341,7 +341,7 @@ export default {
   color: #fff;
   transition: 0.5s;
   border: none;
-  background: #093053;
+  background: #4eb6b6;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
 }
 .start {
@@ -376,7 +376,7 @@ export default {
 }
 #control-button button:hover {
   border: none;
-  background: #093053;
+  background: #4eb6b6;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
 }
 #control-button button:active {
