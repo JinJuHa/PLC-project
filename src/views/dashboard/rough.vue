@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-header">
-      <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="dashxx" />
+      <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="dashboardClose" />
       <div class="dashboard-headding"><p>Dashboard</p></div>
       <div class="dashboard-info">
         <div class="dashboard-date">
@@ -92,14 +92,6 @@ export default {
       required: true
     }
   },
-  watch: {
-    barChart: {
-      handler() {
-        this.renderChart(this.data, this.options)
-      },
-      deep: true
-    }
-  },
   data() {
     return {
       담당자이름: '지미',
@@ -114,7 +106,6 @@ export default {
               borderColor: '#eee',
               hoverBorderColor: '#eee',
               data: [0, 0]
-              // data: [20, 60]
             }
           ]
         },
@@ -326,6 +317,14 @@ export default {
       accuracyRate: 0
     }
   },
+  watch: {
+    barChart: {
+      handler() {
+        this.renderChart(this.data, this.options)
+      },
+      deep: true
+    }
+  },
   created() {
     this.createMqtt()
   },
@@ -347,8 +346,8 @@ export default {
     clearInterval(this.timerInterval)
   },
   methods: {
-    dashxx() {
-      // this.$emit('dashboardX')
+    dashboardClose() {
+      this.$emit('dashboardClose')
     },
     createMqtt() {
       // mqtt연결
@@ -591,6 +590,10 @@ export default {
 </script>
 
 <style scoped>
+.back-button {
+  position: absolute;
+  cursor: pointer;
+}
 .dateTime {
   text-align: left;
   width: 100%;
@@ -601,7 +604,7 @@ export default {
 }
 .dashboard-container {
   display: grid;
-  grid-template-rows: 15% 45% 40%;
+  grid-template-rows: 14vh 45vh 40vh;
   width: 100%;
   height: 100vh;
   background: green;

@@ -29,7 +29,7 @@
       </div>
     </div>
     <div v-show="dashboardStat == true" class="monitoring">
-      <Dashboard :plc="plc" />
+      <Dashboard :plc="plc" @dashboardClose="dashboardSet2" />
     </div>
     <Edukit />
     <TheFooter class="footer" @dashboardOpen="dashboardSet" />
@@ -135,6 +135,9 @@ export default {
     },
     dashboardSet() {
       this.dashboardStat = true
+    },
+    dashboardSet2() {
+      this.dashboardStat = false
     },
     mcStart() {
       this.publishMqtt(1, 1)

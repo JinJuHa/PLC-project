@@ -31,8 +31,7 @@ export default {
   components: { UserInfo },
   data() {
     return {
-      drawerStat: false,
-      dashboardX: false
+      drawerStat: false
     }
   },
   methods: {
@@ -41,9 +40,6 @@ export default {
     },
     dashboard() {
       this.$emit('dashboardOpen')
-    },
-    dashX() {
-      this.dashboardX = true
     }
   }
 }
