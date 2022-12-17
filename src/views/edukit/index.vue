@@ -33,6 +33,41 @@
         </ul>
       </div>
     </div>
+    <div class="dice-status">
+      <div v-show="plc.diceValue == 1" class="dice">
+        <div class="dot"></div>
+      </div>
+      <div v-show="plc.diceValue == 2" class="dice">
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div v-show="plc.diceValue == 3" class="dice">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div v-show="plc.diceValue == 4" class="dice">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div v-show="plc.diceValue == 5" class="dice">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div v-show="plc.diceValue == 6" class="dice">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
     <div v-show="dashboardStat == true" class="monitoring">
       <Dashboard :plc="plc" @dashboardClose="dashboardSet2" />
     </div>
@@ -62,7 +97,9 @@ export default {
         plcReset: null,
         lightGreen: null,
         lightYellow: null,
-        lightRed: null
+        lightRed: null,
+        no3Active: null,
+        diceValue: null
       },
       device: ''
     }
@@ -120,6 +157,9 @@ export default {
 
         //console.log(plcData)
         // console.log('신호등', lightData)
+        let diceData = this.mqttData.Wrapper.filter(p => p.tagId === '37' || p.tagId === '40')
+        this.plc.no3Active = diceData[0].value
+        this.plc.diceValue = diceData[1].value
       })
     },
     publishMqtt(id, v) {
@@ -259,7 +299,15 @@ export default {
   padding: 2.23em;
   position: absolute;
 }
-
+.dice-status {
+  position: absolute;
+  top: 260px;
+  left: 150px;
+  width: 115px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 10px;
+}
 .user-profile {
   margin: auto;
   width: 21em;
@@ -410,5 +458,126 @@ button:focus {
 .click-button:active {
   background-color: black;
   color: #fff;
+}
+.dice {
+  border-radius: 10px;
+  display: block;
+  width: 100px;
+  height: 100px;
+  margin: 7px auto;
+  box-sizing: border-box;
+  padding: 10px;
+  position: relative;
+  background: #000;
+}
+.dice .dot {
+  border-radius: 50%;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: #eee;
+}
+
+.dice:first-child .dot {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+
+.dice:nth-child(2) .dot:first-child {
+  top: 20px;
+  left: 20px;
+}
+.dice:nth-child(2) .dot:last-child {
+  bottom: 20px;
+  right: 20px;
+}
+
+.dice:nth-child(3) .dot:first-child {
+  top: 15px;
+  left: 15px;
+}
+.dice:nth-child(3) .dot:nth-child(2) {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+.dice:nth-child(3) .dot:last-child {
+  bottom: 15px;
+  right: 15px;
+}
+
+.dice:nth-child(4) .dot:first-child {
+  top: 15px;
+  left: 15px;
+}
+.dice:nth-child(4) .dot:nth-child(2) {
+  top: 15px;
+  right: 15px;
+}
+.dice:nth-child(4) .dot:nth-child(3) {
+  bottom: 15px;
+  left: 15px;
+}
+.dice:nth-child(4) .dot:last-child {
+  bottom: 15px;
+  right: 15px;
+}
+
+.dice:nth-child(5) .dot:first-child {
+  top: 15px;
+  left: 15px;
+}
+.dice:nth-child(5) .dot:nth-child(2) {
+  top: 15px;
+  right: 15px;
+}
+.dice:nth-child(5) .dot:nth-child(3) {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+.dice:nth-child(5) .dot:nth-child(4) {
+  bottom: 15px;
+  left: 15px;
+}
+.dice:nth-child(5) .dot:last-child {
+  bottom: 15px;
+  right: 15px;
+}
+
+.dice:nth-child(6) .dot:first-child {
+  top: 15px;
+  left: 15px;
+}
+.dice:nth-child(6) .dot:nth-child(2) {
+  top: 15px;
+  right: 15px;
+}
+.dice:nth-child(6) .dot:nth-child(3) {
+  top: 0;
+  bottom: 0;
+  left: 15px;
+  margin: auto;
+}
+.dice:nth-child(6) .dot:nth-child(4) {
+  top: 0;
+  right: 15px;
+  bottom: 0;
+  margin: auto;
+}
+.dice:nth-child(6) .dot:nth-child(5) {
+  bottom: 15px;
+  left: 15px;
+}
+.dice:nth-child(6) .dot:last-child {
+  bottom: 15px;
+  right: 15px;
 }
 </style>
