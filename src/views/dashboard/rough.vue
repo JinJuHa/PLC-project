@@ -318,14 +318,14 @@ export default {
       accuracyRate: 0
     }
   },
-  // watch: {
-  //   barChart: {
-  //     handler() {
-  //       this.renderChart(this.data, this.options)
-  //     },
-  //     deep: true
-  //   }
-  // },
+  watch: {
+    barChart: {
+      handler() {
+        this.renderChart(this.data, this.options)
+      },
+      deep: true
+    }
+  },
   created() {
     this.createMqtt()
   },
