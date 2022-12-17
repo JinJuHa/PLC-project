@@ -18,12 +18,12 @@
       <div class="dashboard-rates">
         <div class="dashboard-amount">
           <p>Device Id</p>
-          <p>PLC - {{ plc.id }}호기</p>
+          <p class="plc-info">PLC - {{ plc.id }}호기</p>
         </div>
         <div class="dashboard-amount">
           <!-- tagId 17 -->
           <p>작동 여부</p>
-          <p>{{ plc.plcStart }}</p>
+          <p class="plc-info">{{ plc.plcStart }}</p>
         </div>
       </div>
       <div class="dashboard-doughnut">
@@ -35,7 +35,17 @@
           style="width: 450px; height: 290px"
         ></doughnut-chart>
       </div>
-      <div class="dashboard-bar">
+      <div class="dashboard-rates">
+        <div class="dashboard-amount">
+          <p>총 생산량</p>
+          <p class="plc-info">{{ work }}</p>
+        </div>
+        <div class="dashboard-amount">
+          <p>양품 생산율</p>
+          <p class="plc-info">{{ accuracyRate }} %</p>
+        </div>
+      </div>
+      <!-- <div class="dashboard-bar">
         <bar-chart
           id="diceFequencyChart"
           ref="diceFequencyChart"
@@ -43,7 +53,7 @@
           :options="barChart.options"
           style="width: 450px; height: 290px"
         ></bar-chart>
-      </div>
+      </div> -->
     </div>
     <div class="dashboard-footer">
       <line-chart
@@ -61,7 +71,16 @@
         <div v-show="plc.lightGreen === false" class="light green-off"></div>
         <div v-show="plc.lightGreen === true" class="light green"></div>
       </div>
-      <div class="dashboard-rates">
+      <div class="dashboard-bar">
+        <bar-chart
+          id="diceFequencyChart"
+          ref="diceFequencyChart"
+          :chart-data="barChart.data"
+          :options="barChart.options"
+          style="width: 450px; height: 290px"
+        ></bar-chart>
+      </div>
+      <!-- <div class="dashboard-rates">
         <div class="dashboard-amount">
           <p>총 생산량</p>
         </div>
@@ -69,7 +88,7 @@
           <p>양품 생산율</p>
           <p>{{ accuracyRate }} %</p>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -609,7 +628,6 @@ export default {
   height: 100vh;
   background: green;
   padding: 5px;
-  /* position: absolute; */
   border-radius: 10px;
 }
 .dashboard-header {
@@ -660,12 +678,11 @@ export default {
   display: grid;
   grid-template-rows: 50% 50%;
   padding: 5px;
-  /* background-color: bisque; */
 }
 .dashboard-amount {
   width: 100%;
   height: 100%;
-  background-color: rgb(214, 219, 250);
+  /* background-color: rgb(214, 219, 250); */
   padding: 5px;
   text-align: center;
 }
@@ -717,5 +734,9 @@ export default {
 }
 .green {
   background-color: green;
+}
+.plc-info {
+  font-size: 45px;
+  color: darkgreen;
 }
 </style>
