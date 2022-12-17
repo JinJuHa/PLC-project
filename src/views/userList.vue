@@ -1,22 +1,22 @@
 <template>
-  <div>
+  <div class="top-user-list">
     <div class="user-list-page">
       <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="$router.go(-1)" />
       <p class="user-list-title">사용자 리스트</p>
-      <b-button v-b-modal.modal-1>디바이스 제어 권한</b-button>
+      <b-button v-b-modal.modal-1 variant="info" class="control-button">디바이스 제어 권한</b-button>
       <b-modal id="modal-1" hide-footer title="디바이스 제어 권한">
         <div class="user-profile">
           <div class="user-info">
             <div>
-              <p>※ 관리자만 디바이스 권한을 변경할 수 있습니다.</p>
+              <p class="emer">※ 관리자만 디바이스 권한을 변경할 수 있습니다.</p>
               <span>이름: </span>
-              <b-form-select v-model="selected" :options="options"></b-form-select>
+              <b-form-select v-model="selected" :options="options" class="selectt"></b-form-select>
             </div>
             <div>
               <span>디바이스: </span>
-              <b-form-select v-model="delist" :options="devices"></b-form-select>
+              <b-form-select v-model="delist" :options="devices" class="selectt"></b-form-select>
             </div>
-            <b-btn class="button" @click="powerAdd()">저장</b-btn>
+            <b-btn variant="primary" class="button" @click="powerAdd()">저장</b-btn>
           </div>
         </div>
       </b-modal>
@@ -138,6 +138,13 @@ export default {
 </script>
 
 <style scoped>
+.selectt {
+  margin-bottom: 20px;
+}
+.emer {
+  font-size: 12px;
+  color: red;
+}
 .user-list-title {
   font-size: 25px;
   font-weight: bold;
@@ -151,6 +158,7 @@ export default {
   border: none;
   border-radius: 15px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.1);
+  background: #fff;
 }
 .back-button {
   position: absolute;
@@ -160,8 +168,16 @@ export default {
   font-size: 25px;
 }
 .table-list {
-  height: 53vh;
+  height: 60vh;
   width: 100%;
   overflow-y: scroll;
+}
+.top-user-list {
+  width: 100%;
+}
+.control-button {
+  position: absolute;
+  right: 100px;
+  top: 100px;
 }
 </style>

@@ -8,20 +8,23 @@
       <div id="menu">
         <div class="menu-icon" @click="$router.push('/edukit/list')">
           <font-awesome-icon icon="fa-solid fa-list" />
-          <!-- <span class="description">디바이스 리스트</span> -->
           <span class="description">Device List</span>
         </div>
         <div class="menu-icon" @click="dashboard">
           <font-awesome-icon icon="fa-solid fa-chart-line" />
+          <span class="description">Monitoring</span>
         </div>
         <div class="menu-icon" @click="$router.push('/data')">
           <font-awesome-icon icon="fa-solid fa-chart-column" />
+          <span class="description">Data</span>
         </div>
         <div class="menu-icon" @click="$router.push('/list')">
           <font-awesome-icon icon="fa-solid fa-address-card" />
+          <span class="description">User List</span>
         </div>
         <div v-b-modal.modal-1 class="menu-icon">
           <font-awesome-icon icon="fa-solid fa-user-gear" />
+          <span class="description">User Page</span>
           <UserInfo />
         </div>
       </div>
@@ -87,10 +90,9 @@ export default {
   position: absolute;
   text-align: center;
   width: 65px;
-  bottom: 5px;
+  bottom: 11px;
   font-size: 12px;
   color: #fff;
-  // font-weight: bold;
 }
 // .description {
 //   box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1),
@@ -99,11 +101,11 @@ export default {
 #menu {
   position: absolute;
   height: 115px;
-  background-color: rgba(255, 255, 255, 0.634);
+  background-color: rgba(255, 255, 255, 0.262);
   border-radius: 50px;
   width: 60%;
   margin-left: 290px;
-  margin-bottom: 35px;
+  margin-bottom: 38px;
   display: flex;
   justify-content: space-between;
   padding-left: 13%;
@@ -117,26 +119,25 @@ export default {
 .menu-icon {
   height: 65px;
   width: 65px;
-  background: orange;
+  background: #4eb6b6;
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 30px;
   color: #fff;
-  transition: 0.5s;
+  transition: 0.2s;
   cursor: pointer;
   box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5);
+  margin-bottom: 15px;
 }
 .menu-icon:hover {
   box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1),
     4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+  background: #45a8a8;
   .description {
     text-shadow: inherit;
   }
-}
-.menu-icon:active {
-  transform: scale(0.9);
 }
 .footer-page {
   height: 140px;
