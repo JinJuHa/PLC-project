@@ -81,7 +81,7 @@ export default {
         const topic = process.env.VUE_APP_MQTT_SUB_TOPIC // 구독할 토픽: "myEdukit"
         mqttClient.subscribe(topic, {}, (error, res) => {
           if (error) {
-            // console.error('mqtt client error', error)
+            console.error('mqtt client error', error)
             alert('MQTT 연결이 실패했습니다.')
           }
         })

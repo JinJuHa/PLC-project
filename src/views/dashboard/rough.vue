@@ -92,14 +92,6 @@ export default {
       required: true
     }
   },
-  watch: {
-    barChart: {
-      handler() {
-        this.renderChart(this.data, this.options)
-      },
-      deep: true
-    }
-  },
   data() {
     return {
       담당자이름: '지미',
@@ -324,6 +316,14 @@ export default {
       good: 0,
       bad: 0,
       accuracyRate: 0
+    }
+  },
+  watch: {
+    barChart: {
+      handler() {
+        this.renderChart(this.data, this.options)
+      },
+      deep: true
     }
   },
   created() {

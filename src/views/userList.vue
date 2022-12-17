@@ -16,7 +16,7 @@
               <span>디바이스: </span>
               <b-form-select v-model="delist" :options="devices" class="selectt"></b-form-select>
             </div>
-            <b-btn variant="primary" class="button" @click="powerAdd()">저장</b-btn>
+            <b-button variant="info" class="button" @click="powerAdd()">저장</b-button>
           </div>
         </div>
       </b-modal>
@@ -138,6 +138,14 @@ export default {
 </script>
 
 <style scoped>
+.button {
+  margin-left: 385px;
+  border: none;
+  letter-spacing: 1px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 25px 10px 25px;
+}
 .selectt {
   margin-bottom: 20px;
 }
@@ -166,6 +174,7 @@ export default {
   cursor: pointer;
   width: 100px;
   font-size: 25px;
+  color: #4eb6b6;
 }
 .table-list {
   height: 60vh;
@@ -179,5 +188,6 @@ export default {
   position: absolute;
   right: 100px;
   top: 100px;
+  font-size: 15px;
 }
 </style>
