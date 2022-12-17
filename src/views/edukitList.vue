@@ -4,7 +4,7 @@
       <div class="app-content">
         <div class="app-content-header">
           <h1 class="app-content-headerText">Device list</h1>
-          <b-button @click="deviceAdd">디바이스 추가</b-button>
+          <b-button variant="info" @click="deviceAdd">디바이스 추가</b-button>
         </div>
         <div class="app-content-actions">
           <div class="app-content-actions-wrapper">
@@ -183,7 +183,7 @@ export default {
   --filter-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
-$font-small: 14px;
+$font-small: 15px;
 $font-medium: 16px;
 $font-large: 24px;
 
@@ -195,7 +195,6 @@ $font-large: 24px;
   max-width: 1280px;
   display: flex;
   overflow: hidden;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   max-width: 2000px;
   margin: 0 auto;
 }
@@ -364,7 +363,7 @@ $font-large: 24px;
 
 .action-button {
   border-radius: 4px;
-  height: 32px;
+  height: 35px;
   background-color: var(--app-content-secondary-color);
   border: 1px solid var(--app-content-secondary-color);
   display: flex;
@@ -649,6 +648,7 @@ $font-large: 24px;
     cursor: pointer;
     transition: transform 0.2s;
     position: relative;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
     &:hover {
       transform: scale(1.01);
