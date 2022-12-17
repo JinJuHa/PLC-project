@@ -2,7 +2,7 @@
   <div>
     <b-modal id="modal-1" hide-footer hide-header>
       <div class="user-profile">
-        <b-avatar class="user-avatar" variant="primary"
+        <b-avatar class="user-avatar" variant="info"
           ><font-awesome-icon icon="fa-solid fa-user" class="icon-avatar"
         /></b-avatar>
         <div class="user-info">
@@ -41,7 +41,7 @@
             <b-input v-if="!see" v-model="phone"></b-input>
             <b-btn v-if="!see" variant="danger" @click="see = !see">취소</b-btn>
           </div>
-          <b-btn class="save-button" @click="updateProfile">저장</b-btn>
+          <b-btn variant="primary" class="save-button" @click="updateProfile">저장</b-btn>
         </div>
       </div>
     </b-modal>
@@ -153,7 +153,6 @@ export default {
 }
 .save-button {
   margin-top: 20px;
-  background: #024d92;
   transition: 0.5s;
 }
 .save-button:hover {
