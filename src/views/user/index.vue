@@ -2,7 +2,7 @@
   <div>
     <b-modal id="modal-1" hide-footer hide-header>
       <div class="user-profile">
-        <b-avatar class="user-avatar" variant="primary"
+        <b-avatar class="user-avatar" variant="info"
           ><font-awesome-icon icon="fa-solid fa-user" class="icon-avatar"
         /></b-avatar>
         <div class="user-info">
@@ -14,7 +14,7 @@
                 <font-awesome-icon icon="fa-solid fa-pen" class="pencil" />
               </button>
             </span>
-            <b-input v-if="!on" v-model="name"></b-input>
+            <b-input v-if="!on" v-model="name" placeholder="이름을 적어주세요."></b-input>
             <b-btn v-if="!on" variant="danger" @click="on = !on">취소</b-btn>
           </div>
           <div>직급: {{ user.role }}</div>
@@ -38,10 +38,10 @@
                 <font-awesome-icon icon="fa-solid fa-pen" class="pencil" />
               </button>
             </span>
-            <b-input v-if="!see" v-model="phone"></b-input>
+            <b-input v-if="!see" v-model="phone" placeholder="핸드폰 번호만 적어주세요."></b-input>
             <b-btn v-if="!see" variant="danger" @click="see = !see">취소</b-btn>
           </div>
-          <b-btn class="save-button" @click="updateProfile">저장</b-btn>
+          <b-btn variant="info" class="save-button" @click="updateProfile">저장</b-btn>
         </div>
       </div>
     </b-modal>
@@ -146,17 +146,18 @@ export default {
   transition: 0.5s;
 }
 .correction:hover {
-  background-color: #024d92;
+  background-color: #4eb6b6;
 }
 .correction:hover .pencil {
   color: #fff;
 }
 .save-button {
   margin-top: 20px;
-  background: #024d92;
+  margin-left: 245px;
+  letter-spacing: 1px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 25px 10px 25px;
   transition: 0.5s;
-}
-.save-button:hover {
-  background: #0c365d;
 }
 </style>

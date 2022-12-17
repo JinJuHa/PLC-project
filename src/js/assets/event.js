@@ -43,7 +43,7 @@ class Event {
 
     this.client.on('connect', () => {
       console.log('MQTT Connected')
-      // console.log('subscribeMqtt- scene', scene)
+      console.log('subscribeMqtt- scene', scene)
 
       this.client.subscribe([topic], () => {
         console.log(`토픽 연결 완료: ${topic}`)
@@ -69,8 +69,6 @@ class Event {
         )
 
         let stockData = message.Wrapper.filter(p => p.tagId === '23' || p.tagId === '25')
-        console.log('data', data)
-        console.log('stockData', stockData)
         // console.log(edukit)
 
         // no1 hemisphere status
@@ -110,26 +108,20 @@ class Event {
 
         // greenLight status
         if (data[1].value === true) {
-          // console.log('green on')
           scene.trafficLight.trafficLight1.material.color.set(0x00ff00)
         } else if (data[1].value === false) {
-          // console.log('green off')
           scene.trafficLight.trafficLight1.material.color.set(0x003300)
         }
         // yellowLight status
         if (data[2].value === true) {
-          // console.log('yellow on')
           scene.trafficLight.trafficLight2.material.color.set(0xffff00)
         } else if (data[2].value === false) {
-          // console.log('yellow off')
           scene.trafficLight.trafficLight2.material.color.set(0x996600)
         }
         // redLight status
         if (data[3].value === true) {
-          // console.log('red on')
           scene.trafficLight.trafficLight3.material.color.set(0xff0000)
         } else if (data[3].value === false) {
-          // console.log('red off')
           scene.trafficLight.trafficLight3.material.color.set(0x660000)
         }
 

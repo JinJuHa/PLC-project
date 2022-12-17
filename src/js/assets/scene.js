@@ -49,7 +49,7 @@ class Scene {
     this.mesh = new THREE.Mesh(
       new THREE.PlaneGeometry(2000, 2000),
       //바닥 색 바꾸는 부분
-      new THREE.MeshPhongMaterial({ color: 0x073763, depthWrite: false })
+      new THREE.MeshPhongMaterial({ color: 0x181b1f, depthWrite: false })
     )
     this.mesh.rotation.x = -Math.PI / 2
     this.mesh.receiveShadow = true

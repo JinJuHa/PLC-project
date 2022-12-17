@@ -8,8 +8,4 @@
 export default {}
 </script>
 
-<style scoped>
-.index-page {
-  overflow: hidden;
-}
-</style>
+<style scoped></style>

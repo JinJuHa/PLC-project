@@ -4,13 +4,12 @@
       <div class="app-content">
         <div class="app-content-header">
           <h1 class="app-content-headerText">Device list</h1>
-          <b-button @click="signOut">로그아웃</b-button>
-          <b-button @click="deviceAdd">디바이스 추가</b-button>
+          <b-button style="font-size: 15px" variant="info" @click="deviceAdd">디바이스 추가</b-button>
         </div>
         <div class="app-content-actions">
           <div class="app-content-actions-wrapper">
             <div class="filter-button-wrapper">
-              <button class="action-button filter jsFilter"></button>
+              <button class="action-button filter jsFilter" style="border: none"></button>
             </div>
             <button class="action-button list active" title="List View">
               <svg
@@ -159,12 +158,12 @@ export default {
   --app-bg: #101827;
   --sidebar: rgba(21, 30, 47, 1);
   --sidebar-main-color: #fff;
-  --table-border: #1a2131;
+  --table-border: #fff;
   --table-header: #1a2131;
   --app-content-main-color: #fff;
   --sidebar-link: #fff;
-  --sidebar-active-link: #1d283c;
-  --sidebar-hover-link: #1a2539;
+  --sidebar-active-link: #4eb6b6;
+  --sidebar-hover-link: #4eb6b6;
   --action-color: #2869ff;
   --action-color-: #6291fd;
   --app-content-secondary-color: #1d283c;
@@ -184,7 +183,7 @@ export default {
   --filter-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
-$font-small: 14px;
+$font-small: 15px;
 $font-medium: 16px;
 $font-large: 24px;
 
@@ -196,7 +195,6 @@ $font-large: 24px;
   max-width: 1280px;
   display: flex;
   overflow: hidden;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   max-width: 2000px;
   margin: 0 auto;
 }
@@ -365,9 +363,9 @@ $font-large: 24px;
 
 .action-button {
   border-radius: 4px;
-  height: 32px;
+  height: 35px;
   background-color: var(--app-content-secondary-color);
-  border: 1px solid var(--app-content-secondary-color);
+  border: 1px solid #fff;
   display: flex;
   align-items: center;
   color: var(--app-content-main-color);
@@ -380,14 +378,14 @@ $font-large: 24px;
   }
 
   &:hover {
-    border-color: var(--action-color-hover);
+    border: 2px solid#4eb6b6;
   }
 
   &:focus,
   &.active {
     outline: none;
     color: var(--action-color);
-    border-color: var(--action-color);
+    border: 2px solid#4eb6b6;
   }
 }
 
@@ -650,10 +648,11 @@ $font-large: 24px;
     cursor: pointer;
     transition: transform 0.2s;
     position: relative;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
     &:hover {
       transform: scale(1.01);
-      box-shadow: var(--filter-shadow);
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
       .cell-more-button {
         display: flex;

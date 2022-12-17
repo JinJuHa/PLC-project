@@ -1,22 +1,30 @@
 <template>
   <div class="footer-page">
     <div id="menuToggle">
-      <input class="checkbox" type="checkbox" />
+      <input class="checkbox" type="checkbox" checked />
       <div class="footer-button">
         <font-awesome-icon class="footer-button-icon" icon="fa-solid fa-angles-up" />
       </div>
       <div id="menu">
+        <div class="menu-icon" @click="$router.push('/edukit/list')">
+          <font-awesome-icon icon="fa-solid fa-list" />
+          <span class="description">Device List</span>
+        </div>
         <div class="menu-icon" @click="dashboard">
           <font-awesome-icon icon="fa-solid fa-chart-line" />
+          <span class="description">Monitoring</span>
         </div>
         <div class="menu-icon" @click="$router.push('/data')">
           <font-awesome-icon icon="fa-solid fa-chart-column" />
+          <span class="description">Data</span>
         </div>
         <div class="menu-icon" @click="$router.push('/list')">
           <font-awesome-icon icon="fa-solid fa-address-card" />
+          <span class="description">User List</span>
         </div>
         <div v-b-modal.modal-1 class="menu-icon">
           <font-awesome-icon icon="fa-solid fa-user-gear" />
+          <span class="description">User Page</span>
           <UserInfo />
         </div>
       </div>
@@ -45,7 +53,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .footer {
   width: 100%;
   position: fixed;
@@ -67,73 +75,68 @@ export default {
   cursor: pointer;
   font-size: 25px;
   text-align: center;
-  color: #093053;
+  color: #181b1f;
 }
 .menu-container {
   width: 100%;
   position: absolute;
   bottom: 0;
 }
+.description {
+  position: absolute;
+  text-align: center;
+  width: 65px;
+  bottom: 11px;
+  font-size: 12px;
+  color: #fff;
+}
+// .description {
+//   box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1),
+//     4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+// }
 #menu {
   position: absolute;
-  height: 90px;
-  background-color: rgba(255, 255, 255, 0.634);
-  border-radius: 40px;
+  height: 115px;
+  background-color: rgba(255, 255, 255, 0.262);
+  border-radius: 50px;
   width: 60%;
   margin-left: 290px;
-  margin-bottom: 35px;
+  margin-bottom: 38px;
   display: flex;
   justify-content: space-between;
-  padding-left: 16%;
-  padding-right: 16%;
+  padding-left: 13%;
+  padding-right: 13%;
   align-items: center;
   box-shadow: inset 7px 7px 20px 0px rgba(0, 0, 0, 0.1), 4px 4px 5px 0px rgba(0, 0, 0, 0.1);
-  transform: translate(0%, 150%);
+  transform: translate(0%, 165%);
   transform-origin: 0% 0%;
   transition: transform 1s cubic-bezier(0.77, 0.2, 0.05, 1);
 }
 .menu-icon {
   height: 65px;
   width: 65px;
-  background: orange;
+  background: #4eb6b6;
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 30px;
   color: #fff;
-  transition: 0.5s;
+  transition: 0.2s;
   cursor: pointer;
   box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5);
+  margin-bottom: 15px;
 }
 .menu-icon:hover {
   box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1),
     4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+  background: #45a8a8;
+  .description {
+    text-shadow: inherit;
+  }
 }
-.menu-icon:active {
-  transform: scale(0.9);
-}
-
-/* .slide-leave-from {
-  transform: translateY(0px);
-}
-.slide-leave-active {
-  transition: all 3s;
-}
-.slide-leave-to {
-  transform: translateY(100px);
-}
-.menuSlide-enter-from {
-  transform: translateY(90px);
-}
-.menuSlide-enter-active {
-  transition: all 2s;
-}
-.menuSlide-enter-to {
-  transform: translateY(-10px);
-} */
 .footer-page {
-  height: 120px;
+  height: 140px;
   overflow: hidden;
 }
 

@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div id="alert-connection">
+      <!-- <button @click="delayedAlert">Show alert for 2s</button> -->
+      <b-alert v-model="showAlert">
+        {{ alertMessage }}
+      </b-alert>
+    </div>
     <div id="control-button">
       <button :class="plc.plcStart ? 'active-but' : 'start'" :disabled="plc.plcStart" @click="mcStart">
         <font-awesome-icon icon="fa-solid fa-play" />
@@ -14,9 +20,8 @@
     <div class="test-page">
       <div class="user-profile">
         <img class="avatar" src="../../../public/img/engineer.png" />
-        <img class="avatar-logout" src="../../../public/img/logout.png" alt="logout" @click="signOut" />
         <div class="username">PLC - {{ this.$route.params.id }}호기</div>
-        <button class="logout" @click="$router.push('/edukit/list')">
+        <button class="logout" @click="signOut">
           <font-awesome-icon icon="fa-solid fa-power-off" />
         </button>
         <div class="description"></div>
@@ -28,8 +33,43 @@
         </ul>
       </div>
     </div>
-    <div v-show="dashboardStat == true">
-      <Dashboard :plc="plc" />
+    <div class="dice-status">
+      <div v-show="plc.diceValue == 1" class="dice">
+        <div class="dot"></div>
+      </div>
+      <div v-show="plc.diceValue == 2" class="dice">
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div v-show="plc.diceValue == 3" class="dice">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div v-show="plc.diceValue == 4" class="dice">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div v-show="plc.diceValue == 5" class="dice">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div v-show="plc.diceValue == 6" class="dice">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+    <div v-show="dashboardStat == true" class="monitoring">
+      <Dashboard :plc="plc" @dashboardClose="dashboardSet2" />
     </div>
     <Edukit />
     <TheFooter class="footer" @dashboardOpen="dashboardSet" />
@@ -47,6 +87,8 @@ export default {
   components: { Edukit, TheFooter, Dashboard },
   data() {
     return {
+      showAlert: false,
+      alertMessage: 'This is the alert message',
       on: true,
       dashboardStat: false,
       plc: {
@@ -76,11 +118,17 @@ export default {
         const topic = process.env.VUE_APP_MQTT_SUB_TOPIC // 구독할 토픽: "myEdukit"
         mqttClient.subscribe(topic, {}, (error, res) => {
           if (error) {
-            // console.error('mqtt client error', error)
+            console.error('mqtt client error', error)
             alert('MQTT 연결이 실패했습니다.')
           }
         })
       })
+      if (this.plc.plcStart == null) {
+        this.showAlert = true
+        setTimeout(() => {
+          this.showAlert = false
+        }, 5000)
+      }
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
         this.mqttData = JSON.parse(message) // json string으로만 받을 수 있음
@@ -89,17 +137,29 @@ export default {
         this.plc.plcStart = plcData[0].value // 시작
         this.plc.plcReset = plcData[1].value // 리셋
         this.plc.plcStop = plcData[2].value // 비상정지
+        // console.log('정지', this.plc.plcStop)
         // 신호등
         let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
         this.plc.lightGreen = lightData[0].value
         this.plc.lightYellow = lightData[1].value
         this.plc.lightRed = lightData[2].value
-        // 주사위 데이터
+        // if (!(this.plc.plcStart == null)) {
+        //   this.showAlert = false
+        // }
+        // let lightData = this.mqttData.Wrapper.filter(p => p.tagId === '18' || p.tagId === '19' || p.tagId === '20')
+        // this.light.green = lightData[0].value // 초록
+        // this.light.yellow = lightData[1].value // 노랑
+        // this.light.red = lightData[2].value // 빨강
+        // this.control.sen1 = controlData[3].value // 1번 센서 전원
+        // this.control.sen2 = controlData[4].value // 2번 센서 전원
+
+        //console.log('index.vue', plcData, this.plc.plcStart)
+
+        //console.log(plcData)
+        // console.log('신호등', lightData)
         let diceData = this.mqttData.Wrapper.filter(p => p.tagId === '37' || p.tagId === '40')
         this.plc.no3Active = diceData[0].value
         this.plc.diceValue = diceData[1].value
-
-        // console.log('index.vue', plcData)
       })
     },
     publishMqtt(id, v) {
@@ -135,6 +195,9 @@ export default {
     },
     dashboardSet() {
       this.dashboardStat = true
+    },
+    dashboardSet2() {
+      this.dashboardStat = false
     },
     mcStart() {
       this.publishMqtt(1, 1)
@@ -218,6 +281,16 @@ export default {
 </script>
 
 <style scoped>
+#alert-connection {
+  position: absolute;
+  z-index: 100;
+}
+.monitoring {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+}
 .alert {
   z-index: 1000;
 }
@@ -226,7 +299,15 @@ export default {
   padding: 2.23em;
   position: absolute;
 }
-
+.dice-status {
+  position: absolute;
+  top: 260px;
+  left: 150px;
+  width: 115px;
+  margin: 0 auto;
+  background-color: #eee;
+  border-radius: 10px;
+}
 .user-profile {
   margin: auto;
   width: 21em;
@@ -303,23 +384,6 @@ export default {
   top: 35px;
   right: 40px;
 }
-.avatar {
-  cursor: pointer;
-  transition: 0.5s;
-}
-.avatar:hover {
-  opacity: 0;
-}
-.avatar-logout {
-  position: absolute;
-  left: 36px;
-  cursor: pointer;
-  transition: 0.5s;
-  opacity: 0;
-}
-.avatar-logout:hover {
-  opacity: 1;
-}
 .active-but {
   width: 60px;
   height: 60px;
@@ -328,7 +392,7 @@ export default {
   color: #fff;
   transition: 0.5s;
   border: none;
-  background: #093053;
+  background: #4eb6b6;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
 }
 .start {
@@ -363,7 +427,7 @@ export default {
 }
 #control-button button:hover {
   border: none;
-  background: #093053;
+  background: #4eb6b6;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
 }
 #control-button button:active {
@@ -394,5 +458,126 @@ button:focus {
 .click-button:active {
   background-color: black;
   color: #fff;
+}
+.dice {
+  border-radius: 10px;
+  display: block;
+  width: 100px;
+  height: 100px;
+  margin: 7px auto;
+  box-sizing: border-box;
+  padding: 10px;
+  position: relative;
+  background: #000;
+}
+.dice .dot {
+  border-radius: 50%;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: #eee;
+}
+
+.dice:first-child .dot {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+
+.dice:nth-child(2) .dot:first-child {
+  top: 20px;
+  left: 20px;
+}
+.dice:nth-child(2) .dot:last-child {
+  bottom: 20px;
+  right: 20px;
+}
+
+.dice:nth-child(3) .dot:first-child {
+  top: 15px;
+  left: 15px;
+}
+.dice:nth-child(3) .dot:nth-child(2) {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+.dice:nth-child(3) .dot:last-child {
+  bottom: 15px;
+  right: 15px;
+}
+
+.dice:nth-child(4) .dot:first-child {
+  top: 15px;
+  left: 15px;
+}
+.dice:nth-child(4) .dot:nth-child(2) {
+  top: 15px;
+  right: 15px;
+}
+.dice:nth-child(4) .dot:nth-child(3) {
+  bottom: 15px;
+  left: 15px;
+}
+.dice:nth-child(4) .dot:last-child {
+  bottom: 15px;
+  right: 15px;
+}
+
+.dice:nth-child(5) .dot:first-child {
+  top: 15px;
+  left: 15px;
+}
+.dice:nth-child(5) .dot:nth-child(2) {
+  top: 15px;
+  right: 15px;
+}
+.dice:nth-child(5) .dot:nth-child(3) {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+.dice:nth-child(5) .dot:nth-child(4) {
+  bottom: 15px;
+  left: 15px;
+}
+.dice:nth-child(5) .dot:last-child {
+  bottom: 15px;
+  right: 15px;
+}
+
+.dice:nth-child(6) .dot:first-child {
+  top: 15px;
+  left: 15px;
+}
+.dice:nth-child(6) .dot:nth-child(2) {
+  top: 15px;
+  right: 15px;
+}
+.dice:nth-child(6) .dot:nth-child(3) {
+  top: 0;
+  bottom: 0;
+  left: 15px;
+  margin: auto;
+}
+.dice:nth-child(6) .dot:nth-child(4) {
+  top: 0;
+  right: 15px;
+  bottom: 0;
+  margin: auto;
+}
+.dice:nth-child(6) .dot:nth-child(5) {
+  bottom: 15px;
+  left: 15px;
+}
+.dice:nth-child(6) .dot:last-child {
+  bottom: 15px;
+  right: 15px;
 }
 </style>
