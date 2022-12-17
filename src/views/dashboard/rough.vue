@@ -52,7 +52,7 @@
         ref="stockChart"
         :chart-data="lineChart.data"
         :options="lineChart.options"
-        style="width: 650px; height: 250px"
+        style="width: 1300px; height: 250px"
       ></line-chart>
       <div class="dashboard-lights">
         <div v-show="plc.lightRed === false" class="light red-off"></div>
@@ -62,15 +62,15 @@
         <div v-show="plc.lightGreen === false" class="light green-off"></div>
         <div v-show="plc.lightGreen === true" class="light green"></div>
       </div>
-      <div class="dashboard-bar">
+      <!-- <div class="dashboard-bar">
         <p>주사위는 메인화면에 띠워서 안하기로 함</p>
-        <!-- <bar-chart
+        <bar-chart
           id="diceFequencyChart"
           ref="diceFequencyChart"
           :chart-data="barChart.data"
           :options="barChart.options"
-        ></bar-chart> -->
-      </div>
+        ></bar-chart>
+      </div> -->
     </div>
   </div>
 </template>
@@ -369,11 +369,27 @@ export default {
         const mqttData = JSON.parse(message) // json string으로만 받을 수 있음
         let plcData = mqttData.Wrapper.filter(p => p.tagId === '3' || p.tagId === '27')
         // 3은 tray 작동, 27은 주사위 작동
-        if (plcData[0] === true) {
+        if (plcData[0].value === true) {
+          let trayArray = []
+          for (let i = 0; i < 6; i++) {
+            trayArray.push(plcData[0].value)
+            if (trayArray[0] !== trayArray[i]) {
+              trayArray = []
+            }
+          }
           this.tray--
+          console.log('트레이수', this.tray)
         }
-        if (plcData[1] === false) {
+        if (plcData[1].value === false) {
+          let diceArray = []
+          for (let i = 0; i < 6; i++) {
+            diceArray.push(plcData[1].value)
+            if (diceArray[0] !== diceArray[i]) {
+              diceArray = []
+            }
+          }
           this.dice--
+          console.log('주사위수', this.dice)
         }
         // console.log('주사위 인식작동?', plcData[2])
         // console.log('주사위 넘버', this.plc.diceValue)
@@ -384,7 +400,7 @@ export default {
         if (this.plc.no3Active === false && this.diceStatus === false && diceNumber > 0) {
           // this.barDatasetDatas(diceNumber)
           const barData = this.barChart.data.datasets[0].data
-          console.log('주사위', diceNumber)
+          // console.log('주사위', diceNumber)
           let diceArray = []
           for (let i = 0; i < 6; i++) {
             diceArray.push(diceNumber)
@@ -419,9 +435,9 @@ export default {
               console.log('6', diceFinal)
               break
           }
-          console.log('배열에 데이터 추가되니?', barData)
+          // console.log('배열에 데이터 추가되니?', barData)
           this.diceStatus = true
-          console.log('데이터 추가되나?????????')
+          // console.log('데이터 추가되나?????????')
         }
         if (this.plc.no3Active === true) {
           this.diceStatus = false
@@ -683,7 +699,7 @@ export default {
 }
 .dashboard-footer {
   display: grid;
-  grid-template-columns: 53% 7% 40%;
+  grid-template-columns: 93% 7%;
   width: 100%;
   height: 300px;
   background-color: white;
