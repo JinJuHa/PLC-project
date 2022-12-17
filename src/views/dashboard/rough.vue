@@ -90,14 +90,6 @@ export default {
       required: true
     }
   },
-  watch: {
-    barChart: {
-      handler() {
-        this.renderChart(this.chartData, this.options)
-      },
-      deep: true
-    }
-  },
   data() {
     return {
       담당자이름: '지미',
@@ -174,7 +166,7 @@ export default {
               tension: 1,
               // label: '',
               barPercentage: 0.55,
-              data: [2, 3, 5, 7, 4, 3]
+              data: [0, 0, 0, 0, 0, 0]
             }
           ]
         },
@@ -327,6 +319,14 @@ export default {
       accuracyRate: 0
     }
   },
+  watch: {
+    barChart: {
+      handler() {
+        this.renderChart(this.chartData, this.options)
+      },
+      deep: true
+    }
+  },
   created() {
     this.createMqtt()
   },
@@ -341,7 +341,7 @@ export default {
     }, 10)),
       this.makeChartData()
     this.accuracyCheck()
-    this.renderChart(this.chartData, this.options)
+    // this.renderChart(this.chartData, this.options)
   },
   destroyed() {
     clearInterval(this.timerInterval)

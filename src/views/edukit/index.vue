@@ -100,7 +100,6 @@ export default {
         this.plc.diceValue = diceData[1].value
 
         // console.log('index.vue', plcData)
-
       })
     },
     publishMqtt(id, v) {
@@ -191,7 +190,7 @@ export default {
           console.log('/devices/control/stop - response: ', res.data)
         })
         .catch(err => {
-          console.log('/devices/control/stop - errerr', err)
+          console.log('/devices/control/stop - error', err)
         })
     },
     async deviceResetControl() {

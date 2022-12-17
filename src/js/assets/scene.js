@@ -7,7 +7,8 @@ import { Camera } from './camera'
 import { Light } from './light'
 import { TrafficLight } from './trafficLight'
 import { VisionSensor } from './visionSensor'
-import { ToyGoods } from './toyGoods'
+import { StatusLight } from './statusLight'
+// import { ToyGoods } from './toyGoods'
 
 class Scene {
   constructor(file = null) {
@@ -18,7 +19,8 @@ class Scene {
     this.light = new Light()
     this.trafficLight = new TrafficLight()
     this.visionSensor = new VisionSensor()
-    this.toyGoods = new ToyGoods()
+    this.statusLight = new StatusLight()
+    // this.toyGoods = new ToyGoods()
 
     this.setScene()
     this.setMesh()
@@ -68,8 +70,24 @@ class Scene {
     this.scene.add(this.visionSensor.visionSensorJipSection)
     this.scene.add(this.visionSensor.SensorVision)
 
+    // declare no1statusLight
+    this.scene.add(this.statusLight.no1Light)
+    this.scene.add(this.statusLight.no1Hemisphere)
+    // declare colorstatusLight
+    this.scene.add(this.statusLight.colorLight)
+    this.scene.add(this.statusLight.colorHemisphere)
+    // declare no2statusLight
+    this.scene.add(this.statusLight.no2Light)
+    this.scene.add(this.statusLight.no2Hemisphere)
+    // declare visionstatusLight
+    this.scene.add(this.statusLight.visionLight)
+    this.scene.add(this.statusLight.visionHemisphere)
+    // declare no3statusLight
+    this.scene.add(this.statusLight.no3Light)
+    this.scene.add(this.statusLight.no3Hemisphere)
+
     // declare toyGoods
-    this.scene.add(this.toyGoods.defaultToy)
+    // this.scene.add(this.toyGoods.defaultToy)
   }
 
   // setGrid() {
