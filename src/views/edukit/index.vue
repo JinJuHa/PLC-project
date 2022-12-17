@@ -305,7 +305,7 @@ export default {
   left: 150px;
   width: 115px;
   margin: 0 auto;
-  background-color: white;
+  background-color: #eee;
   border-radius: 10px;
 }
 .user-profile {

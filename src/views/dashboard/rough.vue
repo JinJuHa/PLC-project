@@ -18,12 +18,12 @@
       <div class="dashboard-rates">
         <div class="dashboard-amount">
           <p>Device Id</p>
-          <p class="plc-info">PLC - {{ plc.id }}호기</p>
+          <p class="plc-info">PLC - {{ id }}호기</p>
         </div>
         <div class="dashboard-amount">
           <!-- tagId 17 -->
           <p>작동 여부</p>
-          <p class="plc-info">{{ plc.plcStart }}</p>
+          <p class="plc-info">{{ plc.plcStart === true ? 'ON' : 'OFF' }}</p>
         </div>
       </div>
       <div class="dashboard-doughnut">
@@ -63,12 +63,13 @@
         <div v-show="plc.lightGreen === true" class="light green"></div>
       </div>
       <div class="dashboard-bar">
-        <bar-chart
+        <p>주사위는 메인화면에 띠워서 안하기로 함</p>
+        <!-- <bar-chart
           id="diceFequencyChart"
           ref="diceFequencyChart"
           :chart-data="barChart.data"
           :options="barChart.options"
-        ></bar-chart>
+        ></bar-chart> -->
       </div>
     </div>
   </div>
@@ -77,13 +78,13 @@
 <script>
 import mqtt from 'mqtt'
 import DoughnutChart from '@/components/chart/doughnutChart'
-import BarChart from '@/components/chart/barChart'
+// import BarChart from '@/components/chart/barChart'
 import LineChart from '@/components/chart/lineChart'
 import axios from 'axios'
 export default {
   components: {
     'doughnut-chart': DoughnutChart,
-    'bar-chart': BarChart,
+    // 'bar-chart': BarChart,
     'line-chart': LineChart
   },
   props: {
@@ -97,6 +98,7 @@ export default {
       담당자이름: '지미',
       tray: 8,
       dice: 8,
+      id: '',
       doughnutChart: {
         data: {
           labels: ['불량품', '양품'],
@@ -583,6 +585,9 @@ export default {
           console.log('accuracyRate: ', error)
           alert('try again!')
         })
+    },
+    deviceIdCheck() {
+      this.id = this.$route.params.id
     }
   }
 }
