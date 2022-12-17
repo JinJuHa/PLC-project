@@ -18,6 +18,7 @@
       <div class="dashboard-rates">
         <div class="dashboard-amount">
           <p>Device Id</p>
+          <p>PLC - {{ plc.id }}호기</p>
         </div>
         <div class="dashboard-amount">
           <!-- tagId 17 -->
@@ -26,8 +27,6 @@
         </div>
       </div>
       <div class="dashboard-doughnut">
-        <!-- <doughnut-chart ref="chart" :chartData="chart.data" :options="options" style="width: 450px height: 250px">
-        </doughnut-chart> -->
         <doughnut-chart
           id="accuracyChart"
           ref="accuracyChart"
@@ -67,7 +66,7 @@
           <p>총 생산량</p>
         </div>
         <div class="dashboard-amount">
-          <p>불량품, 양품 비율</p>
+          <p>양품 생산율</p>
           <p>{{ accuracyRate }} %</p>
         </div>
       </div>
@@ -91,6 +90,14 @@ export default {
     plc: {
       type: Object,
       required: true
+    }
+  },
+  watch: {
+    barChart: {
+      handler() {
+        this.renderChart(this.data, this.options)
+      },
+      deep: true
     }
   },
   data() {
@@ -166,22 +173,22 @@ export default {
               pointBackgroundColor: 'white',
               borderWidth: 1,
               fill: true,
-              tension: 0.1,
+              tension: 1,
+              // label: '',
               barPercentage: 0.55,
-              data: []
-              // data: [1200, 2000, 2500, 2200, 4000, 3000, 5000, 2000]
+              data: [1, 2, 0, 0, 0, 0]
             }
           ]
         },
         options: {
+          legend: {
+            display: false
+          },
           title: {
             display: true,
             text: 'Dice Frequency Chart'
           },
           plugins: {
-            legend: {
-              display: false
-            },
             datalabels: {
               display: false
             },
@@ -199,19 +206,17 @@ export default {
               }
             },
             y: {
+              beginAtZero: true,
               grid: {
                 drawBorder: false,
                 color: 'black',
                 lineWidth: 1
               },
-              min: 0,
-              max: 5000,
               ticks: {
-                stepSize: 1000,
+                stepSize: 2,
                 padding: 10,
-                callback: (val, index) => {
-                  return val !== 0 ? val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
-                }
+                min: 0,
+                max: 200
               }
             }
           },
@@ -310,10 +315,11 @@ export default {
       },
       maxDataLength: 20, // TODO: 현재 차트에서 출력할 데이터의 최대크기(화면에서 입력 가능하도록 한다.)
       mqttDataList: [], // mqtt를 통해 받은 데이터(리스트로 계속 추가됨)
-      chartData: null, // 차트로 표현될 데이터
+      chartData: [0, 0, 0, 0, 0, 0], // 차트로 표현될 데이터
       chartLabels: [], // 차트에서 사용할 라벨 리스트(가로축 라벨)
       chartDatasetLabels: [], // 차트에서 사용할 데이터셋 라벨 리스트
       chartDatasetDataList: [], // 차트에서 사용할 데이터셋 데이터 리스트
+      diceStatus: false,
       work: 0,
       good: 0,
       bad: 0,
@@ -334,6 +340,8 @@ export default {
     }, 10)),
       this.makeChartData()
     this.accuracyCheck()
+    this.renderChart(this.barChart.data.datasets[0].data, this.options)
+    this.deviceIdCheck()
   },
   destroyed() {
     clearInterval(this.timerInterval)
@@ -367,6 +375,58 @@ export default {
         if (plcData[1] === false) {
           this.dice--
         }
+        // console.log('주사위 인식작동?', plcData[2])
+        // console.log('주사위 넘버', this.plc.diceValue)
+        // console.log('작동하니?', this.plc.no3Active)
+        // 주사위 눈 차트 데이터
+        // let diceNumber = plcData[3].value
+        let diceNumber = this.plc.diceValue
+        if (this.plc.no3Active === false && this.diceStatus === false && diceNumber > 0) {
+          // this.barDatasetDatas(diceNumber)
+          const barData = this.barChart.data.datasets[0].data
+          console.log('주사위', diceNumber)
+          let diceArray = []
+          for (let i = 0; i < 6; i++) {
+            diceArray.push(diceNumber)
+            if (diceArray[0] !== diceArray[i]) {
+              diceArray = []
+            }
+          }
+          let diceFinal = parseInt(diceArray[5])
+          switch (diceFinal) {
+            case 1:
+              barData.splice(0, 1, barData[0] + 1)
+              console.log('1', diceFinal)
+              break
+            case 2:
+              barData.splice(1, 1, barData[1] + 1)
+              console.log('2', diceFinal)
+              break
+            case 3:
+              barData.splice(2, 1, barData[2] + 1)
+              console.log('3', diceFinal)
+              break
+            case 4:
+              barData.splice(3, 1, barData[3] + 1)
+              console.log('4', diceFinal)
+              break
+            case 5:
+              barData.splice(4, 1, barData[4] + 1)
+              console.log('5', diceFinal)
+              break
+            case 6:
+              barData.splice(5, 1, barData[5] + 1)
+              console.log('6', diceFinal)
+              break
+          }
+          console.log('배열에 데이터 추가되니?', barData)
+          this.diceStatus = true
+          console.log('데이터 추가되나?????????')
+        }
+        if (this.plc.no3Active === true) {
+          this.diceStatus = false
+        }
+
         // 선택된 devicdId만 수용함
         this.removeOldData() // 오래된 데이터 제거
         // 도넛 데이터
@@ -430,8 +490,48 @@ export default {
     },
     // 라인 차트 라벨(가로측) 생성
     makeLineLabels(mqttData) {
-      this.chartLabels.push(mqttData.datetime.substring(11, 19)) // datetime을 사용한다.(분:초만 추출함)
+      // this.chartLabels.push(mqttData.datetime.substring(11, 19)) // datetime을 사용한다.(분:초만 추출함)
     },
+    // barDatasetDatas(diceNumber) {
+    //   const barData = this.barChart.data.datasets[0].data
+    //   console.log('주사위', diceNumber)
+    //   let diceArray = []
+    //   for (let i = 0; i < 6; i++) {
+    //     diceArray.push(diceNumber)
+    //     if (diceArray[0] !== diceArray[i]) {
+    //       diceArray = []
+    //     }
+    //   }
+    //   let diceFinal = parseInt(diceArray[5])
+    //   switch (diceFinal) {
+    //     case 1:
+    //       barData.splice(0, 1, barData[0] + 1)
+    //       console.log('1', diceFinal, barData)
+    //       break
+    //     case 2:
+    //       barData.splice(1, 1, barData[1] + 1)
+    //       console.log('2', diceFinal, barData)
+    //       break
+    //     case 3:
+    //       barData.splice(2, 1, barData[2] + 1)
+    //       console.log('3', diceFinal, barData)
+    //       break
+    //     case 4:
+    //       barData.splice(3, 1, barData[3] + 1)
+    //       console.log('4', diceFinal, barData)
+    //       break
+    //     case 5:
+    //       barData.splice(4, 1, barData[4] + 1)
+    //       console.log('5', diceFinal, barData)
+    //       break
+    //     case 6:
+    //       barData.splice(5, 1, barData[5] + 1)
+    //       console.log('6', diceFinal, barData)
+    //       break
+    //   }
+    //   console.log('배열에 데이터 추가되니?', barData)
+    //   this.diceStatus = true
+    // },
     doughnutDatasetDatas() {
       const doughnutData = this.doughnutChart.data.datasets[0].data
       console.log('불량품', doughnutData[0])
@@ -483,7 +583,7 @@ export default {
         })
         .catch(error => {
           console.log('accuracyRate: ', error)
-          //alert('try again!')
+          alert('try again!')
         })
     }
   }
