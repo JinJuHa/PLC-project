@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-header">
-      <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="dashxx" />
+      <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="dashboardClose" />
       <div class="dashboard-headding"><p>Dashboard</p></div>
       <div class="dashboard-info">
         <div class="dashboard-date">
@@ -18,12 +18,12 @@
       <div class="dashboard-rates">
         <div class="dashboard-amount">
           <p>Device Id</p>
-          <p>PLC - {{ plc.id }}호기</p>
+          <p class="plc-info">PLC - {{ plc.id }}호기</p>
         </div>
         <div class="dashboard-amount">
           <!-- tagId 17 -->
           <p>작동 여부</p>
-          <p>{{ plc.plcStart }}</p>
+          <p class="plc-info">{{ plc.plcStart }}</p>
         </div>
       </div>
       <div class="dashboard-doughnut">
@@ -35,14 +35,15 @@
           style="width: 450px; height: 290px"
         ></doughnut-chart>
       </div>
-      <div class="dashboard-bar">
-        <bar-chart
-          id="diceFequencyChart"
-          ref="diceFequencyChart"
-          :chart-data="barChart.data"
-          :options="barChart.options"
-          style="width: 450px; height: 290px"
-        ></bar-chart>
+      <div class="dashboard-rates">
+        <div class="dashboard-amount">
+          <p>총 생산량</p>
+          <p class="plc-info">{{ work }}</p>
+        </div>
+        <div class="dashboard-amount">
+          <p>양품 생산율</p>
+          <p class="plc-info">{{ accuracyRate }} %</p>
+        </div>
       </div>
     </div>
     <div class="dashboard-footer">
@@ -61,14 +62,13 @@
         <div v-show="plc.lightGreen === false" class="light green-off"></div>
         <div v-show="plc.lightGreen === true" class="light green"></div>
       </div>
-      <div class="dashboard-rates">
-        <div class="dashboard-amount">
-          <p>총 생산량</p>
-        </div>
-        <div class="dashboard-amount">
-          <p>양품 생산율</p>
-          <p>{{ accuracyRate }} %</p>
-        </div>
+      <div class="dashboard-bar">
+        <bar-chart
+          id="diceFequencyChart"
+          ref="diceFequencyChart"
+          :chart-data="barChart.data"
+          :options="barChart.options"
+        ></bar-chart>
       </div>
     </div>
   </div>
@@ -92,14 +92,6 @@ export default {
       required: true
     }
   },
-  watch: {
-    barChart: {
-      handler() {
-        this.renderChart(this.data, this.options)
-      },
-      deep: true
-    }
-  },
   data() {
     return {
       담당자이름: '지미',
@@ -114,7 +106,6 @@ export default {
               borderColor: '#eee',
               hoverBorderColor: '#eee',
               data: [0, 0]
-              // data: [20, 60]
             }
           ]
         },
@@ -174,9 +165,8 @@ export default {
               borderWidth: 1,
               fill: true,
               tension: 1,
-              // label: '',
               barPercentage: 0.55,
-              data: [1, 2, 0, 0, 0, 0]
+              data: [0, 0, 0, 0, 0, 0]
             }
           ]
         },
@@ -220,7 +210,7 @@ export default {
               }
             }
           },
-          responsive: true,
+          responsive: false,
           maintainAspectRatio: false,
           animation: {
             duration: 5000
@@ -326,6 +316,14 @@ export default {
       accuracyRate: 0
     }
   },
+  // watch: {
+  //   barChart: {
+  //     handler() {
+  //       this.renderChart(this.data, this.options)
+  //     },
+  //     deep: true
+  //   }
+  // },
   created() {
     this.createMqtt()
   },
@@ -340,15 +338,15 @@ export default {
     }, 10)),
       this.makeChartData()
     this.accuracyCheck()
-    this.renderChart(this.barChart.data.datasets[0].data, this.options)
+    // this.renderChart(this.barChart.data.datasets[0].data, this.options)
     this.deviceIdCheck()
   },
   destroyed() {
     clearInterval(this.timerInterval)
   },
   methods: {
-    dashxx() {
-      // this.$emit('dashboardX')
+    dashboardClose() {
+      this.$emit('dashboardClose')
     },
     createMqtt() {
       // mqtt연결
@@ -591,6 +589,10 @@ export default {
 </script>
 
 <style scoped>
+.back-button {
+  position: absolute;
+  cursor: pointer;
+}
 .dateTime {
   text-align: left;
   width: 100%;
@@ -601,12 +603,11 @@ export default {
 }
 .dashboard-container {
   display: grid;
-  grid-template-rows: 15% 45% 40%;
+  grid-template-rows: 14vh 45vh 40vh;
   width: 100%;
   height: 100vh;
   background: green;
   padding: 5px;
-  /* position: absolute; */
   border-radius: 10px;
 }
 .dashboard-header {
@@ -615,7 +616,7 @@ export default {
   width: 100%;
   height: 100%;
   color: white;
-  padding: 5px;
+  /* padding: 5px; */
 }
 .dashboard-headding {
   letter-spacing: 2px;
@@ -631,7 +632,7 @@ export default {
   grid-template-columns: 70% 30%;
   width: 100%;
   height: 100%;
-  padding: 10px;
+  /* padding: 10px; */
   border-radius: 10px;
 }
 .dashboard-date {
@@ -641,7 +642,7 @@ export default {
 }
 .dashboard-user {
   color: darkgreen;
-  padding: 10px;
+  /* padding: 10px; */
   font-size: 30px;
 }
 .dashboard-columns {
@@ -657,12 +658,11 @@ export default {
   display: grid;
   grid-template-rows: 50% 50%;
   padding: 5px;
-  /* background-color: bisque; */
 }
 .dashboard-amount {
   width: 100%;
   height: 100%;
-  background-color: rgb(214, 219, 250);
+  /* background-color: rgb(214, 219, 250); */
   padding: 5px;
   text-align: center;
 }
@@ -674,19 +674,19 @@ export default {
 }
 .dashboard-bar {
   width: 100%;
-  height: 100%;
+  height: 300px;
 }
 .dashboard-footer {
   display: grid;
   grid-template-columns: 53% 7% 40%;
   width: 100%;
-  height: 100%;
+  height: 300px;
   background-color: white;
   border-radius: 10px;
 }
 .dashboard-lights {
   width: 100%;
-  height: 100%;
+  height: 300px;
   background-color: black;
   display: grid;
   grid-template-rows: 33% 33% 33%;
@@ -714,5 +714,9 @@ export default {
 }
 .green {
   background-color: green;
+}
+.plc-info {
+  font-size: 45px;
+  color: darkgreen;
 }
 </style>
