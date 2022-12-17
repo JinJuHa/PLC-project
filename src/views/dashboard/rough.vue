@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-header">
-      <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="dashxx" />
+      <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="dashboardClose" />
       <div class="dashboard-headding"><p>Dashboard</p></div>
       <div class="dashboard-info">
         <div class="dashboard-date">
@@ -18,12 +18,12 @@
       <div class="dashboard-rates">
         <div class="dashboard-amount">
           <p>Device Id</p>
-          <p>PLC - {{ plc.id }}호기</p>
+          <p class="plc-info">PLC - {{ id }}호기</p>
         </div>
         <div class="dashboard-amount">
           <!-- tagId 17 -->
           <p>작동 여부</p>
-          <p>{{ plc.plcStart }}</p>
+          <p class="plc-info">{{ plc.plcStart === true ? 'ON' : 'OFF' }}</p>
         </div>
       </div>
       <div class="dashboard-doughnut">
@@ -35,14 +35,15 @@
           style="width: 450px; height: 290px"
         ></doughnut-chart>
       </div>
-      <div class="dashboard-bar">
-        <bar-chart
-          id="diceFequencyChart"
-          ref="diceFequencyChart"
-          :chart-data="barChart.data"
-          :options="barChart.options"
-          style="width: 450px; height: 290px"
-        ></bar-chart>
+      <div class="dashboard-rates">
+        <div class="dashboard-amount">
+          <p>총 생산량</p>
+          <p class="plc-info">{{ work }}</p>
+        </div>
+        <div class="dashboard-amount">
+          <p>양품 생산율</p>
+          <p class="plc-info">{{ accuracyRate }} %</p>
+        </div>
       </div>
     </div>
     <div class="dashboard-footer">
@@ -51,7 +52,7 @@
         ref="stockChart"
         :chart-data="lineChart.data"
         :options="lineChart.options"
-        style="width: 650px; height: 250px"
+        style="width: 1300px; height: 250px"
       ></line-chart>
       <div class="dashboard-lights">
         <div v-show="plc.lightRed === false" class="light red-off"></div>
@@ -61,15 +62,15 @@
         <div v-show="plc.lightGreen === false" class="light green-off"></div>
         <div v-show="plc.lightGreen === true" class="light green"></div>
       </div>
-      <div class="dashboard-rates">
-        <div class="dashboard-amount">
-          <p>총 생산량</p>
-        </div>
-        <div class="dashboard-amount">
-          <p>양품 생산율</p>
-          <p>{{ accuracyRate }} %</p>
-        </div>
-      </div>
+      <!-- <div class="dashboard-bar">
+        <p>주사위는 메인화면에 띠워서 안하기로 함</p>
+        <bar-chart
+          id="diceFequencyChart"
+          ref="diceFequencyChart"
+          :chart-data="barChart.data"
+          :options="barChart.options"
+        ></bar-chart>
+      </div> -->
     </div>
   </div>
 </template>
@@ -77,13 +78,13 @@
 <script>
 import mqtt from 'mqtt'
 import DoughnutChart from '@/components/chart/doughnutChart'
-import BarChart from '@/components/chart/barChart'
+// import BarChart from '@/components/chart/barChart'
 import LineChart from '@/components/chart/lineChart'
 import axios from 'axios'
 export default {
   components: {
     'doughnut-chart': DoughnutChart,
-    'bar-chart': BarChart,
+    // 'bar-chart': BarChart,
     'line-chart': LineChart
   },
   props: {
@@ -97,6 +98,7 @@ export default {
       담당자이름: '지미',
       tray: 8,
       dice: 8,
+      id: '',
       doughnutChart: {
         data: {
           labels: ['불량품', '양품'],
@@ -106,7 +108,6 @@ export default {
               borderColor: '#eee',
               hoverBorderColor: '#eee',
               data: [0, 0]
-              // data: [20, 60]
             }
           ]
         },
@@ -166,9 +167,8 @@ export default {
               borderWidth: 1,
               fill: true,
               tension: 1,
-              // label: '',
               barPercentage: 0.55,
-              data: [1, 2, 0, 0, 0, 0]
+              data: [0, 0, 0, 0, 0, 0]
             }
           ]
         },
@@ -212,7 +212,7 @@ export default {
               }
             }
           },
-          responsive: true,
+          responsive: false,
           maintainAspectRatio: false,
           animation: {
             duration: 5000
@@ -340,15 +340,15 @@ export default {
     }, 10)),
       this.makeChartData()
     this.accuracyCheck()
-    this.renderChart(this.barChart.data.datasets[0].data, this.options)
+    // this.renderChart(this.barChart.data.datasets[0].data, this.options)
     this.deviceIdCheck()
   },
   destroyed() {
     clearInterval(this.timerInterval)
   },
   methods: {
-    dashxx() {
-      // this.$emit('dashboardX')
+    dashboardClose() {
+      this.$emit('dashboardClose')
     },
     createMqtt() {
       // mqtt연결
@@ -369,11 +369,27 @@ export default {
         const mqttData = JSON.parse(message) // json string으로만 받을 수 있음
         let plcData = mqttData.Wrapper.filter(p => p.tagId === '3' || p.tagId === '27')
         // 3은 tray 작동, 27은 주사위 작동
-        if (plcData[0] === true) {
+        if (plcData[0].value === true) {
+          let trayArray = []
+          for (let i = 0; i < 6; i++) {
+            trayArray.push(plcData[0].value)
+            if (trayArray[0] !== trayArray[i]) {
+              trayArray = []
+            }
+          }
           this.tray--
+          console.log('트레이수', this.tray)
         }
-        if (plcData[1] === false) {
+        if (plcData[1].value === false) {
+          let diceArray = []
+          for (let i = 0; i < 6; i++) {
+            diceArray.push(plcData[1].value)
+            if (diceArray[0] !== diceArray[i]) {
+              diceArray = []
+            }
+          }
           this.dice--
+          console.log('주사위수', this.dice)
         }
         // console.log('주사위 인식작동?', plcData[2])
         // console.log('주사위 넘버', this.plc.diceValue)
@@ -384,7 +400,7 @@ export default {
         if (this.plc.no3Active === false && this.diceStatus === false && diceNumber > 0) {
           // this.barDatasetDatas(diceNumber)
           const barData = this.barChart.data.datasets[0].data
-          console.log('주사위', diceNumber)
+          // console.log('주사위', diceNumber)
           let diceArray = []
           for (let i = 0; i < 6; i++) {
             diceArray.push(diceNumber)
@@ -419,9 +435,9 @@ export default {
               console.log('6', diceFinal)
               break
           }
-          console.log('배열에 데이터 추가되니?', barData)
+          // console.log('배열에 데이터 추가되니?', barData)
           this.diceStatus = true
-          console.log('데이터 추가되나?????????')
+          // console.log('데이터 추가되나?????????')
         }
         if (this.plc.no3Active === true) {
           this.diceStatus = false
@@ -585,12 +601,19 @@ export default {
           console.log('accuracyRate: ', error)
           alert('try again!')
         })
+    },
+    deviceIdCheck() {
+      this.id = this.$route.params.id
     }
   }
 }
 </script>
 
 <style scoped>
+.back-button {
+  position: absolute;
+  cursor: pointer;
+}
 .dateTime {
   text-align: left;
   width: 100%;
@@ -601,12 +624,11 @@ export default {
 }
 .dashboard-container {
   display: grid;
-  grid-template-rows: 15% 45% 40%;
+  grid-template-rows: 14vh 45vh 40vh;
   width: 100%;
   height: 100vh;
   background: green;
   padding: 5px;
-  /* position: absolute; */
   border-radius: 10px;
 }
 .dashboard-header {
@@ -615,7 +637,7 @@ export default {
   width: 100%;
   height: 100%;
   color: white;
-  padding: 5px;
+  /* padding: 5px; */
 }
 .dashboard-headding {
   letter-spacing: 2px;
@@ -631,7 +653,7 @@ export default {
   grid-template-columns: 70% 30%;
   width: 100%;
   height: 100%;
-  padding: 10px;
+  /* padding: 10px; */
   border-radius: 10px;
 }
 .dashboard-date {
@@ -641,7 +663,7 @@ export default {
 }
 .dashboard-user {
   color: darkgreen;
-  padding: 10px;
+  /* padding: 10px; */
   font-size: 30px;
 }
 .dashboard-columns {
@@ -657,12 +679,11 @@ export default {
   display: grid;
   grid-template-rows: 50% 50%;
   padding: 5px;
-  /* background-color: bisque; */
 }
 .dashboard-amount {
   width: 100%;
   height: 100%;
-  background-color: rgb(214, 219, 250);
+  /* background-color: rgb(214, 219, 250); */
   padding: 5px;
   text-align: center;
 }
@@ -674,19 +695,19 @@ export default {
 }
 .dashboard-bar {
   width: 100%;
-  height: 100%;
+  height: 300px;
 }
 .dashboard-footer {
   display: grid;
-  grid-template-columns: 53% 7% 40%;
+  grid-template-columns: 93% 7%;
   width: 100%;
-  height: 100%;
+  height: 300px;
   background-color: white;
   border-radius: 10px;
 }
 .dashboard-lights {
   width: 100%;
-  height: 100%;
+  height: 300px;
   background-color: black;
   display: grid;
   grid-template-rows: 33% 33% 33%;
@@ -714,5 +735,9 @@ export default {
 }
 .green {
   background-color: green;
+}
+.plc-info {
+  font-size: 45px;
+  color: darkgreen;
 }
 </style>
