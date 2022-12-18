@@ -14,7 +14,6 @@ class Event {
     const hostname = process.env.VUE_APP_NO_3_HOST
     const port = process.env.VUE_APP_NO_3_PORT
     const path = process.env.VUE_APP_NO_3_PATH
-    const no1MachineStatus = false
 
     let props = {
       hostname,
@@ -22,15 +21,14 @@ class Event {
       path,
       topic: subscribe_topic,
       scene,
-      edukit: scene.resource.edukit,
-      no1: no1MachineStatus
+      edukit: scene.resource.edukit
     }
 
     this.subscribeMqtt(props)
   }
 
   subscribeMqtt(props) {
-    let { hostname, port, path, topic, scene, edukit, no1 } = props
+    let { hostname, port, path, topic, scene, edukit } = props
 
     const clientId = `mqtt_${Math.random().toString(16).slice(3)}`
     this.client = mqtt.connect({
@@ -61,63 +59,77 @@ class Event {
             p.tagId === '18' ||
             p.tagId === '19' ||
             p.tagId === '20' ||
+            p.tagId === '39' ||
             p.tagId === '3' ||
-            p.tagId === '39'
+            p.tagId === '29' ||
+            p.tagId === '39' ||
+            p.tagId === '37' ||
+            p.tagId === '32' ||
+            p.tagId === '40'
         )
-        //console.log(data)
-        //console.log(edukit)
+
+        let stockData = message.Wrapper.filter(p => p.tagId === '23' || p.tagId === '25')
+        // console.log(edukit)
+
+        // no1 hemisphere status
+        if (data[0].value === true) {
+          scene.statusLight.no1Hemisphere.material.color.set(0x008000)
+        } else if (data[0].value === false) {
+          if (stockData[0].value === false) {
+            scene.statusLight.no1Hemisphere.material.color.set(0xff00000)
+          } else {
+            scene.statusLight.no1Hemisphere.material.color.set(0xffd400)
+          }
+        }
+        if (data[6].value === true) {
+          scene.statusLight.colorHemisphere.material.color.set(0x008000)
+        } else if (data[6].value === false) {
+          scene.statusLight.colorHemisphere.material.color.set(0xffd400)
+        }
+        if (data[4].value === true) {
+          scene.statusLight.no2Hemisphere.material.color.set(0x008000)
+        } else if (data[4].value === false) {
+          if (stockData[1].value === true) {
+            scene.statusLight.no2Hemisphere.material.color.set(0xff0000)
+          } else {
+            scene.statusLight.no2Hemisphere.material.color.set(0xffd400)
+          }
+        }
+        if (data[10].value !== '0') {
+          scene.statusLight.visionHemisphere.material.color.set(0x008000)
+        } else if (data[10].value === '0') {
+          scene.statusLight.visionHemisphere.material.color.set(0xffd400)
+        }
+        if (data[7].value === true) {
+          scene.statusLight.no3Hemisphere.material.color.set(0x008000)
+        } else if (data[7].value === false) {
+          scene.statusLight.no3Hemisphere.material.color.set(0xffd400)
+        }
 
         // greenLight status
         if (data[1].value === true) {
-          //console.log('green on')
           scene.trafficLight.trafficLight1.material.color.set(0x00ff00)
         } else if (data[1].value === false) {
-          //console.log('green off')
           scene.trafficLight.trafficLight1.material.color.set(0x003300)
         }
         // yellowLight status
         if (data[2].value === true) {
-          //console.log('yellow on')
           scene.trafficLight.trafficLight2.material.color.set(0xffff00)
         } else if (data[2].value === false) {
-          //console.log('yellow off')
           scene.trafficLight.trafficLight2.material.color.set(0x996600)
         }
         // redLight status
         if (data[3].value === true) {
-          //console.log('red on')
           scene.trafficLight.trafficLight3.material.color.set(0xff0000)
         } else if (data[3].value === false) {
-          //console.log('red off')
           scene.trafficLight.trafficLight3.material.color.set(0x660000)
-        }
-        if (data[0].value || no1) {
-          //console.log('No1_action - true')
-          no1 = true
-          this.moveGoods(scene)
-          if (scene.toyGoods.defaultToy.position.x >= 5) {
-            this.removeGoods(scene, no1)
-          }
         }
 
         data = data.map(p => parseInt(p.value))
-        edukit['yAxis'] = data[5]
-        edukit['xAxis'] = data[6]
+        edukit['yAxis'] = data[8]
+        edukit['xAxis'] = data[9]
       })
     })
-  }
-
-  async moveGoods(scene) {
-    //console.log('moveGoods')
-    //console.log(scene)
-    // scene.toyGoods.defaultToy.position.x += 0.5
-  }
-
-  async removeGoods(scene, no1) {
-    //console.log('scene.toyGoods', scene)
-    // scene.remove(scene.toyGoods.defaultToy)
-    // console.log('here?')
-    no1 = false
   }
 }
 
