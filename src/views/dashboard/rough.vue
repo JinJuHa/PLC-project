@@ -317,7 +317,7 @@ export default {
       maxDataLength: 20, // TODO: 현재 차트에서 출력할 데이터의 최대크기(화면에서 입력 가능하도록 한다.)
       mqttDataList: [], // mqtt를 통해 받은 데이터(리스트로 계속 추가됨)
       chartData: [0, 0, 0, 0, 0, 0], // 차트로 표현될 데이터
-      chartLabels: [], // 차트에서 사용할 라벨 리스트(가로축 라벨)
+      // chartLabels: [], // 차트에서 사용할 라벨 리스트(가로축 라벨)
       chartDatasetLabels: [], // 차트에서 사용할 데이터셋 라벨 리스트
       chartDatasetDataList: [], // 차트에서 사용할 데이터셋 데이터 리스트
       diceStatus: false,
@@ -426,7 +426,7 @@ export default {
       // 현재 차트에 출력할 수가 x개를 넘어서면 제일 오래된 데이터를 제거 한다.
       if (this.maxDataLength - 1 < this.mqttDataList.length) {
         this.mqttDataList.shift() // mqttData제거
-        this.chartLabels.shift() // 차트라벨 제거
+        this.lineChart.data.labels.shift() // 차트라벨 제거
       }
     },
     makeChartData() {
@@ -457,16 +457,15 @@ export default {
 
       // 차트 데이터 생성
       this.chartData = {
-        labels: this.chartLabels,
+        labels: this.lineChart.data.labels,
         datasets: this.makeDatasetDatas()
       }
     },
     // 라인 차트 라벨(가로측) 생성
     makeLineLabels(mqttData) {
-      const lineXAxis = mqttData.Wrapper[40].value.substring(11, 19)
-      this.chartLabels.push(lineXAxis) // datetime을 사용한다.(분:초만 추출함)
+      const dateTime = mqttData.Wrapper[40].value.substring(11, 19)
+      this.lineChart.data.labels.push(dateTime) // datetime을 사용한다.(분:초만 추출함)
     },
-
     doughnutDatasetDatas() {
       const doughnutData = this.doughnutChart.data.datasets[0].data
       console.log('불량품', doughnutData[0])
