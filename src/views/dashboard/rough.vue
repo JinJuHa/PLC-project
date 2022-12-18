@@ -315,7 +315,8 @@ export default {
         }
       },
       maxDataLength: 20, // TODO: 현재 차트에서 출력할 데이터의 최대크기(화면에서 입력 가능하도록 한다.)
-      mqttDataList: [], // mqtt를 통해 받은 데이터(리스트로 계속 추가됨)
+      trayDataList: [], // mqtt를 통해 받은 데이터(리스트로 계속 추가됨)
+      diceDataList: [],
       chartData: [0, 0, 0, 0, 0, 0], // 차트로 표현될 데이터
       // chartLabels: [], // 차트에서 사용할 라벨 리스트(가로축 라벨)
       chartDatasetLabels: [], // 차트에서 사용할 데이터셋 라벨 리스트
@@ -411,7 +412,8 @@ export default {
         if (plcData[3].value) {
           this.no2Status = false
         }
-
+        this.trayDataList.push(this.tray)
+        this.diceDataList.push(this.dice)
         // console.log('트레이 갯수', this.tray)
         // console.log('주사위 갯수', this.dice)
 
@@ -424,8 +426,12 @@ export default {
     },
     removeOldData() {
       // 현재 차트에 출력할 수가 x개를 넘어서면 제일 오래된 데이터를 제거 한다.
-      if (this.maxDataLength - 1 < this.mqttDataList.length) {
-        this.mqttDataList.shift() // mqttData제거
+      if (this.maxDataLength - 1 < this.trayDataList.length) {
+        this.trayDataList.shift() // mqttData제거
+        this.lineChart.data.labels.shift() // 차트라벨 제거
+      }
+      if (this.maxDataLength - 1 < this.diceDataList.length) {
+        this.diceDataList.shift() // mqttData제거
         this.lineChart.data.labels.shift() // 차트라벨 제거
       }
     },
@@ -433,13 +439,24 @@ export default {
       // 차트용 데이터 생성
 
       // mqtt정보가 없으면 기본 그래프를 그려준다.(이것이 없으면 그래프 자체가 나오지 않음)
-      if (this.mqttDataList.length === 0) {
-        this.chartData = {
-          labels: ['0'],
+      if (this.trayDataList.length === 0) {
+        this.lineChart.data.datasets[0].data = {
+          labels: ['트레이'],
           datasets: [
             {
               label: 'no data',
-              data: [0]
+              data: [8]
+            }
+          ]
+        }
+      }
+      if (this.diceDataList.length === 0) {
+        this.lineChart.data.datasets[1].data = {
+          labels: ['주사위'],
+          datasets: [
+            {
+              label: 'no data',
+              data: [8]
             }
           ]
         }
@@ -449,8 +466,8 @@ export default {
 
       // 데이터셋 라벨 리스트 생성(태그 리스트(tagList)를 데이터셋 라벨로 사용한다.)
       const datasetLabels = []
-      for (let i = 0; i < this.selected.tagList.length; i += 1) {
-        const tagName = this.selected.tagList[i] // tagName을 추출함
+      for (let i = 0; i < this.lineChart.data.labels.length; i += 1) {
+        const tagName = this.lineChart.data.labels[i] // tagName을 추출함
         datasetLabels.push(tagName) // tagName을 라벨로 사용함
       }
       this.chartDatasetLabels = Array.from(new Set(datasetLabels)) // 중복 제거
@@ -481,9 +498,25 @@ export default {
         const datas = [] // 해당 label에 속한 데이터셋의 데이터 리스트
 
         // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
-        for (let j = 0; j < this.mqttDataList.length; j += 1) {
-          const mqttData = this.mqttDataList[j]
-          const tagData = mqttData.wrapper[22].value // 현재 데이터셋 label과 같은 태그만 추출한다.
+        for (let j = 0; j < this.trayDataList.length; j += 1) {
+          const trayData = this.trayDataList[j]
+          const tagData = trayData.wrapper[22].value // 현재 데이터셋 label과 같은 태그만 추출한다.
+          datas.push(tagData)
+        }
+        datasetDatas.push({
+          label: label,
+          fill: false,
+          data: datas
+        })
+      }
+      for (let i = 0; i < this.chartDatasetLabels.length; i += 1) {
+        const label = this.chartDatasetLabels[i] // label을 하나씩 추출한다.
+        const datas = [] // 해당 label에 속한 데이터셋의 데이터 리스트
+
+        // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
+        for (let j = 0; j < this.diceDataList.length; j += 1) {
+          const diceData = this.diceDataList[j]
+          const tagData = diceData.wrapper[22].value // 현재 데이터셋 label과 같은 태그만 추출한다.
           datas.push(tagData)
         }
         datasetDatas.push({
