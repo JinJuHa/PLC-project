@@ -171,7 +171,7 @@ export default {
       // { "tagId" : "id값", "value" : "value값" }으로 이루어져야 합니다.
       // true와 false 같은 boolean 값은 1과(true) 0으로(false) 입력하도록 합니다.
       mqttClient.publish(topic, message, error => {
-        console.log('message', message)
+        // console.log('message', message)
         if (error) {
           // console.error('mqtt client error', error)
           alert('MQTT 데이터 전송이 실패했습니다.')
@@ -253,7 +253,7 @@ export default {
           console.log('/devices/control/stop - response: ', res.data)
         })
         .catch(err => {
-          console.log('/devices/control/stop - errerr', err)
+          console.log('/devices/control/stop - error', err)
         })
     },
     async deviceResetControl() {
