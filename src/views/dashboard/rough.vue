@@ -95,6 +95,9 @@ export default {
   },
   data() {
     return {
+      no1status: false,
+      no2status: false,
+
       담당자이름: '지미',
       tray: 8,
       dice: 8,
@@ -391,78 +394,11 @@ export default {
           this.dice--
           console.log('주사위수', this.dice)
         }
-        // console.log('주사위 인식작동?', plcData[2])
-        // console.log('주사위 넘버', this.plc.diceValue)
-        // console.log('작동하니?', this.plc.no3Active)
-        // 주사위 눈 차트 데이터
-        // let diceNumber = plcData[3].value
-        let diceNumber = this.plc.diceValue
-        if (this.plc.no3Active === false && this.diceStatus === false && diceNumber > 0) {
-          // this.barDatasetDatas(diceNumber)
-          const barData = this.barChart.data.datasets[0].data
-          // console.log('주사위', diceNumber)
-          let diceArray = []
-          for (let i = 0; i < 6; i++) {
-            diceArray.push(diceNumber)
-            if (diceArray[0] !== diceArray[i]) {
-              diceArray = []
-            }
-          }
-          let diceFinal = parseInt(diceArray[5])
-          switch (diceFinal) {
-            case 1:
-              barData.splice(0, 1, barData[0] + 1)
-              console.log('1', diceFinal)
-              break
-            case 2:
-              barData.splice(1, 1, barData[1] + 1)
-              console.log('2', diceFinal)
-              break
-            case 3:
-              barData.splice(2, 1, barData[2] + 1)
-              console.log('3', diceFinal)
-              break
-            case 4:
-              barData.splice(3, 1, barData[3] + 1)
-              console.log('4', diceFinal)
-              break
-            case 5:
-              barData.splice(4, 1, barData[4] + 1)
-              console.log('5', diceFinal)
-              break
-            case 6:
-              barData.splice(5, 1, barData[5] + 1)
-              console.log('6', diceFinal)
-              break
-          }
-          // console.log('배열에 데이터 추가되니?', barData)
-          this.diceStatus = true
-          // console.log('데이터 추가되나?????????')
-        }
-        if (this.plc.no3Active === true) {
-          this.diceStatus = false
-        }
-
         // 선택된 devicdId만 수용함
         this.removeOldData() // 오래된 데이터 제거
-        // 도넛 데이터
-        // this.doughnutChart.data.datasets.data.push(mqttData) // 리스트에 계속 추가함
-        // 바 데이터
-        // this.barChart.data.datasets.data.push(mqttData)
-        // 라인 데이터
-        // this.lineChart.data.datasets.data.push(this.tray, this.dice)
-        // 라인 차트 라벨
+
         this.makeLineLabels(mqttData)
         this.makeChartData() // 차트용 데이터 작성
-
-        // if (this.selected.deviceId === mqttData.id) {
-        //   this.removeOldData() // 오래된 데이터 제거
-
-        //   this.mqttDataList.push(mqttData) // 리스트에 계속 추가함
-
-        //   this.makeChartLabels(mqttData) // 차트라벨 생성
-        //   this.makeChartData() // 차트용 데이터 작성
-        // }
       })
     },
     removeOldData() {
