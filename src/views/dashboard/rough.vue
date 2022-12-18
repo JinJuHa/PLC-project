@@ -95,13 +95,19 @@ export default {
   },
   data() {
     return {
-      no1status: false,
-      no2status: false,
+      no1Status: false,
+      no2Status: false,
+      isColorSensing: false,
+      cycleEnd: true,
 
       담당자이름: '지미',
       tray: 8,
       dice: 8,
       id: '',
+      no1Active: false,
+      no2Active: false,
+      colorSensor: false,
+      no3Active: false,
       doughnutChart: {
         data: {
           labels: ['불량품', '양품'],
@@ -321,14 +327,16 @@ export default {
       accuracyRate: 0
     }
   },
-  watch: {
-    barChart: {
-      handler() {
-        this.renderChart(this.chartData, this.options)
-      },
-      deep: true
-    }
-  },
+  // computed: {
+  //   stockCheck() {
+  //     if (this.no1Active === true) {
+  //       return this.tray--
+  //     }
+  //     if (this.no2Active === true) {
+  //       return this.dice--
+  //     }
+  //   }
+  // },
   created() {
     this.createMqtt()
   },
@@ -370,30 +378,43 @@ export default {
       // 메세지 실시간 수신
       mqttClient.on('message', (topic, message) => {
         const mqttData = JSON.parse(message) // json string으로만 받을 수 있음
-        let plcData = mqttData.Wrapper.filter(p => p.tagId === '3' || p.tagId === '27')
-        // 3은 tray 작동, 27은 주사위 작동
-        if (plcData[0].value === true) {
-          let trayArray = []
-          for (let i = 0; i < 6; i++) {
-            trayArray.push(plcData[0].value)
-            if (trayArray[0] !== trayArray[i]) {
-              trayArray = []
-            }
-          }
+        let plcData = mqttData.Wrapper.filter(
+          p => p.tagId === '3' || p.tagId === '29' || p.tagId === '39' || p.tagId === '40'
+        )
+
+        // 3은 tray 작동, 27은 주사위 작동, 39는 컬러센서 작동, 40은 3호기 작동
+        // console.log('plcData', plcData) // [0] : 1호기 작동 / [1] : 2호기 작동 / [2]: 컬러센서 작동 / [3]: 3호기 작동
+
+        // 1호기 벨류가 true이면서 1호기 상태가 false면 트레이 갯수 -1 후 1호기 상태 true로 변경
+        if (plcData[0].value && this.no1Status === false) {
+          this.no1Status = true
           this.tray--
-          console.log('트레이수', this.tray)
+          console.log('white', this.tray)
         }
-        if (plcData[1].value === false) {
-          let diceArray = []
-          for (let i = 0; i < 6; i++) {
-            diceArray.push(plcData[1].value)
-            if (diceArray[0] !== diceArray[i]) {
-              diceArray = []
-            }
-          }
+        // 컬러 센서가 작동했다면 컬러센서 상태를 true로 변경 후 1호기 상태를 false로 변경
+        if (plcData[2].value === true) {
+          this.isColorSensing = true
+          this.no1Status = false
+          console.log('this.no1Status', this.no1Status)
+        }
+
+        // 2호기 벨류가 true이고 2호기 상태가 false이면서 컬러센서가 작동됐다면(white tray)
+        // 다이스 갯수 -1 후 2호기 상태 true 및 컬러센싱 상태 false로 변경
+        if (plcData[1].value && !this.no2status && this.isColorSensing) {
+          this.no2Status = true
           this.dice--
-          console.log('주사위수', this.dice)
+          this.isColorSensing = false
+          console.log('this.dice', this.dice)
         }
+
+        // 3호기 벨류가 true이면 2호기 상태 false로 변경
+        if (plcData[3].value) {
+          this.no2Status = false
+        }
+
+        // console.log('트레이 갯수', this.tray)
+        // console.log('주사위 갯수', this.dice)
+
         // 선택된 devicdId만 수용함
         this.removeOldData() // 오래된 데이터 제거
 
@@ -442,48 +463,10 @@ export default {
     },
     // 라인 차트 라벨(가로측) 생성
     makeLineLabels(mqttData) {
-      // this.chartLabels.push(mqttData.datetime.substring(11, 19)) // datetime을 사용한다.(분:초만 추출함)
+      const lineXAxis = mqttData.Wrapper[40].value.substring(11, 19)
+      this.chartLabels.push(lineXAxis) // datetime을 사용한다.(분:초만 추출함)
     },
-    // barDatasetDatas(diceNumber) {
-    //   const barData = this.barChart.data.datasets[0].data
-    //   console.log('주사위', diceNumber)
-    //   let diceArray = []
-    //   for (let i = 0; i < 6; i++) {
-    //     diceArray.push(diceNumber)
-    //     if (diceArray[0] !== diceArray[i]) {
-    //       diceArray = []
-    //     }
-    //   }
-    //   let diceFinal = parseInt(diceArray[5])
-    //   switch (diceFinal) {
-    //     case 1:
-    //       barData.splice(0, 1, barData[0] + 1)
-    //       console.log('1', diceFinal, barData)
-    //       break
-    //     case 2:
-    //       barData.splice(1, 1, barData[1] + 1)
-    //       console.log('2', diceFinal, barData)
-    //       break
-    //     case 3:
-    //       barData.splice(2, 1, barData[2] + 1)
-    //       console.log('3', diceFinal, barData)
-    //       break
-    //     case 4:
-    //       barData.splice(3, 1, barData[3] + 1)
-    //       console.log('4', diceFinal, barData)
-    //       break
-    //     case 5:
-    //       barData.splice(4, 1, barData[4] + 1)
-    //       console.log('5', diceFinal, barData)
-    //       break
-    //     case 6:
-    //       barData.splice(5, 1, barData[5] + 1)
-    //       console.log('6', diceFinal, barData)
-    //       break
-    //   }
-    //   console.log('배열에 데이터 추가되니?', barData)
-    //   this.diceStatus = true
-    // },
+
     doughnutDatasetDatas() {
       const doughnutData = this.doughnutChart.data.datasets[0].data
       console.log('불량품', doughnutData[0])
