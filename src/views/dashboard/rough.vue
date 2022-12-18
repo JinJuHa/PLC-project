@@ -317,7 +317,7 @@ export default {
       maxDataLength: 20, // TODO: 현재 차트에서 출력할 데이터의 최대크기(화면에서 입력 가능하도록 한다.)
       trayDataList: [], // mqtt를 통해 받은 데이터(리스트로 계속 추가됨)
       diceDataList: [],
-      chartData: [0, 0, 0, 0, 0, 0], // 차트로 표현될 데이터
+      // chartData: [0, 0, 0, 0, 0, 0], // 차트로 표현될 데이터
       // chartLabels: [], // 차트에서 사용할 라벨 리스트(가로축 라벨)
       chartDatasetLabels: [], // 차트에서 사용할 데이터셋 라벨 리스트
       chartDatasetDataList: [], // 차트에서 사용할 데이터셋 데이터 리스트
@@ -473,9 +473,13 @@ export default {
       this.chartDatasetLabels = Array.from(new Set(datasetLabels)) // 중복 제거
 
       // 차트 데이터 생성
-      this.chartData = {
-        labels: this.lineChart.data.labels,
-        datasets: this.makeDatasetDatas()
+      this.lineChart.data.datasets[0] = {
+        labels: this.lineChart.data.datasets.label,
+        data: this.trayDatasetDatas()
+      }
+      this.lineChart.data.datasets[1] = {
+        labels: this.lineChart.data.datasets.label,
+        data: this.diceDatasetDatas()
       }
     },
     // 라인 차트 라벨(가로측) 생성
@@ -489,9 +493,9 @@ export default {
       console.log('양품', doughnutData[1])
       doughnutData.splice(0, 2, this.bad, this.good)
     },
-    makeDatasetDatas() {
+    trayDatasetDatas() {
       // 데이터셋의 데이터 추출
-      const datasetDatas = []
+      const trayDatasetDatas = []
 
       for (let i = 0; i < this.chartDatasetLabels.length; i += 1) {
         const label = this.chartDatasetLabels[i] // label을 하나씩 추출한다.
@@ -500,15 +504,22 @@ export default {
         // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
         for (let j = 0; j < this.trayDataList.length; j += 1) {
           const trayData = this.trayDataList[j]
-          const tagData = trayData.wrapper[22].value // 현재 데이터셋 label과 같은 태그만 추출한다.
-          datas.push(tagData)
+          datas.push(trayData)
         }
-        datasetDatas.push({
+        trayDatasetDatas.push({
           label: label,
           fill: false,
           data: datas
         })
       }
+      return trayDatasetDatas.map((item, idx) => {
+        const color = idx === 0 ? '#1B9CFC' : '#e74c3c'
+        return { ...item, borderColor: color }
+      })
+    },
+    diceDatasetDatas() {
+      // 데이터셋의 데이터 추출
+      const diceDatasetDatas = []
       for (let i = 0; i < this.chartDatasetLabels.length; i += 1) {
         const label = this.chartDatasetLabels[i] // label을 하나씩 추출한다.
         const datas = [] // 해당 label에 속한 데이터셋의 데이터 리스트
@@ -516,16 +527,16 @@ export default {
         // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
         for (let j = 0; j < this.diceDataList.length; j += 1) {
           const diceData = this.diceDataList[j]
-          const tagData = diceData.wrapper[22].value // 현재 데이터셋 label과 같은 태그만 추출한다.
-          datas.push(tagData)
+          console.log('다이스', this.diceDataList)
+          datas.push(diceData)
         }
-        datasetDatas.push({
+        diceDatasetDatas.push({
           label: label,
           fill: false,
           data: datas
         })
       }
-      return datasetDatas.map((item, idx) => {
+      return diceDatasetDatas.map((item, idx) => {
         const color = idx === 0 ? '#1B9CFC' : '#e74c3c'
         return { ...item, borderColor: color }
       })
