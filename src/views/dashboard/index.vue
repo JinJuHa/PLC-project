@@ -178,6 +178,7 @@ export default {
           const mqttData = this.mqttDataList[j]
           console.log(mqttData.Wrapper)
           const tagData = mqttData.Wrapper[35].value // 현재 데이터셋 label과 같은 태그만 추출한다.
+          console.log('태그데이터.....', tagData)
           datas.push(tagData)
         }
         datasetDatas.push({
