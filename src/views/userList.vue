@@ -3,7 +3,9 @@
     <div class="user-list-page">
       <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="$router.go(-1)" />
       <p class="user-list-title">사용자 리스트</p>
-      <b-button v-b-modal.modal-1 variant="info" class="control-button">디바이스 제어 권한</b-button>
+      <b-button v-b-modal.modal-1 variant="info" class="control-button" @click="deviceList()"
+        >디바이스 제어 권한</b-button
+      >
       <b-modal id="modal-1" hide-footer title="디바이스 제어 권한">
         <div class="user-profile">
           <div class="user-info">
@@ -52,7 +54,7 @@ export default {
   },
   mounted() {
     this.userList()
-    this.deviceList()
+    // this.deviceList()
   },
   methods: {
     async userList() {
@@ -109,12 +111,8 @@ export default {
         })
         .catch(err => {
           console.log('deviceList - error : ', err)
-          localStorage.setItem('err', err.response.status)
-          // if (this.on == true) {
-          //   if (err == 401) {
-          //     alert('권한을 변경할 수 없습니다.')
-          //   }
-          // }
+          // alert('디바이스 권한을 변경할 수 없습니다. 관리자에게 문의하세요.')
+          // this.$router.go(0)
         })
     },
     async powerAdd() {
@@ -129,14 +127,18 @@ export default {
           }
         })
         .then(async res => {
-          const code = res.data
-          console.log('/deviceAdd - response: ', code)
-          alert('디바이스 권한이 반영 되었습니다.')
+          console.log('/powerAdd - response: ', res.data)
+          if (res.data.data == 'existed') {
+            alert('이미 등록 된 디바이스 권한입니다.')
+          } else {
+            alert('디바이스 권한이 반영 되었습니다.')
+          }
           this.$router.go(0)
         })
         .catch(err => {
-          console.log('/deviceAdd - error: ', err)
-          alert('권한이 없습니다.')
+          console.log('/powerAdd - error: ', err)
+          // alert('권한이 없습니다.')
+          alert('권한을 변경할 수 없습니다. 관리자에게 문의하세요.')
         })
     }
   }
