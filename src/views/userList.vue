@@ -109,6 +109,12 @@ export default {
         })
         .catch(err => {
           console.log('deviceList - error : ', err)
+          localStorage.setItem('err', err.response.status)
+          // if (this.on == true) {
+          //   if (err == 401) {
+          //     alert('권한을 변경할 수 없습니다.')
+          //   }
+          // }
         })
     },
     async powerAdd() {

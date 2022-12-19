@@ -14,34 +14,28 @@ const routes = [
       {
         path: '/web',
         component: () => import('../views/edukit'),
-        meta: { noLogin: true },
         children: [
           {
             path: ':id',
-            component: () => import('../views/edukit'),
-            meta: { noLogin: true }
+            component: () => import('../views/edukit')
           }
         ]
       },
       {
         path: '/edukit/list',
-        component: () => import('../views/edukitList.vue'),
-        meta: { noLogin: true }
+        component: () => import('../views/edukitList.vue')
       },
       {
         path: '/list',
-        component: () => import('../views/userList.vue'),
-        meta: { noLogin: true }
+        component: () => import('../views/userList.vue')
       },
       {
         path: '/data',
-        component: () => import('../views/edukitdata.vue'),
-        meta: { noLogin: true }
+        component: () => import('../views/edukitdata.vue')
       },
       {
         path: '/dashboard',
-        component: () => import('../views/dashboard'),
-        meta: { noLogin: true }
+        component: () => import('../views/dashboard')
       },
       {
         path: '/mypage',
@@ -56,14 +50,14 @@ const routes = [
       {
         path: '/auth/login',
         component: () => import('../views/auth/login'),
-        meta: { header: false, noLogin: true }
+        meta: { noLogin: true }
       }
     ]
   },
   {
     path: '*',
     component: () => import('../components/NotFound.vue'),
-    meta: { header: false, noLogin: true }
+    meta: { noLogin: true }
   }
 ]
 
