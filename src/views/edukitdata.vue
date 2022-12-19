@@ -62,7 +62,7 @@ export default {}
   color: #85dd79;
 }
 .dashboard-title {
-  margin-left: 380px;
+  margin-left: 430px;
   width: 450px;
   padding: 6px;
   border-radius: 25px;
@@ -74,7 +74,7 @@ export default {}
   margin-bottom: 20px;
 }
 .db-dashboard {
-  margin-left: 90px;
+  margin-left: 160px;
 }
 .iframe-data-bottom {
   margin-left: 100px;
