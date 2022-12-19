@@ -13,7 +13,7 @@ import { Event } from './assets/event'
 
 export default async element => {
   element.style.width = '100%'
-  element.style.height = '100vh'
+  element.style.height = '99.9vh'
 
   // Scene Setting
   let scene = new Scene('edukit')

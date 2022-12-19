@@ -1,11 +1,5 @@
 <template>
   <div>
-    <div id="alert-connection">
-      <!-- <button @click="delayedAlert">Show alert for 2s</button> -->
-      <b-alert v-model="showAlert">
-        {{ alertMessage }}
-      </b-alert>
-    </div>
     <div id="control-button">
       <button :class="plc.plcStart ? 'active-but' : 'start'" :disabled="plc.plcStart" @click="mcStart">
         <font-awesome-icon icon="fa-solid fa-play" />
@@ -281,10 +275,6 @@ export default {
 </script>
 
 <style scoped>
-#alert-connection {
-  position: absolute;
-  z-index: 100;
-}
 .monitoring {
   position: absolute;
   width: 100%;
