@@ -15,16 +15,16 @@
               <div class="dashboard-details">
                 <div class="dashboard-user">
                   <div class="user-info">
-                    <p>PLC 명</p>
+                    <p class="header-text">PLC 명</p>
                     <p>PLC - {{ id }}호기</p>
                   </div>
                   <div class="user-info">
-                    <p>담당자</p>
-                    <p>{{ 담당자이름 }}</p>
+                    <p class="header-text">담당자</p>
+                    <p>{{ plc.username }}</p>
                   </div>
                 </div>
                 <div class="dashboard-active">
-                  <p>작동 여부</p>
+                  <p class="header-text">작동 여부</p>
                   <p>{{ plc.plcStart === true ? 'ON' : 'OFF' }}</p>
                 </div>
               </div>
@@ -40,39 +40,37 @@
               </div>
             </div>
           </div>
-          <div class="dashboard-line">
-            <doughnut-chart
-              id="accuracyChart"
-              ref="accuracyChart"
-              :chart-data="doughnutChart.data"
-              :options="doughnutChart.options"
-              style="width: 450px; height: 290px"
-            ></doughnut-chart>
-            <!-- <line-chart
-              ref="chart"
-              :chart-data="chartData"
-              :options="options"
-              style="height: 250px; width: 400px"
-            ></line-chart> -->
-          </div>
-        </div>
-        <div class="dashboard-right">
-          <div>
+          <div class="dashboard-chart">
             <line-chart
               ref="chart"
               :chart-data="chartData"
               :options="options"
-              style="height: 300px; width: 300px"
+              style="height: 218px; width: 668px"
             ></line-chart>
-            <!-- <doughnut-chart
-              id="accuracyChart"
-              ref="accuracyChart"
-              :chart-data="doughnutChart.data"
-              :options="doughnutChart.options"
-              style="width: 450px; height: 290px"
-            ></doughnut-chart> -->
           </div>
-          <div></div>
+        </div>
+        <div class="dashboard-right">
+          <div class="chart-container">
+            <div class="dashboard-chart">
+              <doughnut-chart
+                id="accuracyChart"
+                ref="accuracyChart"
+                :chart-data="doughnutChart.data"
+                :options="doughnutChart.options"
+                style="width: 464px; height: 460px"
+              ></doughnut-chart>
+            </div>
+          </div>
+          <div class="accuracy-info">
+            <div class="accuracy-detail">
+              <p class="header-text">총 생산량</p>
+              <p class="accuracy-text">{{ work }}</p>
+            </div>
+            <div class="accuracy-detail">
+              <p class="header-text">양품 생산울</p>
+              <p class="accuracy-text">{{ accuracyRate }} %</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -99,13 +97,12 @@ export default {
   data() {
     return {
       selected: {
-        deviceId: 1,
-        deviceName: '1StockData',
         tagList: ['트레이', '주사위']
       },
       // 라인차트 옵션 시작
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         title: {
           display: true,
           text: '재고 현황'
@@ -144,7 +141,7 @@ export default {
       no2Status: false,
       isColorSensing: false,
 
-      담당자이름: '지미',
+      username: null,
       tray: 8,
       dice: 8,
       id: '',
@@ -165,35 +162,16 @@ export default {
             display: true,
             text: 'Accuracy Rate Chart'
           },
-          plugins: {
-            legend: {
-              display: true,
-              position: 'left',
-              labels: {
-                boxWidth: 8,
-                padding: 10,
-                usePointStyle: true,
-                pointStyle: 'circle',
-                font: {
-                  size: 14
-                }
-              },
-              fullSize: true,
-              align: 'center'
-            },
-            tooltip: {
-              boxWidth: 15,
-              bodyFont: {
-                size: 14
-              }
-            }
+          legend: {
+            display: true,
+            position: 'top'
           },
           responsive: true,
           maintainAspectRatio: false,
           layout: {
             padding: {
-              top: 50,
-              bottom: 50
+              top: 10,
+              bottom: 20
             }
           },
           elements: {
@@ -470,8 +448,15 @@ export default {
 </script>
 
 <style scoped>
+.header-text {
+  color: #999999;
+}
+.accuracy-text {
+  font-size: 40px;
+}
 .dashboard-background {
   width: 100%;
+  height: 100%;
   background-color: white;
 }
 .dashboard-container {
@@ -519,7 +504,14 @@ export default {
 }
 .dashboard-right {
   display: grid;
-  grid-template-rows: 80% 20%;
+  grid-template-columns: 75% 25%;
+}
+.chart-container {
+  width: 464px;
+  height: 476px;
+  margin: 10px 0px 0px 20px;
+  background-color: #eee;
+  border-radius: 10px;
 }
 .dashboard-info {
   display: grid;
@@ -531,15 +523,10 @@ export default {
   padding: 10px;
 }
 .dashboard-clock {
-  text-align: left;
+  text-align: center;
   width: 100%;
-  color: darkgreen;
-  border-left: 3px solid rgb(2, 44, 84);
-  border-right: 3px solid rgb(2, 44, 84);
-  padding-left: 20px;
+  color: #eee;
   font-size: 30px;
-  background-color: white;
-  border-radius: 10px;
 }
 .dashboard-details {
   padding: 10px;
@@ -549,6 +536,15 @@ export default {
 .dashboard-user {
   display: grid;
   grid-template-rows: 50% 50%;
+  padding-right: 60px;
+}
+.dashboard-chart {
+  position: relative;
+  background-color: #eee;
+  border-radius: 10px;
+}
+.dashboard-doughnut {
+  position: relative;
 }
 .user-info {
   display: flex;
@@ -556,6 +552,31 @@ export default {
   font-size: 20px;
   justify-content: space-between;
   align-items: center;
+}
+.accuracy-info {
+  display: grid;
+  grid-template-rows: 50% 50%;
+}
+.accuracy-detail {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-size: 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 40%;
+}
+.dashboard-active {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-size: 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 10%;
+  border-left: 1px solid;
 }
 .light-container {
   padding: 10px;

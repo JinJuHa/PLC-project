@@ -93,7 +93,8 @@ export default {
         lightYellow: null,
         lightRed: null,
         no3Active: null,
-        diceValue: null
+        diceValue: null,
+        username: null
       },
       device: '',
       deviceId: null,
@@ -276,6 +277,7 @@ export default {
     checkDeviceId() {
       this.deviceId = this.$route.params.id
       this.userId = localStorage.getItem('user')
+      this.plc.username = localStorage.getItem('username')
     }
   }
 }
@@ -285,7 +287,7 @@ export default {
 .monitoring {
   position: absolute;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   z-index: 10;
 }
 .alert {
