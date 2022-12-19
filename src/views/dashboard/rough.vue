@@ -38,7 +38,7 @@
       <div class="dashboard-rates">
         <div class="dashboard-amount">
           <p>총 생산량</p>
-          <p class="plc-info">{{ work }}</p>
+          <p class="plc-info">{{ good }}</p>
         </div>
         <div class="dashboard-amount">
           <p>양품 생산율</p>
@@ -477,6 +477,7 @@ export default {
         labels: this.lineChart.data.datasets.label,
         data: this.trayDatasetDatas()
       }
+      console.log('트레이 데이터')
       this.lineChart.data.datasets[1] = {
         labels: this.lineChart.data.datasets.label,
         data: this.diceDatasetDatas()
@@ -497,8 +498,8 @@ export default {
       // 데이터셋의 데이터 추출
       const trayDatasetDatas = []
 
-      for (let i = 0; i < this.chartDatasetLabels.length; i += 1) {
-        const label = this.chartDatasetLabels[i] // label을 하나씩 추출한다.
+      for (let i = 0; i < this.trayDatasetLabels.length; i += 1) {
+        const label = this.trayDatasetLabels[i] // label을 하나씩 추출한다.
         const datas = [] // 해당 label에 속한 데이터셋의 데이터 리스트
 
         // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
@@ -520,14 +521,14 @@ export default {
     diceDatasetDatas() {
       // 데이터셋의 데이터 추출
       const diceDatasetDatas = []
-      for (let i = 0; i < this.chartDatasetLabels.length; i += 1) {
-        const label = this.chartDatasetLabels[i] // label을 하나씩 추출한다.
+      for (let i = 0; i < this.diceDatasetLabels.length; i += 1) {
+        const label = this.diceDatasetLabels[i] // label을 하나씩 추출한다.
         const datas = [] // 해당 label에 속한 데이터셋의 데이터 리스트
 
         // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
         for (let j = 0; j < this.diceDataList.length; j += 1) {
           const diceData = this.diceDataList[j]
-          console.log('다이스', this.diceDataList)
+          // console.log('다이스', this.diceDataList)
           datas.push(diceData)
         }
         diceDatasetDatas.push({
@@ -543,7 +544,7 @@ export default {
     },
     accuracyCheck() {
       axios
-        .get(process.env.VUE_APP_SERVER + '/logs/find-cycle-all/1')
+        .get(process.env.VUE_APP_SERVER + '/logs/find-cycle-all/' + this.$route.params.id)
         .then(response => {
           const cycle = response.data.data
           for (let i = 0; i < cycle.length; i++) {
@@ -556,8 +557,6 @@ export default {
           const doughnutData = this.doughnutChart.data.datasets[0].data
           doughnutData.splice(0)
           doughnutData.push(this.bad, this.good)
-          console.log('불량품', doughnutData[0])
-          console.log('양품', doughnutData[1])
         })
         .catch(error => {
           console.log('accuracyRate: ', error)

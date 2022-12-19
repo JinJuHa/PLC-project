@@ -101,12 +101,15 @@ export default {
         no3Active: null,
         diceValue: null
       },
-      device: ''
+      device: '',
+      deviceId: null,
+      userId: null
     }
   },
   mounted() {
     this.createMqtt()
     this.getDeviceOne()
+    this.checkDeviceId()
   },
   methods: {
     createMqtt() {
@@ -166,7 +169,7 @@ export default {
       // mqtt pubish
       const mqttClient = mqtt.connect(process.env.VUE_APP_MQTT)
       const topic = process.env.VUE_APP_MQTT_PUB_TOPIC // UVC-Write
-      const message = JSON.stringify({ tagId: id, value: v, userId: 1, deviceId: 1 })
+      const message = JSON.stringify({ tagId: id, value: v, userId: this.userId, deviceId: this.deviceid })
       // PLC 제어에 쓰이는 모든 publish message들은
       // { "tagId" : "id값", "value" : "value값" }으로 이루어져야 합니다.
       // true와 false 같은 boolean 값은 1과(true) 0으로(false) 입력하도록 합니다.
@@ -218,7 +221,7 @@ export default {
     },
     async deviceStartControl() {
       const axiosBody = {
-        deviceid: '1',
+        deviceid: this.deviceId,
         control: 'START',
         state: this.plc.plcStart
       }
@@ -238,7 +241,7 @@ export default {
     },
     async deviceStopControl() {
       const axiosBody = {
-        deviceid: '1',
+        deviceid: this.deviceId,
         control: 'STOP',
         state: this.plc.plcStop
       }
@@ -258,7 +261,7 @@ export default {
     },
     async deviceResetControl() {
       const axiosBody = {
-        deviceid: '1',
+        deviceid: this.deviceId,
         control: 'RESET',
         state: this.plc.plcReset
       }
@@ -275,6 +278,12 @@ export default {
         .catch(err => {
           console.log('/devices/control/reset - errerr', err)
         })
+    },
+    checkDeviceId() {
+      this.deviceId = this.$route.params.id
+      this.userId = localStorage.getItem('user')
+      console.log('디바아디', this.deviceId)
+      console.log('유저아디', this.userId)
     }
   }
 }
