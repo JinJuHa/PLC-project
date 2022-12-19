@@ -3,9 +3,7 @@
     <div class="user-list-page">
       <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="$router.go(-1)" />
       <p class="user-list-title">사용자 리스트</p>
-      <b-button v-b-modal.modal-1 variant="info" class="control-button" @click="modalCheck"
-        >디바이스 제어 권한</b-button
-      >
+      <b-button v-b-modal.modal-1 variant="info" class="control-button">디바이스 제어 권한</b-button>
       <b-modal id="modal-1" hide-footer title="디바이스 제어 권한">
         <div class="user-profile">
           <div class="user-info">
@@ -57,12 +55,6 @@ export default {
     this.deviceList()
   },
   methods: {
-    modalCheck() {
-      if (localStorage.getItem('err') == 401) {
-        alert('권한을 변경할 수 없습니다.')
-        this.$router.go(0)
-      }
-    },
     async userList() {
       await axios
         .get(process.env.VUE_APP_SERVER + `/users/list`, {
