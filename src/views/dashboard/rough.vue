@@ -38,7 +38,7 @@
       <div class="dashboard-rates">
         <div class="dashboard-amount">
           <p>총 생산량</p>
-          <p class="plc-info">{{ work }}</p>
+          <p class="plc-info">{{ good }}</p>
         </div>
         <div class="dashboard-amount">
           <p>양품 생산율</p>
@@ -50,7 +50,7 @@
       <line-chart
         id="stockChart"
         ref="stockChart"
-        :chart-data="lineChart.data"
+        :chart-data="chartData"
         :options="lineChart.options"
         style="width: 1300px; height: 250px"
       ></line-chart>
@@ -230,7 +230,7 @@ export default {
       },
       lineChart: {
         data: {
-          labels: [],
+          tagList: ['트레이', '주사위'],
           datasets: [
             {
               label: '트레이',
@@ -239,8 +239,8 @@ export default {
               borderColor: 'green',
               pointBorderColor: 'green',
               borderWidth: 1,
-              pointBorderWidth: 1,
-              data: []
+              pointBorderWidth: 1
+              // data: []
               // data: [10, 10, 10, 9, 7, 6, 9, 10, 10, 8]
             },
             {
@@ -250,8 +250,8 @@ export default {
               borderColor: 'yellow',
               pointBorderColor: 'yellow',
               borderWidth: 1,
-              pointBorderWidth: 1,
-              data: []
+              pointBorderWidth: 1
+              // data: []
               // data: [5, 10, 4, 8, 3, 2, 8, 5, 2, 2]
             }
           ]
@@ -285,42 +285,59 @@ export default {
             }
           },
           scales: {
-            x: {
-              grid: {
-                display: false
-              },
-              ticks: {
-                padding: 3
+            // x: {
+            //   grid: {
+            //     display: false
+            //   },
+            //   ticks: {
+            //     padding: 3
+            //   }
+            // },
+            // y: {
+            //   ticks: {
+            //     callback: (val, index) => {
+            //       return val !== 0 ? val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
+            //     },
+            //     padding: 10
+            //   },
+            //   grid: {
+            //     drawBorder: false,
+            //     color: '#323232',
+            //     lineWidth: 1
+            //   }
+            // }
+            xAxes: [
+              {
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Time'
+                }
               }
-            },
-            y: {
-              ticks: {
-                callback: (val, index) => {
-                  return val !== 0 ? val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
-                },
-                padding: 10
-              },
-              grid: {
-                drawBorder: false,
-                color: '#323232',
-                lineWidth: 1
+            ],
+            yAxes: [
+              {
+                stacked: false,
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Stocks'
+                }
               }
-            }
+            ]
           },
           responsive: true,
           maintainAspectRatio: false,
           animation: {
-            duration: 5000
+            duration: 0
           }
         }
       },
       maxDataLength: 20, // TODO: 현재 차트에서 출력할 데이터의 최대크기(화면에서 입력 가능하도록 한다.)
       trayDataList: [], // mqtt를 통해 받은 데이터(리스트로 계속 추가됨)
       diceDataList: [],
-      // chartData: [0, 0, 0, 0, 0, 0], // 차트로 표현될 데이터
-      // chartLabels: [], // 차트에서 사용할 라벨 리스트(가로축 라벨)
+      chartData: null, // 차트로 표현될 데이터
+      chartLabels: [], // 차트에서 사용할 라벨 리스트(가로축 라벨)
       chartDatasetLabels: [], // 차트에서 사용할 데이터셋 라벨 리스트
-      chartDatasetDataList: [], // 차트에서 사용할 데이터셋 데이터 리스트
+      // chartDatasetDataList: [], // 차트에서 사용할 데이터셋 데이터 리스트
       diceStatus: false,
       work: 0,
       good: 0,
@@ -414,12 +431,13 @@ export default {
         }
         this.trayDataList.push(this.tray)
         this.diceDataList.push(this.dice)
-        // console.log('트레이 갯수', this.tray)
-        // console.log('주사위 갯수', this.dice)
-
-        // 선택된 devicdId만 수용함
         this.removeOldData() // 오래된 데이터 제거
 
+        this.trayDataList.push(this.tray) // 리스트에 계속 추가함
+        this.diceDataList.push(this.dice)
+
+        this.makeLineLabels(mqttData) // 차트라벨 생성
+        this.makeChartData() // 차트용 데이터 작성
         this.makeLineLabels(mqttData)
         this.makeChartData() // 차트용 데이터 작성
       })
@@ -428,16 +446,17 @@ export default {
       // 현재 차트에 출력할 수가 x개를 넘어서면 제일 오래된 데이터를 제거 한다.
       if (this.maxDataLength - 1 < this.trayDataList.length) {
         this.trayDataList.shift() // mqttData제거
-        this.lineChart.data.labels.shift() // 차트라벨 제거
+        // this.lineChart.data.labels.shift() // 차트라벨 제거
+        this.chartLabels.shift()
       }
       if (this.maxDataLength - 1 < this.diceDataList.length) {
         this.diceDataList.shift() // mqttData제거
-        this.lineChart.data.labels.shift() // 차트라벨 제거
+        // this.lineChart.data.labels.shift() // 차트라벨 제거
+        this.chartLabels.shift()
       }
     },
     makeChartData() {
       // 차트용 데이터 생성
-
       // mqtt정보가 없으면 기본 그래프를 그려준다.(이것이 없으면 그래프 자체가 나오지 않음)
       if (this.trayDataList.length === 0) {
         this.lineChart.data.datasets[0].data = {
@@ -460,31 +479,38 @@ export default {
             }
           ]
         }
-
         return
       }
-
+      console.log('타니????????')
       // 데이터셋 라벨 리스트 생성(태그 리스트(tagList)를 데이터셋 라벨로 사용한다.)
       const datasetLabels = []
-      for (let i = 0; i < this.lineChart.data.labels.length; i += 1) {
-        const tagName = this.lineChart.data.labels[i] // tagName을 추출함
+      for (let i = 0; i < this.lineChart.data.tagList.length; i += 1) {
+        const tagName = this.lineChart.data.tagList[i] // tagName을 추출함
         datasetLabels.push(tagName) // tagName을 라벨로 사용함
+        console.log('태그네임', tagName)
       }
       this.chartDatasetLabels = Array.from(new Set(datasetLabels)) // 중복 제거
-
       // 차트 데이터 생성
+      // 트레이 데이터
       this.lineChart.data.datasets[0] = {
-        labels: this.lineChart.data.datasets.label,
+        labels: this.chartDatasetLabels,
+        // labels: this.chartLabels,
         data: this.trayDatasetDatas()
       }
+      // console.log(this.chartDatasetLabels)
+      // console.log('트레이 데이터', this.lineChart.data.datasets[0])
+
+      // 다이스 데이터
       this.lineChart.data.datasets[1] = {
-        labels: this.lineChart.data.datasets.label,
+        labels: this.chartDatasetLabels,
+        // labels: this.chartLabels,
         data: this.diceDatasetDatas()
       }
     },
     // 라인 차트 라벨(가로측) 생성
     makeLineLabels(mqttData) {
       const dateTime = mqttData.Wrapper[40].value.substring(11, 19)
+      this.chartLabels.push(dateTime)
       this.lineChart.data.labels.push(dateTime) // datetime을 사용한다.(분:초만 추출함)
     },
     doughnutDatasetDatas() {
@@ -496,54 +522,93 @@ export default {
     trayDatasetDatas() {
       // 데이터셋의 데이터 추출
       const trayDatasetDatas = []
+      // 기존 코드
 
-      for (let i = 0; i < this.chartDatasetLabels.length; i += 1) {
-        const label = this.chartDatasetLabels[i] // label을 하나씩 추출한다.
-        const datas = [] // 해당 label에 속한 데이터셋의 데이터 리스트
+      // for (let i = 0; i < this.chartDatasetLabels.length; i += 1) {
+      //   const label = this.chartDatasetLabels[i] // label을 하나씩 추출한다.
+      //   const datas = [] // 해당 label에 속한 데이터셋의 데이터 리스트
+      //   // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
+      //   for (let j = 0; j < this.trayDataList.length; j += 1) {
+      //     const trayData = this.trayDataList[j]
+      //     // console.log('트레이데이터?', datas)
+      //     datas.push(trayData)
+      //   }
+      //   trayDatasetDatas.push({
+      //     label: label,
+      //     fill: false,
+      //     data: datas
+      //   })
+      // }
+      // return trayDatasetDatas.map((item, idx) => {
+      //   const color = idx === 0 ? '#1B9CFC' : '#A684B7'
+      //   // console.log('너 이걸 타긴 하니?', item)
+      //   return { ...item, borderColor: color }
+      // })
 
-        // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
-        for (let j = 0; j < this.trayDataList.length; j += 1) {
-          const trayData = this.trayDataList[j]
-          datas.push(trayData)
-        }
-        trayDatasetDatas.push({
-          label: label,
-          fill: false,
-          data: datas
-        })
+      //포문 없앤버전
+      const label = this.chartDatasetLabels[0] // label을 하나씩 추출한다.
+      const datas = [] // 해당 label에 속한 데이터셋의 데이터 리스트
+      // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
+      for (let j = 0; j < this.trayDataList.length; j += 1) {
+        const trayData = this.trayDataList[j]
+        // console.log('트레이데이터?', datas)
+        datas.push(trayData)
       }
+      trayDatasetDatas.push({
+        label: label,
+        fill: false,
+        data: datas
+      })
       return trayDatasetDatas.map((item, idx) => {
-        const color = idx === 0 ? '#1B9CFC' : '#e74c3c'
+        const color = idx === 0 ? '#1B9CFC' : '#A684B7'
+        // console.log('너 이걸 타긴 하니?', item)
         return { ...item, borderColor: color }
       })
     },
     diceDatasetDatas() {
       // 데이터셋의 데이터 추출
+      //기존코드
+      // const diceDatasetDatas = []
+      // for (let i = 0; i < this.chartDatasetLabels.length; i += 1) {
+      //   const label = this.chartDatasetLabels[i] // label을 하나씩 추출한다.
+      //   const diceDatas = [] // 해당 label에 속한 데이터셋의 데이터 리스트
+      //   // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
+      //   for (let j = 0; j < this.diceDataList.length; j += 1) {
+      //     const diceData = this.diceDataList[j]
+      //     diceDatas.push(diceData)
+      //   }
+      //   diceDatasetDatas.push({
+      //     label: label,
+      //     fill: false,
+      //     data: diceDatas
+      //   })
+      // }
+      // return diceDatasetDatas.map((item, idx) => {
+      //   const color = idx === 0 ? '#1B9CFC' : '#DD7445'
+      //   return { ...item, borderColor: color }
+      // })
+      //테스트코드
       const diceDatasetDatas = []
-      for (let i = 0; i < this.chartDatasetLabels.length; i += 1) {
-        const label = this.chartDatasetLabels[i] // label을 하나씩 추출한다.
-        const datas = [] // 해당 label에 속한 데이터셋의 데이터 리스트
-
-        // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
-        for (let j = 0; j < this.diceDataList.length; j += 1) {
-          const diceData = this.diceDataList[j]
-          console.log('다이스', this.diceDataList)
-          datas.push(diceData)
-        }
-        diceDatasetDatas.push({
-          label: label,
-          fill: false,
-          data: datas
-        })
+      const label = this.chartDatasetLabels[1] // label을 하나씩 추출한다.
+      const diceDatas = [] // 해당 label에 속한 데이터셋의 데이터 리스트
+      // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
+      for (let j = 0; j < this.diceDataList.length; j += 1) {
+        const diceData = this.diceDataList[j]
+        diceDatas.push(diceData)
       }
+      diceDatasetDatas.push({
+        label: label,
+        fill: false,
+        data: diceDatas
+      })
       return diceDatasetDatas.map((item, idx) => {
-        const color = idx === 0 ? '#1B9CFC' : '#e74c3c'
+        const color = idx === 0 ? '#1B9CFC' : '#DD7445'
         return { ...item, borderColor: color }
       })
     },
     accuracyCheck() {
       axios
-        .get(process.env.VUE_APP_SERVER + '/logs/find-cycle-all/1')
+        .get(process.env.VUE_APP_SERVER + '/logs/find-cycle-today/' + this.$route.params.id)
         .then(response => {
           const cycle = response.data.data
           for (let i = 0; i < cycle.length; i++) {
@@ -556,8 +621,6 @@ export default {
           const doughnutData = this.doughnutChart.data.datasets[0].data
           doughnutData.splice(0)
           doughnutData.push(this.bad, this.good)
-          console.log('불량품', doughnutData[0])
-          console.log('양품', doughnutData[1])
         })
         .catch(error => {
           console.log('accuracyRate: ', error)

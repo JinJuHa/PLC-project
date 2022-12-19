@@ -43,7 +43,7 @@ class Event {
 
     this.client.on('connect', () => {
       console.log('MQTT Connected')
-      console.log('subscribeMqtt- scene', scene)
+      // console.log('subscribeMqtt- scene', scene)
 
       this.client.subscribe([topic], () => {
         console.log(`토픽 연결 완료: ${topic}`)
