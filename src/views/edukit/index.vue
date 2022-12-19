@@ -282,8 +282,6 @@ export default {
     checkDeviceId() {
       this.deviceId = this.$route.params.id
       this.userId = localStorage.getItem('user')
-      console.log('디바아디', this.deviceId)
-      console.log('유저아디', this.userId)
     }
   }
 }

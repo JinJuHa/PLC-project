@@ -62,6 +62,7 @@ export default {
       },
       maxDataLength: 20, // TODO: 현재 차트에서 출력할 데이터의 최대크기(화면에서 입력 가능하도록 한다.)
       mqttDataList: [], // mqtt를 통해 받은 데이터(리스트로 계속 추가됨)
+      yAxis: [],
       chartData: null, // 차트로 표현될 데이터
       chartLabels: [], // 차트에서 사용할 라벨 리스트(가로축 라벨)
       chartDatasetLabels: [], // 차트에서 사용할 데이터셋 라벨 리스트
@@ -101,12 +102,13 @@ export default {
         this.removeOldData() // 오래된 데이터 제거
 
         this.mqttDataList.push(mqttData) // 리스트에 계속 추가함
+        this.yAxis.push(yAxis)
         console.log('mqtt-0')
         console.log(mqttData.Wrapper)
-        this.makeChartLabels(xAxis) // 차트라벨 생성
+        this.makeChartLabels(mqttData) // 차트라벨 생성
         console.log('mqtt-1')
         this.makeChartData() // 차트용 데이터 작성
-
+        console.log('이건 아디 머야?', mqttData.id)
         if (this.selected.deviceId === mqttData.id) {
           this.removeOldData() // 오래된 데이터 제거
 
@@ -158,11 +160,12 @@ export default {
         labels: this.chartLabels,
         datasets: this.makeDatasetDatas()
       }
+      // console.log('차트데이터라벨이 대체 몬데,,', this.chartLabels)
     },
-    makeChartLabels(xAxis) {
+    makeChartLabels(mqttData) {
       // 차트라벨(가로측) 생성
-      console.log('너 뭐니?', xAxis)
-      this.chartLabels.push(xAxis.value.substring(11, 19)) //datetime을 사용한다.(분:초만 추출함)
+      // console.log('너 뭐니?', mqttData.Wrapper[40].value.substring(11, 19))
+      this.chartLabels.push(mqttData.Wrapper[40].value.substring(11, 19)) //datetime을 사용한다.(분:초만 추출함)
       // this.chartLabels.push(mqttData.Wrapper[34].value)
       console.log('here2?')
     },
@@ -176,9 +179,7 @@ export default {
         // mqtt로 들어온 데이터에서 key값으로 사용된 tag와 현재 label이 같으면 해당 데이터를 추출 한다.
         for (let j = 0; j < this.mqttDataList.length; j += 1) {
           const mqttData = this.mqttDataList[j]
-          console.log(mqttData.Wrapper)
           const tagData = mqttData.Wrapper[35].value // 현재 데이터셋 label과 같은 태그만 추출한다.
-          console.log('태그데이터.....', tagData)
           datas.push(tagData)
         }
         datasetDatas.push({

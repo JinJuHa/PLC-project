@@ -6,7 +6,7 @@ export default {
   mixins: [reactiveProp],
   props: {
     chartData: {
-      type: Object,
+      type: Array,
       default: null
     },
     options: {
