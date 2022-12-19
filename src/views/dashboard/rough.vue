@@ -97,7 +97,7 @@ export default {
   data() {
     return {
       selected: {
-        tagList: ['트레이', '주사위']
+        tagList: ['트레이']
       },
       // 라인차트 옵션 시작
       options: {
@@ -260,7 +260,7 @@ export default {
           p => p.tagId === '3' || p.tagId === '29' || p.tagId === '39' || p.tagId === '40'
         )
         this.mqttDataListForLine.push(this.tray)
-        this.mqttDataListForLine.push(this.dice)
+        // this.mqttDataListForLine.push(this.dice)
         // console.log('plcData', plcData)
         // console.log('this.mqttDataListForLine', this.mqttDataListForLine)
 
@@ -419,7 +419,7 @@ export default {
     },
     accuracyCheck() {
       axios
-        .get(process.env.VUE_APP_SERVER + '/logs/find-cycle-all/1')
+        .get(process.env.VUE_APP_SERVER + '/logs/find-cycle-today/' + this.$route.params.id)
         .then(response => {
           const cycle = response.data.data
           for (let i = 0; i < cycle.length; i++) {
@@ -458,11 +458,11 @@ export default {
   width: 100%;
   height: 100%;
   background-color: white;
+  padding: 50px;
 }
 .dashboard-container {
   height: 85vh;
   padding: 50px;
-  margin: 50px;
   border: none;
   border-radius: 15px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.1);
