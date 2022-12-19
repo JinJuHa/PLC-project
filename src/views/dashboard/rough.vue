@@ -544,7 +544,7 @@ export default {
     },
     accuracyCheck() {
       axios
-        .get(process.env.VUE_APP_SERVER + '/logs/find-cycle-all/' + this.$route.params.id)
+        .get(process.env.VUE_APP_SERVER + '/logs/find-cycle-today/' + this.$route.params.id)
         .then(response => {
           const cycle = response.data.data
           for (let i = 0; i < cycle.length; i++) {
