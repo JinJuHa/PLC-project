@@ -1,81 +1,81 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-header">
+  <div class="dashboard-background">
+    <div class="dashboard-container">
       <font-awesome-icon class="back-button" icon="fa-solid fa-circle-chevron-left" @click="dashboardClose" />
-      <div class="dashboard-headding"><p>Dashboard</p></div>
-      <div class="dashboard-info">
-        <div class="dashboard-date">
-          <div class="dateTime">
-            <div id="time">&nbsp;</div>
+      <div class="dashboard-title">
+        <p>대시보드</p>
+      </div>
+      <div class="dashboard-content">
+        <div class="dashboard-left">
+          <div class="dashboard-info">
+            <div class="dashboard-info-lists">
+              <div class="dashboard-clock">
+                <div id="time">&nbsp;</div>
+              </div>
+              <div class="dashboard-details">
+                <div class="dashboard-user">
+                  <div class="user-info">
+                    <p class="header-text">PLC 명</p>
+                    <p>PLC - {{ id }}호기</p>
+                  </div>
+                  <div class="user-info">
+                    <p class="header-text">담당자</p>
+                    <p>{{ plc.username }}</p>
+                  </div>
+                </div>
+                <div class="dashboard-active">
+                  <p class="header-text">작동 여부</p>
+                  <p>{{ plc.plcStart === true ? 'ON' : 'OFF' }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="light-container">
+              <div class="dashboard-lights">
+                <div v-show="plc.lightRed === false" class="light red-off"></div>
+                <div v-show="plc.lightRed === true" class="light red"></div>
+                <div v-show="plc.lightYellow === false" class="light yellow-off"></div>
+                <div v-show="plc.lightYellow === true" class="light yellow"></div>
+                <div v-show="plc.lightGreen === false" class="light green-off"></div>
+                <div v-show="plc.lightGreen === true" class="light green"></div>
+              </div>
+            </div>
+          </div>
+          <div class="dashboard-chart">
+            <line-chart
+              ref="chart"
+              :chart-data="chartData"
+              :options="options"
+              style="height: 218px; width: 668px"
+            ></line-chart>
           </div>
         </div>
-        <div class="dashboard-user">
-          <p>담당자 : {{ this.담당자이름 }}</p>
+        <div class="dashboard-right">
+          <div class="chart-container">
+            <div class="dashboard-chart">
+              <doughnut-chart
+                id="accuracyChart"
+                ref="accuracyChart"
+                :chart-data="doughnutChart.data"
+                :options="doughnutChart.options"
+                style="width: 464px; height: 460px"
+              ></doughnut-chart>
+            </div>
+          </div>
+          <div class="accuracy-info">
+            <div class="accuracy-detail">
+              <p class="header-text">총 생산량</p>
+              <p class="accuracy-text">{{ work }}</p>
+            </div>
+            <div class="accuracy-detail">
+              <p class="header-text">양품 생산울</p>
+              <p class="accuracy-text">{{ accuracyRate }} %</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="dashboard-columns">
-      <div class="dashboard-rates">
-        <div class="dashboard-amount">
-          <p>Device Id</p>
-          <p class="plc-info">PLC - {{ id }}호기</p>
-        </div>
-        <div class="dashboard-amount">
-          <!-- tagId 17 -->
-          <p>작동 여부</p>
-          <p class="plc-info">{{ plc.plcStart === true ? 'ON' : 'OFF' }}</p>
-        </div>
-      </div>
-      <div class="dashboard-doughnut">
-        <doughnut-chart
-          id="accuracyChart"
-          ref="accuracyChart"
-          :chart-data="doughnutChart.data"
-          :options="doughnutChart.options"
-          style="width: 450px; height: 290px"
-        ></doughnut-chart>
-      </div>
-      <div class="dashboard-rates">
-        <div class="dashboard-amount">
-          <p>총 생산량</p>
-          <p class="plc-info">{{ work }}</p>
-        </div>
-        <div class="dashboard-amount">
-          <p>양품 생산율</p>
-          <p class="plc-info">{{ accuracyRate }} %</p>
-        </div>
-      </div>
-    </div>
-    <div v-if="chartData" class="dashboard-footer">
-      <line-chart ref="chart" :chart-data="chartData" :options="options"></line-chart>
-      <!-- <line-chart
-        id="stockChart"
-        ref="stockChart"
-        :chart-data="lineChart.data"
-        :options="lineChart.options"
-        style="width: 1300px; height: 250px"
-      ></line-chart> -->
-      <div class="dashboard-lights">
-        <div v-show="plc.lightRed === false" class="light red-off"></div>
-        <div v-show="plc.lightRed === true" class="light red"></div>
-        <div v-show="plc.lightYellow === false" class="light yellow-off"></div>
-        <div v-show="plc.lightYellow === true" class="light yellow"></div>
-        <div v-show="plc.lightGreen === false" class="light green-off"></div>
-        <div v-show="plc.lightGreen === true" class="light green"></div>
-      </div>
-      <!-- <div class="dashboard-bar">
-        <p>주사위는 메인화면에 띠워서 안하기로 함</p>
-        <bar-chart
-          id="diceFequencyChart"
-          ref="diceFequencyChart"
-          :chart-data="barChart.data"
-          :options="barChart.options"
-        ></bar-chart>
-      </div> -->
     </div>
   </div>
 </template>
-
 <script>
 import mqtt from 'mqtt'
 import DoughnutChart from '@/components/chart/doughnutChart'
@@ -97,13 +97,12 @@ export default {
   data() {
     return {
       selected: {
-        deviceId: 1,
-        deviceName: '1StockData',
         tagList: ['트레이', '주사위']
       },
       // 라인차트 옵션 시작
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         title: {
           display: true,
           text: '재고 현황'
@@ -129,6 +128,9 @@ export default {
               scaleLabel: {
                 display: true,
                 labelString: 'amount'
+              },
+              ticks: {
+                beginAtZero: true
               }
             }
           ]
@@ -139,7 +141,7 @@ export default {
       no2Status: false,
       isColorSensing: false,
 
-      담당자이름: '지미',
+      username: null,
       tray: 8,
       dice: 8,
       id: '',
@@ -160,35 +162,16 @@ export default {
             display: true,
             text: 'Accuracy Rate Chart'
           },
-          plugins: {
-            legend: {
-              display: true,
-              position: 'left',
-              labels: {
-                boxWidth: 8,
-                padding: 10,
-                usePointStyle: true,
-                pointStyle: 'circle',
-                font: {
-                  size: 14
-                }
-              },
-              fullSize: true,
-              align: 'center'
-            },
-            tooltip: {
-              boxWidth: 15,
-              bodyFont: {
-                size: 14
-              }
-            }
+          legend: {
+            display: true,
+            position: 'top'
           },
           responsive: true,
           maintainAspectRatio: false,
           layout: {
             padding: {
-              top: 50,
-              bottom: 50
+              top: 10,
+              bottom: 20
             }
           },
           elements: {
@@ -278,8 +261,8 @@ export default {
         )
         this.mqttDataListForLine.push(this.tray)
         this.mqttDataListForLine.push(this.dice)
-        console.log('plcData', plcData)
-        console.log('this.mqttDataListForLine', this.mqttDataListForLine)
+        // console.log('plcData', plcData)
+        // console.log('this.mqttDataListForLine', this.mqttDataListForLine)
 
         // 3은 tray 작동, 27은 주사위 작동, 39는 컬러센서 작동, 40은 3호기 작동
         // console.log('plcData', plcData) // [0] : 1호기 작동 / [1] : 2호기 작동 / [2]: 컬러센서 작동 / [3]: 3호기 작동
@@ -288,14 +271,14 @@ export default {
         if (plcData[0].value && this.no1Status === false) {
           this.no1Status = true
           this.tray--
-          console.log('white', this.tray)
+          // console.log('white', this.tray)
         }
 
         // 컬러 센서가 작동했다면 컬러센서 상태를 true로 변경 후 1호기 상태를 false로 변경
         if (plcData[2].value === true) {
           this.isColorSensing = true
           this.no1Status = false
-          console.log('this.no1Status', this.no1Status)
+          // console.log('this.no1Status', this.no1Status)
         }
 
         // 2호기 벨류가 true이고 2호기 상태가 false이면서 컬러센서가 작동됐다면(white tray)
@@ -304,7 +287,7 @@ export default {
           this.no2Status = true
           this.dice--
           this.isColorSensing = false
-          console.log('this.no2Status', this.no2Status)
+          // console.log('this.no2Status', this.no2Status)
         }
 
         // 3호기 벨류가 true이면 2호기 상태 false로 변경
@@ -366,8 +349,8 @@ export default {
         labels: this.lineChartLabels,
         datasets: this.makeLineChartDatasetDatas()
       }
-      console.log('this.chartData.labels', this.chartData.labels)
-      console.log('this.chartData.datasets', this.chartData.datasets)
+      // console.log('this.chartData.labels', this.chartData.labels)
+      // console.log('this.chartData.datasets', this.chartData.datasets)
     },
 
     // 라인차트용데이타셋데이터스 만들기
@@ -405,8 +388,8 @@ export default {
     },
     doughnutDatasetDatas() {
       const doughnutData = this.doughnutChart.data.datasets[0].data
-      console.log('불량품', doughnutData[0])
-      console.log('양품', doughnutData[1])
+      // console.log('불량품', doughnutData[0])
+      // console.log('양품', doughnutData[1])
       doughnutData.splice(0, 2, this.bad, this.good)
     },
     makeDatasetDatas() {
@@ -449,8 +432,8 @@ export default {
           const doughnutData = this.doughnutChart.data.datasets[0].data
           doughnutData.splice(0)
           doughnutData.push(this.bad, this.good)
-          console.log('불량품', doughnutData[0])
-          console.log('양품', doughnutData[1])
+          // console.log('불량품', doughnutData[0])
+          // console.log('양품', doughnutData[1])
         })
         .catch(error => {
           console.log('accuracyRate: ', error)
@@ -465,134 +448,175 @@ export default {
 </script>
 
 <style scoped>
-.back-button {
-  position: absolute;
-  cursor: pointer;
+.header-text {
+  color: #999999;
 }
-.dateTime {
-  text-align: left;
-  width: 100%;
-  color: darkgreen;
-  border-left: 3px solid green;
-  padding-left: 20px;
+.accuracy-text {
   font-size: 40px;
 }
+.dashboard-background {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+}
 .dashboard-container {
+  height: 85vh;
+  padding: 50px;
+  margin: 50px;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.1);
+  background: #474b4b;
   display: grid;
-  grid-template-rows: 14vh 45vh 40vh;
-  width: 100%;
-  height: 100vh;
-  background: green;
-  padding: 5px;
-  border-radius: 10px;
+  grid-template-rows: 10% 90%;
 }
-.dashboard-header {
-  display: grid;
-  grid-template-rows: 30% 70%;
-  width: 100%;
-  height: 100%;
-  color: white;
-  /* padding: 5px; */
-}
-.dashboard-headding {
-  letter-spacing: 2px;
-  padding: auto;
-  font-size: 20px;
-  width: 100%;
-  height: 100%;
+.dashboard-title {
+  margin-left: 380px;
+  width: 450px;
+  border-radius: 25px;
+  background-color: #999999;
+  color: #e5e5e5;
+  font-size: 25px;
+  font-weight: bold;
   text-align: center;
+  padding-top: 4px;
+  margin-bottom: 8px;
+}
+.back-button {
+  position: absolute;
+  color: #999999;
+  cursor: pointer;
+  left: 70px;
+  width: 100px;
+  font-size: 25px;
+  transition: 0.2s;
+}
+.back-button:hover {
+  color: #aabece;
+}
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+.dashboard-left {
+  display: grid;
+  grid-template-rows: 55% 45%;
+}
+.dashboard-right {
+  display: grid;
+  grid-template-columns: 75% 25%;
+}
+.chart-container {
+  width: 464px;
+  height: 476px;
+  margin: 10px 0px 0px 20px;
+  background-color: #eee;
+  border-radius: 10px;
 }
 .dashboard-info {
-  background-color: white;
   display: grid;
-  grid-template-columns: 70% 30%;
+  grid-template-columns: 84% 16%;
+}
+.dashboard-info-lists {
+  display: grid;
+  grid-template-rows: 25% 75%;
+  padding: 10px;
+}
+.dashboard-clock {
+  text-align: center;
   width: 100%;
-  height: 100%;
-  /* padding: 10px; */
-  border-radius: 10px;
-}
-.dashboard-date {
-  padding: 5px;
-  color: grey;
-  font-size: 25px;
-}
-.dashboard-user {
-  color: darkgreen;
-  /* padding: 10px; */
+  color: #eee;
   font-size: 30px;
 }
-.dashboard-columns {
+.dashboard-details {
+  padding: 10px;
   display: grid;
-  grid-template-columns: 30% 35% 35%;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  border-radius: 10px;
-  padding: 5px;
+  grid-template-columns: 60% 40%;
 }
-.dashboard-rates {
+.dashboard-user {
   display: grid;
   grid-template-rows: 50% 50%;
-  padding: 5px;
+  padding-right: 60px;
 }
-.dashboard-amount {
-  width: 100%;
-  height: 100%;
-  /* background-color: rgb(214, 219, 250); */
-  padding: 5px;
-  text-align: center;
+.dashboard-chart {
+  position: relative;
+  background-color: #eee;
+  border-radius: 10px;
 }
 .dashboard-doughnut {
-  width: 100%;
-  height: 100%;
-  border-left: solid 1px;
-  border-right: solid 1px;
+  position: relative;
 }
-.dashboard-bar {
-  width: 100%;
-  height: 300px;
+.user-info {
+  display: flex;
+  color: white;
+  font-size: 20px;
+  justify-content: space-between;
+  align-items: center;
 }
-.dashboard-footer {
+.accuracy-info {
   display: grid;
-  grid-template-columns: 93% 7%;
-  width: 100%;
-  height: 300px;
-  background-color: white;
-  border-radius: 10px;
+  grid-template-rows: 50% 50%;
+}
+.accuracy-detail {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-size: 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 40%;
+}
+.dashboard-active {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-size: 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 10%;
+  border-left: 1px solid;
+}
+.light-container {
+  padding: 10px;
 }
 .dashboard-lights {
   width: 100%;
-  height: 300px;
+  height: 100%;
   background-color: black;
-  display: grid;
-  grid-template-rows: 33% 33% 33%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px;
 }
 .light {
   width: 100%;
   height: 100%;
-  border-radius: 20%;
+  border-radius: 100%;
+  margin: 3px 3px 3px 3px;
 }
 .red-off {
-  background-color: lightsalmon;
+  background-color: gray;
 }
 .red {
-  background-color: red;
+  background-color: #ff0000;
+  box-shadow: 0 0 6em #ff3333;
 }
 .yellow-off {
-  background-color: lightgoldenrodyellow;
+  background-color: gray;
 }
 .yellow {
-  background-color: yellow;
+  background-color: #ffff00;
+  box-shadow: 0 0 6em #ffff33;
 }
 .green-off {
-  background-color: lightgrey;
+  background-color: gray;
 }
 .green {
-  background-color: green;
-}
-.plc-info {
-  font-size: 45px;
-  color: darkgreen;
+  background-color: #00ff00;
+  box-shadow: 0 0 6em #33ff33;
 }
 </style>

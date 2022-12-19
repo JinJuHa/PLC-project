@@ -75,6 +75,7 @@ export default {
         .then(async res => {
           this.user = res.data.data
           localStorage.setItem('user', this.user.id)
+          localStorage.setItem('username', this.user.name)
           console.log('inforData - response: ', this.user)
         })
         .catch(err => {
