@@ -64,7 +64,7 @@
           <div class="accuracy-info">
             <div class="accuracy-detail">
               <p class="header-text">총 생산량</p>
-              <p class="accuracy-text">{{ work }}</p>
+              <p class="accuracy-text">{{ good }}</p>
             </div>
             <div class="accuracy-detail">
               <p class="header-text">양품 생산울</p>
