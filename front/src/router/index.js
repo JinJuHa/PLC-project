@@ -34,10 +34,6 @@ const routes = [
         component: () => import('../views/edukitdata.vue')
       },
       {
-        path: '/dashboard',
-        component: () => import('../views/dashboard')
-      },
-      {
         path: '/mypage',
         component: () => import('../views/user')
       }
